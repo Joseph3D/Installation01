@@ -1,0 +1,255 @@
+fileFormatVersion: 2
+guid: 23de2f4538850b2408b4c4103681413c
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: Arms
+    100002: bipod
+    100004: bipod 1
+    100006: bolt
+    100008: bolt 1
+    100010: Camera001
+    100012: Camera001.Target
+    100014: Circle002
+    100016: Circle003
+    100018: Circle004
+    100020: Circle005
+    100022: //RootNode
+    100024: frame bone24
+    100026: frame l forearm
+    100028: frame l index low
+    100030: frame l index mid
+    100032: frame l index tip
+    100034: frame l middle mid
+    100036: frame l middle tip
+    100038: frame l middlelow
+    100040: frame l pinky low
+    100042: frame l pinky mid
+    100044: frame l pinky tip
+    100046: frame l ring low
+    100048: frame l ring mid
+    100050: frame l ring tip
+    100052: frame l thumb low
+    100054: frame l thumb mid
+    100056: frame l thumb tip
+    100058: frame l upperarm
+    100060: frame l wriste
+    100062: frame r forearm
+    100064: frame r index low
+    100066: frame r index mid
+    100068: frame r index tip
+    100070: frame r middle low
+    100072: frame r middle mid
+    100074: frame r middle tip
+    100076: frame r pinky low
+    100078: frame r pinky mid
+    100080: frame r pinky tip
+    100082: frame r ring low
+    100084: frame r ring mid
+    100086: frame r ring tip
+    100088: frame r thumb low
+    100090: frame r thumb mid
+    100092: frame r thumb tip
+    100094: frame r upperarm
+    100096: frame r wriste
+    100098: gun
+    100100: gun 1
+    100102: gun01
+    100104: gun02
+    100106: gun03
+    100108: gun04
+    100110: gun05
+    100112: gun06
+    100114: IK Chain001
+    100116: IK Chain002
+    100118: magazine
+    100120: magazine 1
+    100122: Object001
+    100124: Omni01
+    400000: Arms
+    400002: bipod
+    400004: bipod 1
+    400006: bolt
+    400008: bolt 1
+    400010: Camera001
+    400012: Camera001.Target
+    400014: Circle002
+    400016: Circle003
+    400018: Circle004
+    400020: Circle005
+    400022: //RootNode
+    400024: frame bone24
+    400026: frame l forearm
+    400028: frame l index low
+    400030: frame l index mid
+    400032: frame l index tip
+    400034: frame l middle mid
+    400036: frame l middle tip
+    400038: frame l middlelow
+    400040: frame l pinky low
+    400042: frame l pinky mid
+    400044: frame l pinky tip
+    400046: frame l ring low
+    400048: frame l ring mid
+    400050: frame l ring tip
+    400052: frame l thumb low
+    400054: frame l thumb mid
+    400056: frame l thumb tip
+    400058: frame l upperarm
+    400060: frame l wriste
+    400062: frame r forearm
+    400064: frame r index low
+    400066: frame r index mid
+    400068: frame r index tip
+    400070: frame r middle low
+    400072: frame r middle mid
+    400074: frame r middle tip
+    400076: frame r pinky low
+    400078: frame r pinky mid
+    400080: frame r pinky tip
+    400082: frame r ring low
+    400084: frame r ring mid
+    400086: frame r ring tip
+    400088: frame r thumb low
+    400090: frame r thumb mid
+    400092: frame r thumb tip
+    400094: frame r upperarm
+    400096: frame r wriste
+    400098: gun
+    400100: gun 1
+    400102: gun01
+    400104: gun02
+    400106: gun03
+    400108: gun04
+    400110: gun05
+    400112: gun06
+    400114: IK Chain001
+    400116: IK Chain002
+    400118: magazine
+    400120: magazine 1
+    400122: Object001
+    400124: Omni01
+    2300000: bipod
+    2300002: bipod 1
+    2300004: bolt 1
+    2300006: gun
+    2300008: gun 1
+    2300010: gun01
+    2300012: gun02
+    2300014: gun03
+    2300016: gun04
+    2300018: gun05
+    2300020: gun06
+    2300022: magazine
+    2300024: magazine 1
+    3300000: bipod
+    3300002: bipod 1
+    3300004: bolt 1
+    3300006: gun
+    3300008: gun 1
+    3300010: gun01
+    3300012: gun02
+    3300014: gun03
+    3300016: gun04
+    3300018: gun05
+    3300020: gun06
+    3300022: magazine
+    3300024: magazine 1
+    4300000: Object001
+    4300002: Arms
+    4300004: gun
+    4300006: gun
+    4300008: gun04
+    4300010: gun03
+    4300012: gun02
+    4300014: gun01
+    4300016: gun06
+    4300018: gun05
+    4300020: bipod
+    4300022: bipod
+    4300024: magazine
+    4300026: magazine
+    4300028: bolt
+    7400000: Fire1New
+    9500000: //RootNode
+    13700000: Arms
+    13700002: Object001
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Fire1New
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 35
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 1
+  userData: 

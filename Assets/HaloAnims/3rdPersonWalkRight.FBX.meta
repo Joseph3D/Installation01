@@ -1,0 +1,185 @@
+fileFormatVersion: 2
+guid: d28a6c446232eab4c91206d30005d4a2
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: '#antenna'
+    100002: '#backpack'
+    100004: '#backpack-bs'
+    100006: '#body'
+    100008: '#flashlight'
+    100010: '#head'
+    100012: '#holster'
+    100014: '#left foot'
+    100016: '#left hand'
+    100018: '#right foot'
+    100020: '#right hand'
+    100022: //RootNode
+    100024: __unnamed
+    100026: bip01 head
+    100028: bip01 l calf
+    100030: bip01 l clavicle
+    100032: bip01 l foot
+    100034: bip01 l forearm
+    100036: bip01 l hand
+    100038: bip01 l thigh
+    100040: bip01 l upperarm
+    100042: bip01 neck
+    100044: bip01 pelvis
+    100046: bip01 r calf
+    100048: bip01 r clavicle
+    100050: bip01 r foot
+    100052: bip01 r forearm
+    100054: bip01 r hand
+    100056: bip01 r thigh
+    100058: bip01 r upperarm
+    100060: bip01 spine
+    100062: bip01 spine1
+    400000: '#antenna'
+    400002: '#backpack'
+    400004: '#backpack-bs'
+    400006: '#body'
+    400008: '#flashlight'
+    400010: '#head'
+    400012: '#holster'
+    400014: '#left foot'
+    400016: '#left hand'
+    400018: '#right foot'
+    400020: '#right hand'
+    400022: //RootNode
+    400024: __unnamed
+    400026: bip01 head
+    400028: bip01 l calf
+    400030: bip01 l clavicle
+    400032: bip01 l foot
+    400034: bip01 l forearm
+    400036: bip01 l hand
+    400038: bip01 l thigh
+    400040: bip01 l upperarm
+    400042: bip01 neck
+    400044: bip01 pelvis
+    400046: bip01 r calf
+    400048: bip01 r clavicle
+    400050: bip01 r foot
+    400052: bip01 r forearm
+    400054: bip01 r hand
+    400056: bip01 r thigh
+    400058: bip01 r upperarm
+    400060: bip01 spine
+    400062: bip01 spine1
+    2300000: '#antenna'
+    2300002: '#backpack'
+    2300004: '#backpack-bs'
+    2300006: '#body'
+    2300008: '#flashlight'
+    2300010: '#head'
+    2300012: '#holster'
+    2300014: '#left foot'
+    2300016: '#left hand'
+    2300018: '#right foot'
+    2300020: '#right hand'
+    3300000: '#antenna'
+    3300002: '#backpack'
+    3300004: '#backpack-bs'
+    3300006: '#body'
+    3300008: '#flashlight'
+    3300010: '#head'
+    3300012: '#holster'
+    3300014: '#left foot'
+    3300016: '#left hand'
+    3300018: '#right foot'
+    3300020: '#right hand'
+    4300000: '#left foot'
+    4300002: '#right foot'
+    4300004: '#holster'
+    4300006: '#left hand'
+    4300008: '#flashlight'
+    4300010: '#head'
+    4300012: '#right hand'
+    4300014: '#antenna'
+    4300016: '#backpack'
+    4300018: '#backpack-bs'
+    4300020: '#body'
+    4300022: __unnamed
+    7400000: WalkRight
+    9500000: //RootNode
+    13700000: __unnamed
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: WalkRight
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 100
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 1
+  userData: 

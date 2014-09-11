@@ -1,0 +1,168 @@
+fileFormatVersion: 2
+guid: b8f6fe78fc0a748439a2beca0555bd67
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: Camera01
+    100002: elbow left
+    100004: elbow right
+    100006: FP
+    100008: frame bone24
+    100010: frame l forearm
+    100012: frame l index low
+    100014: frame l index mid
+    100016: frame l index tip
+    100018: frame l middle mid
+    100020: frame l middle tip
+    100022: frame l middlelow
+    100024: frame l pinky low
+    100026: frame l pinky mid
+    100028: frame l pinky tip
+    100030: frame l ring low
+    100032: frame l ring mid
+    100034: frame l ring tip
+    100036: frame l thumb low
+    100038: frame l thumb mid
+    100040: frame l thumb tip
+    100042: frame l upperarm
+    100044: frame l wriste
+    100046: frame r forearm
+    100048: frame r index low
+    100050: frame r index mid
+    100052: frame r index tip
+    100054: frame r middle low
+    100056: frame r middle mid
+    100058: frame r middle tip
+    100060: frame r pinky low
+    100062: frame r pinky mid
+    100064: frame r pinky tip
+    100066: frame r ring low
+    100068: frame r ring mid
+    100070: frame r ring tip
+    100072: frame r thumb low
+    100074: frame r thumb mid
+    100076: frame r thumb tip
+    100078: frame r upperarm
+    100080: frame r wriste
+    100082: //RootNode
+    100084: IK Chain01
+    100086: IK Chain02
+    100088: left wrist constraint
+    100090: Left Wrist Controller
+    100092: Left Wrist IK Goal
+    100094: Left Wrist Orientation
+    100096: right wrist constraint
+    100098: Right Wrist Controller
+    100100: Right Wrist IK Goal
+    100102: Right Wrist Orientation
+    400000: Camera01
+    400002: elbow left
+    400004: elbow right
+    400006: FP
+    400008: frame bone24
+    400010: frame l forearm
+    400012: frame l index low
+    400014: frame l index mid
+    400016: frame l index tip
+    400018: frame l middle mid
+    400020: frame l middle tip
+    400022: frame l middlelow
+    400024: frame l pinky low
+    400026: frame l pinky mid
+    400028: frame l pinky tip
+    400030: frame l ring low
+    400032: frame l ring mid
+    400034: frame l ring tip
+    400036: frame l thumb low
+    400038: frame l thumb mid
+    400040: frame l thumb tip
+    400042: frame l upperarm
+    400044: frame l wriste
+    400046: frame r forearm
+    400048: frame r index low
+    400050: frame r index mid
+    400052: frame r index tip
+    400054: frame r middle low
+    400056: frame r middle mid
+    400058: frame r middle tip
+    400060: frame r pinky low
+    400062: frame r pinky mid
+    400064: frame r pinky tip
+    400066: frame r ring low
+    400068: frame r ring mid
+    400070: frame r ring tip
+    400072: frame r thumb low
+    400074: frame r thumb mid
+    400076: frame r thumb tip
+    400078: frame r upperarm
+    400080: frame r wriste
+    400082: //RootNode
+    400084: IK Chain01
+    400086: IK Chain02
+    400088: left wrist constraint
+    400090: Left Wrist Controller
+    400092: Left Wrist IK Goal
+    400094: Left Wrist Orientation
+    400096: right wrist constraint
+    400098: Right Wrist Controller
+    400100: Right Wrist IK Goal
+    400102: Right Wrist Orientation
+    2300000: frame bone24
+    3300000: frame bone24
+    4300000: FP
+    4300002: frame bone24
+    9500000: //RootNode
+    13700000: FP
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 1
+  userData: 
