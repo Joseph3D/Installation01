@@ -23,14 +23,7 @@ namespace Assets.Scripts.Data
         /// <param name="fileName">File name.</param>
         protected static bool FileExits(string fileName)
         {
-            if (File.Exists(_base_path + fileName + XMLBaseFile._extension))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return File.Exists(_base_path + fileName + XMLBaseFile._extension);
         }
 
         /// <summary>
