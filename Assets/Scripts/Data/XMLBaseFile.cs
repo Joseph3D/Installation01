@@ -21,7 +21,7 @@ namespace Assets.Scripts.Data
         /// </summary>
         /// <returns><c>true</c>, if file exits, <c>false</c> otherwise.</returns>
         /// <param name="fileName">File name.</param>
-        protected static bool FileExits(string fileName)
+        public static bool FileExits(string fileName)
         {
             return File.Exists(_base_path + fileName + XMLBaseFile._extension);
         }
@@ -31,7 +31,7 @@ namespace Assets.Scripts.Data
         /// </summary>
         /// <param name="fileName">File name.</param>
         /// <param name="obj">Object.</param>
-        protected static void CreateXMLFile(string fileName, System.Object obj)
+        public static void CreateXMLFile(string fileName, System.Object obj)
         {
             XmlSerializer serializer = new XmlSerializer(obj.GetType());
 
@@ -46,7 +46,7 @@ namespace Assets.Scripts.Data
         /// </summary>
         /// <param name="fileName">File name.</param>
         /// <param name="obj">Object.</param>
-        protected static void CreateEXMLFile(string fileName, System.Object obj)
+        public static void CreateEXMLFile(string fileName, System.Object obj)
         {
             XmlSerializer serializer = new XmlSerializer(obj.GetType());
             StringWriter textWriter = new StringWriter();
@@ -66,7 +66,7 @@ namespace Assets.Scripts.Data
         /// <returns>The XML file.</returns>
         /// <param name="fileName">File name.</param>
         /// <param name="type">Type.</param>
-        protected static System.Object LoadXMLFile(string fileName, System.Type type)
+        public static System.Object LoadXMLFile(string fileName, System.Type type)
         {
             XmlSerializer serializer = new XmlSerializer(type);
 
@@ -82,7 +82,7 @@ namespace Assets.Scripts.Data
         /// <returns>The EXML file.</returns>
         /// <param name="fileName">File name.</param>
         /// <param name="type">Type.</param>
-        protected static System.Object LoadEXMLFile(string fileName, System.Type type)
+        public static System.Object LoadEXMLFile(string fileName, System.Type type)
         {
             XmlSerializer serializer = new XmlSerializer(type);
 
