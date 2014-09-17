@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Assets.Scripts.Data
 {
-    public class XMLBaseFile : System.Object
+    public class XMLBaseFile
     {
         private static readonly string _base_path = Application.persistentDataPath + "/"; 	// Base path for data files.
         private static readonly string _key = "12345678901234567890123456789012";			// Key
