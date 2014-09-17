@@ -39,11 +39,11 @@
     <Reference Include="System.XML" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="UnityEngine">
-      <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
-      <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files (x86)\Unity\Editor\Data\Managed\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\Program Files (x86)\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +226,8 @@
     <Compile Include="Assets\Packages\Standard Assets\Water (Basic)\Sources\Scripts\WaterSimple.cs" />
     <Compile Include="Assets\Scripts\Data\GlobalObjectPool.cs" />
     <Compile Include="Assets\Scripts\Data\XMLBaseFile.cs" />
+    <Compile Include="Assets\Scripts\Game Logic\AI\AIEntity.cs" />
+    <Compile Include="Assets\Scripts\Game Logic\AI\AITraits.cs" />
     <Compile Include="Assets\Scripts\Game Logic\ChooseEquipment.cs" />
     <Compile Include="Assets\Scripts\Game Logic\Crouch.cs" />
     <Compile Include="Assets\Scripts\Game Logic\EndGameScript.cs" />
@@ -310,9 +312,6 @@
     <None Include="Assets\Packages\Standard Assets\Blob-Shadow\ShadowProjection.shader" />
     <None Include="Assets\Packages\Standard Assets\Image Effects (Pro Only)\Image Based\Sources\Shaders\DepthDownsample.shader" />
     <None Include="Assets\Packages\Standard Assets\Image Effects (Pro Only)\Image Based\Sources\Shaders\RadialBlurDepthWeighted.shader" />
-    <Reference Include="UnityEngine.UI">
-      <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Scripts\Utility\" />
