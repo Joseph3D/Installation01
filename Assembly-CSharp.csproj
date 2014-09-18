@@ -226,7 +226,9 @@
     <Compile Include="Assets\Packages\Standard Assets\Water (Basic)\Sources\Scripts\WaterSimple.cs" />
     <Compile Include="Assets\Scripts\Data\GlobalObjectPool.cs" />
     <Compile Include="Assets\Scripts\Data\XMLBaseFile.cs" />
+    <Compile Include="Assets\Scripts\Game Logic\AI\AIMessage.cs" />
     <Compile Include="Assets\Scripts\Game Logic\AI\AIEntity.cs" />
+    <Compile Include="Assets\Scripts\Game Logic\AI\AIManager.cs" />
     <Compile Include="Assets\Scripts\Game Logic\AI\AITraits.cs" />
     <Compile Include="Assets\Scripts\Game Logic\ChooseEquipment.cs" />
     <Compile Include="Assets\Scripts\Game Logic\Crouch.cs" />
@@ -234,6 +236,7 @@
     <Compile Include="Assets\Scripts\Game Logic\Footsteps.cs" />
     <Compile Include="Assets\Scripts\Game Logic\GrenadeExplosionC.cs" />
     <Compile Include="Assets\Scripts\Managers\BulletManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\GameEntity.cs" />
     <Compile Include="Assets\Scripts\Managers\GUIController.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\PlayerManager.cs" />

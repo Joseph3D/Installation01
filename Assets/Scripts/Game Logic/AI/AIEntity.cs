@@ -6,8 +6,23 @@ using UnityEngine;
 
 namespace Assets.Scripts.Game_Logic.AI
 {
-    public class AIEntity : MonoBehaviour
+    public sealed class AIEntity : MonoBehaviour
     {
+        private CharacterController Controller;
 
+
+        public AIEntity()
+        {
+        }
+
+        public void Start()
+        {
+
+        }
+
+        public void Update()
+        {
+
+        }
     }
 }
