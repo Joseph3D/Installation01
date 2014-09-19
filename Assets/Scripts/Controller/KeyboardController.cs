@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class KeyboardController : MonoBehaviour {
+public sealed class KeyboardController : MonoBehaviour {
 	#region Movement Codes
 	KeyCode back = KeyCode.None;
 	KeyCode forward = KeyCode.None;
@@ -54,9 +54,16 @@ public class KeyboardController : MonoBehaviour {
 		this.secondary = kbs.Secondary;
 		this.zoom = kbs.Zoom;
 	}
-
-	private float smooth = 0.0f;
-	private float speed = 2.0f;
+	[SerializeField]
+	float minimumYAngle = -60.0f;
+	[SerializeField]
+	float maximumYAngle = 60.0f;
+	[SerializeField]
+	float mouseSensitivity = 10.0f;
+	
+	// Internal variables
+	float smooth = 0.0f;
+	float speed = 2.0f;
 
 	void Update() {
 		#region Action

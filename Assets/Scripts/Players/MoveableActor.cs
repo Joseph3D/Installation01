@@ -8,7 +8,7 @@ public class MoveableActor : MonoBehaviour {
 	[SerializeField]
 	float speed = 5.0f;
 	[SerializeField]
-	float jumpForce = 10.0f;
+	float jumpForce = 6.0f;
 	[SerializeField]
 	Vector3 direction = Vector3.zero;
 	[SerializeField]
