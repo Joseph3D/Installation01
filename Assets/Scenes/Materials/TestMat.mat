@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: blue
-  m_Shader: {fileID: 3, guid: 0000000000000000f000000000000000, type: 0}
+  m_Name: TestMat
+  m_Shader: {fileID: 4, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
@@ -17,30 +17,27 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
+          m_Texture: {fileID: 2800000, guid: d96594966a5d0ae46a4fae8d13a787be, type: 3}
+          m_Scale: {x: 4, y: 4}
           m_Offset: {x: 0, y: 0}
       data:
         first:
           name: _BumpMap
         second:
           m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
+          m_Scale: {x: 4, y: 4}
           m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
           name: _Shininess
-        second: .364626884
+        second: .078125
     m_Colors:
       data:
         first:
           name: _Color
-        second: {r: .0832896754, g: 0, b: .626865685, a: 1}
+        second: {r: 1, g: .558620691, b: 0, a: 1}
       data:
         first:
           name: _SpecColor
-        second: {r: .873134315, g: .873134315, b: .873134315, a: 1}
---- !u!1002 &2100001
-EditorExtensionImpl:
-  serializedVersion: 6
+        second: {r: 1, g: 1, b: 1, a: 1}
