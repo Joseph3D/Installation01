@@ -15,7 +15,15 @@ namespace Assets.Scripts.Game_Logic.AI
 	/// </summary>
 	public sealed class AIManager :  MonoBehaviour
     {
-		private List<GameObject> AIEntityCollection;
+		private GameObject[] AIEntityCollection;
+
+		public int AIEntityCount
+		{
+			get
+			{
+				return AIEntityCollection.Length;
+			}
+		}
 
 		
 		public void Start()
@@ -30,7 +38,7 @@ namespace Assets.Scripts.Game_Logic.AI
 
 		private void UpdateAIEntityCollection()
 		{
-			throw new NotImplementedException();
+			AIEntityCollection = GameObject.FindGameObjectsWithTag("AI");
 		}
     }
 }
