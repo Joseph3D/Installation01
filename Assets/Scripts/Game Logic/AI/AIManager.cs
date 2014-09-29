@@ -17,6 +17,8 @@ namespace Assets.Scripts.Game_Logic.AI
     {
 		private GameObject[] AIEntityCollection;
 
+		private List<AIMessage> AIMessageList;
+
 		public int AIEntityCount
 		{
 			get
@@ -25,10 +27,9 @@ namespace Assets.Scripts.Game_Logic.AI
 			}
 		}
 
-		
 		public void Start()
 		{
-			AIEntityCollection = new List<GameObject>();
+			InitializeInternals();
 		}
 
 		public void Update()
@@ -39,6 +40,13 @@ namespace Assets.Scripts.Game_Logic.AI
 		private void UpdateAIEntityCollection()
 		{
 			AIEntityCollection = GameObject.FindGameObjectsWithTag("AI");
+		}
+
+		private void InitializeInternals()
+		{
+			UpdateAIEntityCollection();
+
+			AIMessageList = new List<AIMessage>();
 		}
     }
 }

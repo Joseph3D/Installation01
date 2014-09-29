@@ -48,5 +48,13 @@ public class Profiler
 		return Ticks;
 	}
 
-	public static TimeSpan
+	public static TimeSpan GetElapsedTimeSpan(bool ResetTimer)
+	{
+		TimeSpan Span = Timer.Elapsed;
+
+		if(ResetTimer)
+			Timer.Reset();
+
+		return Span;
+	}
 }
