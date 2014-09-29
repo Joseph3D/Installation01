@@ -18,6 +18,20 @@ namespace Assets.Scripts.Game_Logic.AI
 		Right = 3,
 	}
 
+	/// <summary>
+	/// AI Entity State
+	/// </summary>
+	public enum AIState
+	{
+		Idle = 0,
+		SingleWaypoint = 1,
+		WaypointList = 2,
+		SeekingCover = 3,
+		AtCover = 4,
+		Patrolling = 5,
+		SearchingForTargets = 6,
+	}
+
 
 	/// <summary>
 	/// Static class to get common directions in a Vector3

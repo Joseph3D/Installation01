@@ -13,14 +13,16 @@ namespace Assets.Scripts.Game_Logic.AI
 
 		private Stack<Vector3> Waypoints;
 
-		private AIManager Manager;
-		private Ray VisionRay;
-		private Vector3 LookVector;
+		private AIManager    Manager;
+		private Ray          VisionRay;
+		private Vector3      LookVector;
 		private LineRenderer DebugVisionRayRenderer;
 
 		public float Speed;
 		public float SprintSpeed;
 		private bool Sprinting;
+
+		public AIState State;
 
         public void Start()
         {
@@ -32,7 +34,7 @@ namespace Assets.Scripts.Game_Logic.AI
 			MoveEntity(MovementDirection.Left);
 		}
 
-		private void UpdateMovement()
+		private void UpdateMovement() // currently unused
 		{
 		}
 
@@ -91,6 +93,42 @@ namespace Assets.Scripts.Game_Logic.AI
 			DirectionToPoint.Normalize();
 
 			Controller.SimpleMove(DirectionToPoint*Speed);
+		}
+
+		/// <summary>
+		/// Adds the waypoint
+		/// </summary>
+		/// <param name="NewWaypoint">New waypoint</param>
+		private void AddWaypoint(Vector3 NewWaypoint)
+		{
+			Waypoints.Push(NewWaypoint);
+		}
+
+		/// <summary>
+		/// Removes the top waypoint.
+		/// </summary>
+		private void RemoveTopWaypoint()
+		{
+			Waypoints.Pop();
+		}
+
+		/// <summary>
+		/// Returns the next waypoint Stack.Peek()
+		/// </summary>
+		/// <returns>The waypoint.</returns>
+		private Vector3 NextWaypoint()
+		{
+			return Waypoints.Peek();
+		}
+
+		public bool HasWaypoints()
+		{
+			return Waypoints.Count > 0 ? true : false;
+		}
+
+		public int WaypointCount()
+		{
+			return Waypoints.Count;
 		}
 
 		/// <summary>
