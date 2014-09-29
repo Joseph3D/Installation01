@@ -109,6 +109,19 @@ namespace Assets.Scripts.Game_Logic.AI
 		}
 
 		/// <summary>
+		/// Moves the entity towards a point.
+		/// </summary>
+		/// <param name="Point">Point to move towards</param>
+		private void MoveEntityTowardsPoint(Vector3 Point)
+		{
+			Vector3 DirectionToPoint = Point - this.transform.position;
+
+			DirectionToPoint.Normalize();
+
+			Controller.SimpleMove(DirectionToPoint*Speed);
+		}
+
+		/// <summary>
 		/// 1) Grabs CharacterController component for this entity
 		/// 2) Gets a reference to the GameObject tagged as "AI Manager"
 		/// 3) Gets a reference to the AIManager component of the GameObject tagged as "AI Manager"
