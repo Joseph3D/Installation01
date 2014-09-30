@@ -36,7 +36,6 @@ namespace Assets.Scripts.Game_Logic.AI
 		{
 		}
 
-
 		private void UpdateAIEntityCollection()
 		{
 			AIEntityCollection = GameObject.FindGameObjectsWithTag("AI");
@@ -47,6 +46,11 @@ namespace Assets.Scripts.Game_Logic.AI
 			UpdateAIEntityCollection();
 
 			AIMessageList = new List<AIMessage>();
+		}
+		
+		public AIEntity GetEntity(int Index)
+		{
+			return AIEntityCollection.Count > 0 ? AIEntityCollection[Index] : null;
 		}
     }
 }

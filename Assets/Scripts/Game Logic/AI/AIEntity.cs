@@ -222,6 +222,28 @@ namespace Assets.Scripts.Game_Logic.AI
 			StateStack = new Stack<AIState>();
 			
 			StateStack.Push(AIState.Idle);
-		}	
+			
+			AcquireAIManager();
+		}
+		
+		/// <summary>
+		/// Acquires the AI manager.
+		/// </summary>
+		private void AcquireAIManager()
+		{
+			GameObject ManagerGameObject = GameObject.FindGameObjectWithTag("AI Manager");
+			if(!ManagerGameObject)
+			{
+				Debug.LogError(@"GameObject tagged as 'AI Manager' Not found in scene");
+			}
+			else
+			{
+				Manager = ManagerGameObject.GetComponent<AIManager>() as AIManager;
+				if(!Manager)
+				{
+					Debug.LogError(@"GameObject tagged as 'AI Manager' found. But it is missing the AIManager component");
+				}
+			}
+		}
     }
 }
