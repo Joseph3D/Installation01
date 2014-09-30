@@ -29,32 +29,13 @@ namespace Assets.Scripts.Game_Logic.AI
         public void Start()
         {
 			InitializeInternals();
-			
-			WaypointTest();
         }
-        
-        public void WaypointTest()
-        {
-        	Vector3 Position = transform.position;
-        	Position.x += 20;
-        	Position.z += 20;
-        	
-        	AddWaypoint(Position);
-        	PushState(AIState.SingleWaypoint);
-        }
+       
 		
         public void Update()
         {
 			UpdateAIState();
-			
-			DEBUG_Update();
 		}
-		
-		private void DEBUG_Update()
-		{
-			Debug.DrawRay(this.transform.position,transform.position + (Vector3.forward * 5),Color.green);
-		}
-
 
 		private void UpdateAIState()
 		{
