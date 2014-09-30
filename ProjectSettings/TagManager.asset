@@ -60,3 +60,7 @@ TagManager:
     userID: 0
     uniqueID: 0
     locked: 0
+  - name: AI_Entity_Layer
+    userID: 1
+    uniqueID: 1330550787
+    locked: 0
