@@ -21,3 +21,5 @@ Temp
 *.sln
 *.userprefs
 basename.exe.stackdump
+obj/
+*.suo
