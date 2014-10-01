@@ -143,7 +143,7 @@ namespace Assets.Scripts.Game_Logic.AI
                     Ray DirectionalTestRay = new Ray(CurrentPosition,(AngleVector * 100)); // Make a ray that points at the angle for 100 meters
 
                     Physics.Raycast(DirectionalTestRay, out HitInformation); // check to see if there are AIEntities along this ray
-                } while (HitInformation.collider != null && HitInformation.collider.tag != "AI");
+                } while (HitInformation.collider == null || HitInformation.collider.tag != "AI");
 
                 // At this point AngleVector is a Vector that points in a direction where there are no AIEntities
 
