@@ -19,7 +19,7 @@ namespace Assets.Scripts.Game_Logic.AI
 
 		private List<AIMessage> AIMessageList;
 
-		public int AIEntityCount
+		public int EntityCount
 		{
 			get
 			{
@@ -50,7 +50,13 @@ namespace Assets.Scripts.Game_Logic.AI
 		
 		public AIEntity GetEntity(int Index)
 		{
-			return AIEntityCollection.Count > 0 ? AIEntityCollection[Index] : null;
+            if (AIEntityCollection.Length > 0)
+            {
+                AIEntity Entity = AIEntityCollection[Index].GetComponent<AIEntity>() as AIEntity;
+
+                return Entity;
+            }
+            return null;
 		}
     }
 }
