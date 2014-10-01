@@ -1,6 +1,10 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// CERTIFIED SHITTY CODE
+/// TODO: REWRITE
+/// </summary>
 public class Footsteps : MonoBehaviour 
 {
 	public float AudioTimer;
