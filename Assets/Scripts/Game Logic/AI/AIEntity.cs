@@ -68,14 +68,10 @@ namespace Assets.Scripts.Game_Logic.AI
 		
 		private void Update_SingleWaypoint()
 		{
-			if(AtWaypoint(CurrentWaypoint(),WaypointTolerance))
-			{
-				RemoveCurrentState();
-			}
-			else
-			{
-				MoveEntityTowardsPoint(CurrentWaypoint());
-			}
+            if(NavigationAgent.hasPath == false && NavigationAgent.pathPending == false) // no current path, not in the process of making one
+            {
+                SetEntityDestination(CurrentWaypoint()); // set path and let pathfinding take it from there
+            }
 		}
 		
 		/// <summary>
@@ -83,15 +79,28 @@ namespace Assets.Scripts.Game_Logic.AI
 		/// </summary>
 		private void Update_WaypointList()
 		{
-			if(AtWaypoint(CurrentWaypoint(),WaypointTolerance))
-			{
-				RemoveTopWaypoint();
-				return;
-			}
-			else
-			{
-				MoveEntityTowardsPoint(CurrentWaypoint());
-			}
+            //if(AtWaypoint(CurrentWaypoint(),WaypointTolerance))
+            //{
+            //    RemoveTopWaypoint();
+            //    return;
+            //}
+            //else
+            //{
+            //    MoveEntityTowardsPoint(CurrentWaypoint());
+            //}
+
+            if(!InTransit())
+            {
+                SetEntityDestination(CurrentWaypoint()); // set destination
+            }
+            if(InTransit())
+            {
+                if(AtDestination())
+                {
+                    RemoveTopWaypoint();
+                    SetEntityDestination(CurrentWaypoint());
+                }
+            }
 		}
 		
 		private void UpdateCommunications()
@@ -105,12 +114,38 @@ namespace Assets.Scripts.Game_Logic.AI
 		}
 
         #region Helper Methods
-        private bool AtWaypoint(Vector3 Waypoint, int Tolerance)
-		{
-			return Physics.CheckSphere(Waypoint,Tolerance,1);
+        /// <summary>
+        /// Sets this Entitiy's destination in the pathfinding engine
+        /// </summary>
+        /// <param name="Destination">Destination Point</param>
+        public void SetEntityDestination(Vector3 Destination)
+        {
+            NavigationAgent.SetDestination(Destination);
+        }
+
+        
+        private bool AtDestination()
+        {
+            float DistanceRemaining = NavigationAgent.remainingDistance;
+
+            if(DistanceRemaining != Mathf.Infinity && NavigationAgent.pathStatus == NavMeshPathStatus.PathComplete && NavigationAgent.remainingDistance == 0)
+            {
+                return true;
+            }
+            return false;
 		}
 
-		/// <summary>
+        private bool InTransit()
+        {
+            if (NavigationAgent.pathStatus == NavMeshPathStatus.PathComplete &&
+                NavigationAgent.remainingDistance != Mathf.Infinity &&
+                NavigationAgent.remainingDistance > 0)
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
 		/// Moves the entity.
 		/// </summary>
 		/// <param name="Direction">Direction to move entity in</param>
@@ -245,6 +280,8 @@ namespace Assets.Scripts.Game_Logic.AI
 			StateStack.Push(AIState.Idle); // put idle at the bottom
 			
 			AcquireAIManager();
+
+            SystemsCheck();
 		}
 		
 		/// <summary>
@@ -267,9 +304,20 @@ namespace Assets.Scripts.Game_Logic.AI
 			}
 		}
 
+        /// <summary>
+        /// Ensures that all critical systems are in place
+        /// Raises an exception if any of them are not ready
+        /// </summary>
         private void SystemsCheck()
         {
-            
+            if(!Controller)
+            {
+                UnityDebug.LogError("Character Controller is NULL");
+            }
+            if(!NavigationAgent)
+            {
+                UnityDebug.LogError("Navigation Agent is NULL");
+            }
         }
     }
 }
