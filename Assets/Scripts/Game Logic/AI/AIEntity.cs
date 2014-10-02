@@ -39,20 +39,13 @@ namespace Assets.Scripts.Game_Logic.AI
 			UpdateAIState();
 		}
 
-        int GhettoCohesionCheckCounter = 0;
+
 		private void UpdateAIState()
 		{
 			switch(CurrentState())
 			{
 				case AIState.Idle:
 				{
-                    GhettoCohesionCheckCounter++;
-                    if (GhettoCohesionCheckCounter >= 120)
-                    {
-                        CheckSeparation();
-
-                        GhettoCohesionCheckCounter = 0;
-                    }
 
 					break;
 				}
@@ -102,58 +95,9 @@ namespace Assets.Scripts.Game_Logic.AI
 			
 		}
 		
-        /// <summary>
-        /// Communicates with the AIManager to determine if this unit is too close to to other units.
-        /// If it determines that it is too close, it will pick a random vector and determine if there are other units in the way
-        /// If there are no other units along this vector ( determined via raycast ) it will set the waypoint for the end of the vector and push AIState.SingleWaypoint
-        /// </summary>
 		private void CheckSeparation()
 		{
-			int EntityCount = Manager.EntityCount;
 			
-			Vector3 EntityGroupAveragePosition = Vector3.zero;
-			
-			for(int i = 0; i < EntityCount; ++i)
-			{
-				AIEntity Entity = Manager.GetEntity(i);
-
-                if (Entity.GetHashCode() == this.GetHashCode()) // do not count our own position
-                    continue;
-
-				EntityGroupAveragePosition += Entity.transform.position;
-			}
-			
-			EntityGroupAveragePosition /= EntityCount;
-			
-			RaycastHit HitInformation;
-            int RandomAngle;
-            Vector3 AngleVector;
-			
-			if(Vector3.Distance(transform.position,EntityGroupAveragePosition) < 15) // our position is TOO CLOSE to the group's average position
-			{
-				Vector3 CurrentPosition = transform.position;
-
-                do
-                {
-                    RandomAngle = UnityEngine.Random.Range(0, 359); // Pick an angle
-
-                    AngleVector = new Vector3((float)Math.Cos(RandomAngle), (float)Math.Sin(RandomAngle));
-                    AngleVector.Normalize();
-
-                    Ray DirectionalTestRay = new Ray(CurrentPosition,(AngleVector * 100)); // Make a ray that points at the angle for 100 meters
-
-                    Physics.Raycast(DirectionalTestRay, out HitInformation); // check to see if there are AIEntities along this ray
-                } while (HitInformation.collider.tag != "AI"); // loop until the ray doesn't hit a fellow AI unit
-
-                // At this point AngleVector is a Vector that points in a direction where there are no AIEntities
-
-                int DistanceToSeparateBy = UnityRandom.Range(5, 15);
-
-                AngleVector *= DistanceToSeparateBy; // extend to X meters from normalized direction vector
-
-                AddWaypoint((transform.position + AngleVector)); // set waypoint to the end of the AngleVector
-                PushState(AIState.SingleWaypoint); // push new state
-			}
 		}
 
         #region Helper Methods
