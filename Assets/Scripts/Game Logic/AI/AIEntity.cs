@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Diagnostics;
+using System.IO;
 using UnityEngine;
 
 using UnityRandom = UnityEngine.Random;
+using UnityDebug = UnityEngine.Debug;
 
 namespace Assets.Scripts.Game_Logic.AI
 {
     public sealed class AIEntity : MonoBehaviour
     {
 		private CharacterController Controller;
+        private NavMeshAgent NavigationAgent;
 		
 		private Stack<AIState> StateStack;
 
@@ -231,6 +235,8 @@ namespace Assets.Scripts.Game_Logic.AI
 		private void InitializeInternals()
 		{
 			Controller = GetComponent<CharacterController>() as CharacterController;
+
+            NavigationAgent = GetComponent<NavMeshAgent>() as NavMeshAgent;
 			
 			Waypoints = new Stack<Vector3>();
 			
@@ -249,16 +255,21 @@ namespace Assets.Scripts.Game_Logic.AI
 			GameObject ManagerGameObject = GameObject.FindGameObjectWithTag("AI Manager");
 			if(!ManagerGameObject)
 			{
-				Debug.LogError(@"GameObject tagged as 'AI Manager' Not found in scene");
+				UnityDebug.LogError(@"GameObject tagged as 'AI Manager' Not found in scene");
 			}
 			else
 			{
 				Manager = ManagerGameObject.GetComponent<AIManager>() as AIManager;
 				if(!Manager)
 				{
-					Debug.LogError(@"GameObject tagged as 'AI Manager' found. But it is missing the AIManager component");
+					UnityDebug.LogError(@"GameObject tagged as 'AI Manager' found. But it is missing the AIManager component");
 				}
 			}
 		}
+
+        private void SystemsCheck()
+        {
+            
+        }
     }
 }
