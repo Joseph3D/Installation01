@@ -8,7 +8,7 @@ using System.IO;
 using UnityEngine;
 
 using UnityRandom = UnityEngine.Random;
-using UnityDebug = UnityEngine.Debug;
+using UnityDebug  = UnityEngine.Debug;
 
 namespace Assets.Scripts.Game_Logic.AI
 {
@@ -36,7 +36,6 @@ namespace Assets.Scripts.Game_Logic.AI
         {
 			InitializeInternals();
         }
-       
 		
         public void Update()
         {
@@ -50,7 +49,6 @@ namespace Assets.Scripts.Game_Logic.AI
 			{
 				case AIState.Idle:
 				{
-
 					break;
 				}
 				case AIState.SingleWaypoint:
@@ -280,8 +278,6 @@ namespace Assets.Scripts.Game_Logic.AI
 			StateStack.Push(AIState.Idle); // put idle at the bottom
 			
 			AcquireAIManager();
-
-            SystemsCheck();
 		}
 		
 		/// <summary>
@@ -303,21 +299,5 @@ namespace Assets.Scripts.Game_Logic.AI
 				}
 			}
 		}
-
-        /// <summary>
-        /// Ensures that all critical systems are in place
-        /// Raises an exception if any of them are not ready
-        /// </summary>
-        private void SystemsCheck()
-        {
-            if(!Controller)
-            {
-                UnityDebug.LogError("Character Controller is NULL");
-            }
-            if(!NavigationAgent)
-            {
-                UnityDebug.LogError("Navigation Agent is NULL");
-            }
-        }
     }
 }
