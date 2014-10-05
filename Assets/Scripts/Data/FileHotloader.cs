@@ -69,5 +69,24 @@ namespace Assets.Scripts.Data
                 }
             }
         }
+
+        /// <summary>
+        /// Gets the latest handle to the object in the XML file
+        /// if the specified file output does not exist in the output list it will return null
+        /// </summary>
+        /// <param name="FromFile">Gets hotloaded output from this file (if data is present)</param>
+        /// <returns></returns>
+        public static object GetOutputObject(string FromFile)
+        {
+            if(OutputList.ContainsKey(FromFile))
+            {
+                object output = OutputList[FromFile];
+
+                OutputList.Remove(FromFile);
+
+                return output;
+            }
+            return null;
+        }
     }
 }
