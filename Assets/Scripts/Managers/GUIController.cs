@@ -64,11 +64,11 @@ public class GUIController : MonoBehaviour
 				Screen.lockCursor = false;
 				MenuOpen = true;
 
-				PlayerManager.Instance.ML1.sensitivityX = 0;
-  				PlayerManager.Instance.ML1.sensitivityY = 0;
+                //PlayerManager.Instance.ML1.sensitivityX = 0;
+                //PlayerManager.Instance.ML1.sensitivityY = 0;
 
-    			PlayerManager.Instance.ML2.sensitivityX = 0;
-    			PlayerManager.Instance.ML2.sensitivityY = 0;
+                //PlayerManager.Instance.ML2.sensitivityX = 0;
+                //PlayerManager.Instance.ML2.sensitivityY = 0;
 
 			}
 			else if(MenuOpen == true)
@@ -76,11 +76,11 @@ public class GUIController : MonoBehaviour
 				Screen.lockCursor = true;
 				MenuOpen = false;
 
-				PlayerManager.Instance.ML1.sensitivityX = PlayerManager.Instance.NormalSens;
-   				PlayerManager.Instance.ML1.sensitivityY = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML1.sensitivityX = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML1.sensitivityY = PlayerManager.Instance.NormalSens;
 
-    			PlayerManager.Instance.ML2.sensitivityX = PlayerManager.Instance.NormalSens;
-    			PlayerManager.Instance.ML2.sensitivityY = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML2.sensitivityX = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML2.sensitivityY = PlayerManager.Instance.NormalSens;
 			}
 		}
 
@@ -89,20 +89,20 @@ public class GUIController : MonoBehaviour
 			if(ScoreboardOpen == false)
 			{
 				ScoreboardOpen = true;
-				PlayerManager.Instance.ML1.sensitivityX = 0;
-  				PlayerManager.Instance.ML1.sensitivityY = 0;
+                //PlayerManager.Instance.ML1.sensitivityX = 0;
+                //PlayerManager.Instance.ML1.sensitivityY = 0;
 
-    			PlayerManager.Instance.ML2.sensitivityX = 0;
-    			PlayerManager.Instance.ML2.sensitivityY = 0;
+                //PlayerManager.Instance.ML2.sensitivityX = 0;
+                //PlayerManager.Instance.ML2.sensitivityY = 0;
 			}
 			else if (ScoreboardOpen == true)
 			{
 				ScoreboardOpen = false;
-				PlayerManager.Instance.ML1.sensitivityX = PlayerManager.Instance.NormalSens;
-   				PlayerManager.Instance.ML1.sensitivityY = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML1.sensitivityX = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML1.sensitivityY = PlayerManager.Instance.NormalSens;
 
-    			PlayerManager.Instance.ML2.sensitivityX = PlayerManager.Instance.NormalSens;
-    			PlayerManager.Instance.ML2.sensitivityY = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML2.sensitivityX = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML2.sensitivityY = PlayerManager.Instance.NormalSens;
 			}
 		}
 	}
@@ -128,11 +128,11 @@ public class GUIController : MonoBehaviour
 			{
 				MenuOpen = false;
 
-				PlayerManager.Instance.ML1.sensitivityX = PlayerManager.Instance.NormalSens;
-   				PlayerManager.Instance.ML1.sensitivityY = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML1.sensitivityX = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML1.sensitivityY = PlayerManager.Instance.NormalSens;
 
-    			PlayerManager.Instance.ML2.sensitivityX = PlayerManager.Instance.NormalSens;
-    			PlayerManager.Instance.ML2.sensitivityY = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML2.sensitivityX = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML2.sensitivityY = PlayerManager.Instance.NormalSens;
 			}
 
 			if(GUI.Button(new Rect(10,40,Screen.width - 20, 30), "Suicide", GUIButton))

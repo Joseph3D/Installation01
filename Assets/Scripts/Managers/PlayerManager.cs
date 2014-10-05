@@ -48,8 +48,8 @@ public class PlayerManager : MonoBehaviour
     public string LastShootByName;
     public string LastShootByGun;
 
-    public MouseLook ML1;
-    public MouseLook ML2;
+//    public MouseLook ML1;
+//    public MouseLook ML2;
 
     public float NormalSens;
     public float ZoomingSens;
@@ -92,11 +92,11 @@ public class PlayerManager : MonoBehaviour
 		ThirdPerson.gameObject.SetActive(false);
 		DontDestroyOnLoad(gameObject);
 
-        ML1.sensitivityX = NormalSens;
-        ML1.sensitivityY = NormalSens;
+        //ML1.sensitivityX = NormalSens;
+        //ML1.sensitivityY = NormalSens;
 
-        ML2.sensitivityX = NormalSens;
-        ML2.sensitivityY = NormalSens;
+        //ML2.sensitivityX = NormalSens;
+        //ML2.sensitivityY = NormalSens;
 
 		if(networkView.isMine)
 		{
@@ -140,11 +140,11 @@ public class PlayerManager : MonoBehaviour
                 ChooseEquipment.instance.Curweapon.ReloadingBool = false;
 			    audio.PlayOneShot(ZoomIn);
 
-                ML1.sensitivityX = ZoomingSens;
-                ML1.sensitivityY = ZoomingSens;
+                //ML1.sensitivityX = ZoomingSens;
+                //ML1.sensitivityY = ZoomingSens;
 
-                ML2.sensitivityX = ZoomingSens;
-                ML2.sensitivityY = ZoomingSens;
+                //ML2.sensitivityX = ZoomingSens;
+                //ML2.sensitivityY = ZoomingSens;
                 Weapon.Instance.ReloadingBool = false;
 			}
 			else if(Zooming == true && ChooseEquipment.instance.Curweapon.CanZoom == false)
@@ -157,11 +157,11 @@ public class PlayerManager : MonoBehaviour
                 ChooseEquipment.instance.Curweapon.animation.Play("Draw");
                 ChooseEquipment.instance.Curweapon.ReloadingBool = false;
 
-                ML1.sensitivityX = NormalSens;
-                ML1.sensitivityY = NormalSens;
+                //ML1.sensitivityX = NormalSens;
+                //ML1.sensitivityY = NormalSens;
 
-                ML2.sensitivityX = NormalSens;
-                ML2.sensitivityY = NormalSens;
+                //ML2.sensitivityX = NormalSens;
+                //ML2.sensitivityY = NormalSens;
 			}
 
             if(Zooming == false && ChooseEquipment.instance.Curweapon.CanZoom == true)
@@ -171,11 +171,11 @@ public class PlayerManager : MonoBehaviour
                 
                 audio.PlayOneShot(ZoomIn);
 
-                ML1.sensitivityX = ZoomingSens;
-                ML1.sensitivityY = ZoomingSens;
+                //ML1.sensitivityX = ZoomingSens;
+                //ML1.sensitivityY = ZoomingSens;
 
-                ML2.sensitivityX = ZoomingSens;
-                ML2.sensitivityY = ZoomingSens;
+                //ML2.sensitivityX = ZoomingSens;
+                //ML2.sensitivityY = ZoomingSens;
                 Weapon.Instance.ReloadingBool = false;
                 ChooseEquipment.instance.Curweapon.Gun.gameObject.SetActive(false);
                 ChooseEquipment.instance.Curweapon.ReloadingBool = false;
@@ -189,11 +189,11 @@ public class PlayerManager : MonoBehaviour
                 Weapon.Instance.ReloadingBool = false;
                 ChooseEquipment.instance.Curweapon.Gun.animation.Play("Draw");
 
-                ML1.sensitivityX = NormalSens;
-                ML1.sensitivityY = NormalSens;
+                //ML1.sensitivityX = NormalSens;
+                //ML1.sensitivityY = NormalSens;
 
-                ML2.sensitivityX = NormalSens;
-                ML2.sensitivityY = NormalSens;
+                //ML2.sensitivityX = NormalSens;
+                //ML2.sensitivityY = NormalSens;
                 ChooseEquipment.instance.Curweapon.Gun.gameObject.SetActive(true);
                 ChooseEquipment.instance.Curweapon.ReloadingBool = false;
             }
@@ -207,11 +207,11 @@ public class PlayerManager : MonoBehaviour
                 Weapon.Instance.ReloadingBool = false;
                 ChooseEquipment.instance.Curweapon.Gun.animation.Play("Draw");
 
-                ML1.sensitivityX = NormalSens;
-                ML1.sensitivityY = NormalSens;
+                //ML1.sensitivityX = NormalSens;
+                //ML1.sensitivityY = NormalSens;
 
-                ML2.sensitivityX = NormalSens;
-                ML2.sensitivityY = NormalSens;
+                //ML2.sensitivityX = NormalSens;
+                //ML2.sensitivityY = NormalSens;
                 ChooseEquipment.instance.Curweapon.Gun.gameObject.SetActive(true);
                 ChooseEquipment.instance.Curweapon.ReloadingBool = false;
 
@@ -223,11 +223,11 @@ public class PlayerManager : MonoBehaviour
                 ChooseEquipment.instance.Curweapon.animation.Play("Draw");
                 ChooseEquipment.instance.Curweapon.ReloadingBool = false;
 
-                ML1.sensitivityX = NormalSens;
-                ML1.sensitivityY = NormalSens;
+                //ML1.sensitivityX = NormalSens;
+                //ML1.sensitivityY = NormalSens;
 
-                ML2.sensitivityX = NormalSens;
-                ML2.sensitivityY = NormalSens;
+                //ML2.sensitivityX = NormalSens;
+                //ML2.sensitivityY = NormalSens;
             }
 		}
 
@@ -442,11 +442,11 @@ public class PlayerManager : MonoBehaviour
             Weapon.Instance.ReloadingBool = false;
             ChooseEquipment.instance.Curweapon.Gun.animation.Play("Draw");
 
-            ML1.sensitivityX = NormalSens;
-            ML1.sensitivityY = NormalSens;
+            //ML1.sensitivityX = NormalSens;
+            //ML1.sensitivityY = NormalSens;
 
-            ML2.sensitivityX = NormalSens;
-            ML2.sensitivityY = NormalSens;
+            //ML2.sensitivityX = NormalSens;
+            //ML2.sensitivityY = NormalSens;
 
             ChooseEquipment.instance.Curweapon.Gun.gameObject.SetActive(true);
             ChooseEquipment.instance.Curweapon.ReloadingBool = false;

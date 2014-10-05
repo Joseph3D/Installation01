@@ -260,11 +260,11 @@ public class GameManager : MonoBehaviour
 
                 NetworkAnimController.Instance.isMeleeing = false;
 
-                PlayerManager.Instance.ML1.sensitivityX = PlayerManager.Instance.NormalSens;
-                PlayerManager.Instance.ML1.sensitivityY = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML1.sensitivityX = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML1.sensitivityY = PlayerManager.Instance.NormalSens;
 
-                PlayerManager.Instance.ML2.sensitivityX = PlayerManager.Instance.NormalSens;
-                PlayerManager.Instance.ML2.sensitivityY = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML2.sensitivityX = PlayerManager.Instance.NormalSens;
+                //PlayerManager.Instance.ML2.sensitivityY = PlayerManager.Instance.NormalSens;
 
                 Weapon.Instance.ReloadingBool = false;
             }

@@ -77,19 +77,9 @@ namespace Assets.Scripts.Game_Logic.AI
 		/// </summary>
 		private void Update_WaypointList()
 		{
-            //if(AtWaypoint(CurrentWaypoint(),WaypointTolerance))
-            //{
-            //    RemoveTopWaypoint();
-            //    return;
-            //}
-            //else
-            //{
-            //    MoveEntityTowardsPoint(CurrentWaypoint());
-            //}
-
             if(!InTransit())
             {
-                SetEntityDestination(CurrentWaypoint()); // set destination
+                SetEntityDestination(CurrentWaypoint());
             }
             if(InTransit())
             {

@@ -33,7 +33,7 @@ namespace Assets.Scripts.Data
 
         private static object OutputListLock;
 
-        public static XMLHotloader()
+        static XMLHotloader()
         {
             FileWatchList = new List<XMLFileData>();
             OutputList = new Dictionary<string, object>();
