@@ -29,15 +29,25 @@ namespace Assets.Scripts.Data
         private static List<XMLFileData> FileWatchList;
         private static Dictionary<string, object> OutputList;
 
-        private Timer FileWatchlistTask;
+        private static Timer FileWatchlistTask;
+
+        private static object OutputListLock;
 
         public static XMLHotloader()
         {
             FileWatchList = new List<XMLFileData>();
             OutputList = new Dictionary<string, object>();
+
+            FileWatchlistTask = new Timer(new TimerCallback(Process));
+
+            OutputListLock = new object();
         }
 
-        private static void Process()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="param">junk</param>
+        private static void Process(object param)
         {
             for(int i = 0; i < FileWatchList.Count; ++i)
             {
@@ -49,16 +59,19 @@ namespace Assets.Scripts.Data
                     {
                         try
                         {
-                            XmlSerializer Deserializer = new XmlSerializer(FileWatchList[i].ObjectType);
-                            FileStream Stream = File.Open(FileWatchList[i].FilePath, FileMode.Open, FileAccess.Read);
+                            lock (OutputListLock)
+                            {
+                                XmlSerializer Deserializer = new XmlSerializer(FileWatchList[i].ObjectType);
+                                FileStream Stream = File.Open(FileWatchList[i].FilePath, FileMode.Open, FileAccess.Read);
 
-                            System.Object Handle = Deserializer.Deserialize(Stream);
+                                System.Object Handle = Deserializer.Deserialize(Stream);
 
-                            OutputList.Add(FileWatchList[i].FilePath, Handle);
+                                OutputList.Add(FileWatchList[i].FilePath, Handle);
 
-                            FileWatchList[i].LastModifiedTime = DateTime.Now;
+                                FileWatchList[i].LastModifiedTime = DateTime.Now;
 
-                            continue;
+                                continue;
+                            }
                         }
                         catch(IOException e)
                         {
@@ -78,15 +91,18 @@ namespace Assets.Scripts.Data
         /// <returns></returns>
         public static object GetOutputObject(string FromFile)
         {
-            if(OutputList.ContainsKey(FromFile))
+            lock (OutputListLock)
             {
-                object output = OutputList[FromFile];
+                if (OutputList.ContainsKey(FromFile))
+                {
+                    object output = OutputList[FromFile];
 
-                OutputList.Remove(FromFile);
+                    OutputList.Remove(FromFile);
 
-                return output;
+                    return output;
+                }
+                return null;
             }
-            return null;
         }
     }
 }
