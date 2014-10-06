@@ -30,6 +30,8 @@ namespace Assets.Scripts.Game_Logic.AI
 		public float Speed;
 		public float SprintSpeed;
 		private bool Sprinting;
+
+        private GameObject[] PatrolPoints;
 	
 
         public void Start()
@@ -61,8 +63,28 @@ namespace Assets.Scripts.Game_Logic.AI
 					Update_WaypointList();
 					break;
 				}
+                case AIState.Patrolling:
+                {
+                    if (PatrolPoints == null || PatrolPoints.Length == 0) break;
+
+                    Update_Patrol();
+
+                    break;
+                }
 			}
 		}
+
+        private void Update_Patrol()
+        {
+            if(!InTransit())
+            {
+                // Scan for enemies
+
+                Vector3 NextPatrolPointPosition = GetRandomPatrolPoint().transform.position;
+
+                SetEntityDestination(NextPatrolPointPosition);
+            }
+        }
 		
 		private void Update_SingleWaypoint()
 		{
@@ -248,6 +270,22 @@ namespace Assets.Scripts.Game_Logic.AI
 		{
 			StateStack.Push(State);
 		}
+
+        private void UpdatePatrolPoints()
+        {
+            PatrolPoints = GameObject.FindGameObjectsWithTag("AI Patrol Point");
+        }
+
+        /// <summary>
+        /// Gets a random patrol point GameObject
+        /// </summary>
+        /// <returns>A random GameObject in the world that is tagged "AI Patrol Point". Returns null if there are no patrol points in the world</returns>
+        private GameObject GetRandomPatrolPoint()
+        {
+            if (PatrolPoints.Length > 0)
+                return PatrolPoints[UnityRandom.Range(0, PatrolPoints.Length)];
+            return null;
+        }
         #endregion
 
         /// <summary>
@@ -266,8 +304,12 @@ namespace Assets.Scripts.Game_Logic.AI
 			StateStack = new Stack<AIState>();
 			
 			StateStack.Push(AIState.Idle); // put idle at the bottom
+
+            PatrolPoints = null;
 			
 			AcquireAIManager();
+
+            UpdatePatrolPoints();
 		}
 		
 		/// <summary>
