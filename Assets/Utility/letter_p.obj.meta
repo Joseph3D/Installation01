@@ -1,28 +1,15 @@
 fileFormatVersion: 2
-guid: 92b0a65ec35fb8e4fa4ae2d04dd62038
+guid: 6c45d760ff56f884e9805dc2ffb90d9f
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
-    100000: Box001
-    100002: Cone001
-    100004: plane
-    100006: //RootNode
-    400000: Box001
-    400002: Cone001
-    400004: plane
-    400006: //RootNode
-    2300000: Box001
-    2300002: Cone001
-    2300004: plane
-    3300000: Box001
-    3300002: Cone001
-    3300004: plane
-    4300000: Box001
-    4300002: Cone001
-    4300004: plane
-    6400000: Box001
-    6400002: Cone001
-    6400004: plane
+    100000: //RootNode
+    100002: Mesh1_P1 Model
+    400000: //RootNode
+    400002: Mesh1_P1 Model
+    2300000: Mesh1_P1 Model
+    3300000: Mesh1_P1 Model
+    4300000: Mesh1_P1 Model
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -44,10 +31,10 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 1
+    addColliders: 0
     importBlendShapes: 1
-    swapUVChannels: 1
-    generateSecondaryUV: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
     weldVertices: 1
@@ -57,8 +44,8 @@ ModelImporter:
     secondaryUVPackMargin: 4
   tangentSpace:
     normalSmoothAngle: 60
-    splitTangentsAcrossUV: 0
-    normalImportMode: 1
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
     tangentImportMode: 1
   importAnimation: 1
   copyAvatar: 0
@@ -75,5 +62,5 @@ ModelImporter:
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
-  additionalBone: 1
+  additionalBone: 0
   userData: 
