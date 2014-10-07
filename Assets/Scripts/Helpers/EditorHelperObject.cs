@@ -6,6 +6,11 @@ using UnityEngine;
 
 namespace Assets.Scripts.Helpers
 {
+    /// <summary>
+    /// Represents an object that is visible in the editor
+    /// But is rendered invisible when the game starts, WITHOUT removing the underlying GameObject
+    /// Intented use is for things like spawn points, AI unit patrol points, etc.
+    /// </summary>
     public class EditorHelperObject : MonoBehaviour
     {
         private MeshRenderer Renderer;
