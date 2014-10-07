@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Simple camera free-flying script that was downloaded from the internet.
+/// Code might not be the cleanest but this thing works.
+/// </summary>
 public class CameraFreeFly : MonoBehaviour
 {
 	
