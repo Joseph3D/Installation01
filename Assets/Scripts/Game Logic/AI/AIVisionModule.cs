@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Assets.Scripts.Game_Logic.AI
 {
     /// <summary>
-    /// 
+    /// Class that provides AI units with the ability to see.
     /// </summary>
     public sealed class AIVisionModule
     {
