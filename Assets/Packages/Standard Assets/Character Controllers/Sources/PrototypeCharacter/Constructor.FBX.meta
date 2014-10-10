@@ -123,8 +123,6 @@ ModelImporter:
     3300000: wrench
     4300000: construction_worker
     4300002: wrench
-    7400000: Take 001
-    7400006: idle0
     7400012: idle
     7400014: run
     7400016: walk
@@ -139,7 +137,6 @@ ModelImporter:
     legacyGenerateAnimations: 3
     bakeSimulation: 0
     optimizeGameObjects: 0
-    motionNodeName: 
     animationCompression: 0
     animationRotationError: .5
     animationPositionError: .5
@@ -287,5 +284,5 @@ ModelImporter:
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 1
-  additionalBone: 1
+  additionalBone: 0
   userData: 

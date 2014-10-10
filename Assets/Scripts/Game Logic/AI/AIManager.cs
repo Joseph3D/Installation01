@@ -19,7 +19,7 @@ namespace Assets.Scripts.Game_Logic.AI
 
 		private List<AIMessage> AIMessageList;
 
-		public int AIEntityCount
+		public int EntityCount
 		{
 			get
 			{
@@ -36,7 +36,6 @@ namespace Assets.Scripts.Game_Logic.AI
 		{
 		}
 
-
 		private void UpdateAIEntityCollection()
 		{
 			AIEntityCollection = GameObject.FindGameObjectsWithTag("AI");
@@ -47,6 +46,17 @@ namespace Assets.Scripts.Game_Logic.AI
 			UpdateAIEntityCollection();
 
 			AIMessageList = new List<AIMessage>();
+		}
+		
+		public AIEntity GetEntity(int Index)
+		{
+            if (AIEntityCollection.Length > 0)
+            {
+                AIEntity Entity = AIEntityCollection[Index].GetComponent<AIEntity>() as AIEntity;
+
+                return Entity;
+            }
+            return null;
 		}
     }
 }

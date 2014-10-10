@@ -3,6 +3,9 @@ using System.Collections;
 using System.Diagnostics;
 using System;
 
+/// <summary>
+/// Simple System.Diagnostics.Stopwatch based class used to time code execution
+/// </summary>
 public class Profiler
 {
 	private static Stopwatch Timer;
