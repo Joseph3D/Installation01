@@ -11,7 +11,7 @@ namespace Assets.Scripts.Game_Logic.AI
     /// <summary>
     /// A set of general traits that will modify all aspects of an AIEntitie's behavior
     /// </summary>
-    [Serializable]
+    [XmlRoot]
     public class AITraits
     {
         [XmlElement]
