@@ -40,7 +40,6 @@ namespace Assets.Scripts.Game_Logic.AI
         {
 			InitializeInternals();
 
-            Update_Patrol();
         }
 		
         public void Update()
@@ -69,9 +68,6 @@ namespace Assets.Scripts.Game_Logic.AI
 				}
                 case AIState.Patrolling:
                 {
-                   // if (PatrolPoints == null || PatrolPoints.Length == 0) break;
-
-                 //   Update_Patrol();
 
                     break;
                 }
@@ -80,9 +76,7 @@ namespace Assets.Scripts.Game_Logic.AI
 
         private void Update_Patrol()
         {
-            Vector3 Position = GetRandomPatrolPoint().transform.position;
-
-            NavigationAgent.SetDestination(Position);
+            
         }
 		
 		private void Update_SingleWaypoint()
