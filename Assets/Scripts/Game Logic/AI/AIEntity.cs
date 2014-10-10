@@ -31,6 +31,8 @@ namespace Assets.Scripts.Game_Logic.AI
 	
         private GameObject[] PatrolPoints;
 
+        private AITraits Traits;
+
         public void Start()
         {
 			InitializeInternals();
@@ -402,6 +404,18 @@ namespace Assets.Scripts.Game_Logic.AI
             NavigationAgent.speed = Speed;
         }
 		
+        /// <summary>
+        /// Loads AITraits from XML file
+        /// </summary>
+        /// <param name="TraitsFilePath"></param>
+        private void LoadTraits(string TraitsFilePath)
+        {
+            if(File.Exists(TraitsFilePath))
+            {
+                Traits = AITraits.LoadFromFile(TraitsFilePath);
+            }
+        }
+
 		/// <summary>
 		/// Acquires the AI manager.
 		/// </summary>
