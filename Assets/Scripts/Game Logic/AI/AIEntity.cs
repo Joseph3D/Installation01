@@ -32,11 +32,15 @@ namespace Assets.Scripts.Game_Logic.AI
 		private bool Sprinting;
 
         private GameObject[] PatrolPoints;
+
+        public AIState InitialState;
 	
 
         public void Start()
         {
 			InitializeInternals();
+
+            Update_Patrol();
         }
 		
         public void Update()
@@ -65,9 +69,9 @@ namespace Assets.Scripts.Game_Logic.AI
 				}
                 case AIState.Patrolling:
                 {
-                    if (PatrolPoints == null || PatrolPoints.Length == 0) break;
+                   // if (PatrolPoints == null || PatrolPoints.Length == 0) break;
 
-                    Update_Patrol();
+                 //   Update_Patrol();
 
                     break;
                 }
@@ -76,14 +80,9 @@ namespace Assets.Scripts.Game_Logic.AI
 
         private void Update_Patrol()
         {
-            if(!InTransit())
-            {
-                // Scan for enemies
+            Vector3 Position = GetRandomPatrolPoint().transform.position;
 
-                Vector3 NextPatrolPointPosition = GetRandomPatrolPoint().transform.position;
-
-                SetEntityDestination(NextPatrolPointPosition);
-            }
+            NavigationAgent.SetDestination(Position);
         }
 		
 		private void Update_SingleWaypoint()
@@ -302,8 +301,8 @@ namespace Assets.Scripts.Game_Logic.AI
 			Waypoints = new Stack<Vector3>();
 			
 			StateStack = new Stack<AIState>();
-			
-			StateStack.Push(AIState.Idle); // put idle at the bottom
+
+            StateStack.Push(InitialState);
 
             PatrolPoints = null;
 			
