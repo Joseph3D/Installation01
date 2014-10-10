@@ -20,40 +20,40 @@ namespace Assets.Scripts.Game_Logic.AI
 		private Stack<AIState> StateStack;
 
 		private Stack<Vector3> Waypoints;
-		public int WaypointTolerance;
 
 		private AIManager    Manager;
-		private Ray          VisionRay;
-		private Vector3      LookVector;
-		private LineRenderer DebugVisionRayRenderer;
 
-		public float Speed;
-		public float SprintSpeed;
-		private bool Sprinting;
-
-        private GameObject[] PatrolPoints;
-
-        public AIState InitialState;
+		public  float Speed;
+		public  float SprintSpeed;
+		private bool   Sprinting;
+        public  AIState InitialState;
+        public int CommunicationsChannel;
 	
+        private GameObject[] PatrolPoints;
 
         public void Start()
         {
 			InitializeInternals();
-
         }
 		
         public void Update()
         {
-			UpdateAIState();
+			UpdateState();
+
+            UpdateSpeed();
 		}
 
 
-		private void UpdateAIState()
+        /// <summary>
+        /// Updates state of unit
+        /// </summary>
+		private void UpdateState()
 		{
 			switch(CurrentState())
 			{
 				case AIState.Idle:
 				{
+                    // eventually interesting idle behavior will go here
 					break;
 				}
 				case AIState.SingleWaypoint:
@@ -68,17 +68,42 @@ namespace Assets.Scripts.Game_Logic.AI
 				}
                 case AIState.Patrolling:
                 {
+                    if (PatrolPoints.Length == 0) break;
+
+                    Update_Patrol();
 
                     break;
                 }
 			}
 		}
 
+        /// <summary>
+        /// Updates current speed of this unit
+        /// </summary>
+        private void UpdateSpeed()
+        {
+            if (Sprinting)
+                NavigationAgent.speed = SprintSpeed;
+            else
+                NavigationAgent.speed = Speed;
+        }
+
+        /// <summary>
+        /// Update method for patrol functionality
+        /// </summary>
         private void Update_Patrol()
         {
-            
+            if(!InTransit())
+            {
+                Vector3 NextPatrolPoint = GetRandomPatrolPoint().transform.position;
+
+                SetEntityDestination(NextPatrolPoint);
+            }
         }
 		
+        /// <summary>
+        /// Update method for single waypoint navigation
+        /// </summary>
 		private void Update_SingleWaypoint()
 		{
             if(NavigationAgent.hasPath == false && NavigationAgent.pathPending == false) // no current path, not in the process of making one
@@ -96,24 +121,21 @@ namespace Assets.Scripts.Game_Logic.AI
             {
                 SetEntityDestination(CurrentWaypoint());
             }
-            if(InTransit())
+
+            //if(InTransit())
+            //{
+            //    if(AtDestination())
+            //    {
+            //        RemoveTopWaypoint();
+            //        SetEntityDestination(CurrentWaypoint());
+            //    }
+            //}     
+
+            if(InTransit() && AtDestination()) // New cleaner implementation, old is commented out above. UNTESTED 10-10-14 10:24am pacific time
             {
-                if(AtDestination())
-                {
-                    RemoveTopWaypoint();
-                    SetEntityDestination(CurrentWaypoint());
-                }
+                RemoveTopWaypoint();
+                SetEntityDestination(CurrentWaypoint());
             }
-		}
-		
-		private void UpdateCommunications()
-		{
-			
-		}
-		
-		private void CheckSeparation()
-		{
-			
 		}
 
         #region Helper Methods
@@ -126,7 +148,10 @@ namespace Assets.Scripts.Game_Logic.AI
             NavigationAgent.SetDestination(Destination);
         }
 
-        
+        /// <summary>
+        /// AtDestination()
+        /// </summary>
+        /// <returns>True if the unit is at it's navigation destination</returns>
         private bool AtDestination()
         {
             float DistanceRemaining = NavigationAgent.remainingDistance;
@@ -135,9 +160,14 @@ namespace Assets.Scripts.Game_Logic.AI
             {
                 return true;
             }
+
             return false;
 		}
 
+        /// <summary>
+        /// Determines if this AI unit is currently in transit
+        /// </summary>
+        /// <returns>True if the unit is currently in transit</returns>
         private bool InTransit()
         {
             if (NavigationAgent.pathStatus == NavMeshPathStatus.PathComplete &&
@@ -161,7 +191,8 @@ namespace Assets.Scripts.Game_Logic.AI
 		}
 
 		/// <summary>
-		/// Moves the entity.
+		/// Moves the entity. using the character controller attached to it.
+        /// this DOES NOT involve pathfinding / navigation in any way
 		/// </summary>
 		/// <param name="Direction">Direction to move entity in</param>
 		/// <param name="Speed">Speed (meters per second)</param>
@@ -171,22 +202,53 @@ namespace Assets.Scripts.Game_Logic.AI
 			{
 				case MovementDirection.Left:
 				{
-					Controller.SimpleMove(Directions.Left * Speed);
+                    if (Sprinting)
+                    {
+                        Controller.SimpleMove(Directions.Left * SprintSpeed);
+                    }
+                    else
+                    {
+                        Controller.SimpleMove(Directions.Left * Speed);
+                    }
+
 					break;
 				}
 				case MovementDirection.Right:
 				{
-					Controller.SimpleMove(Directions.Right * Speed);
+                    if (Sprinting)
+                    {
+                        Controller.SimpleMove(Directions.Right * SprintSpeed);
+                    }
+                    else
+                    {
+                        Controller.SimpleMove(Directions.Right * Speed);
+                    }
+
 					break;
 				}
 				case MovementDirection.Foreward:
 				{
-					Controller.SimpleMove(Directions.Foreward * Speed);
+                    if (Sprinting)
+                    {
+                        Controller.SimpleMove(Directions.Foreward * SprintSpeed);
+                    }
+                    else
+                    {
+                        Controller.SimpleMove(Directions.Foreward * Speed);
+                    }
+
 					break;
 				}
 				case MovementDirection.Backward:
 				{
-					Controller.SimpleMove(Directions.Backward * Speed);
+                    if (Sprinting)
+                    {
+                        Controller.SimpleMove(Directions.Backward * SprintSpeed);
+                    }
+                    else
+                    {
+                        Controller.SimpleMove(Directions.Backward * Speed);
+                    }
 					break;
 				}
 			}
@@ -202,7 +264,14 @@ namespace Assets.Scripts.Game_Logic.AI
 
 			DirectionToPoint.Normalize();
 
-			Controller.SimpleMove(DirectionToPoint*Speed);
+			if(Sprinting)
+            {
+                Controller.SimpleMove(DirectionToPoint * SprintSpeed);
+            }
+            else
+            {
+                Controller.SimpleMove(DirectionToPoint * Speed);
+            }
 		}
 
 		/// <summary>
@@ -231,20 +300,28 @@ namespace Assets.Scripts.Game_Logic.AI
 			return Waypoints.Peek();
 		}
 
+        /// <summary>
+        /// HasWaypoints()
+        /// </summary>
+        /// <returns>True if this unit has waypoints</returns>
 		public bool HasWaypoints()
 		{
 			return Waypoints.Count > 0 ? true : false;
 		}
 
+        /// <summary>
+        /// WaypointCount()
+        /// </summary>
+        /// <returns>The number of waypoints that this unit has</returns>
 		public int WaypointCount()
 		{
 			return Waypoints.Count;
 		}
 
         /// <summary>
-		/// returns the current AIState via Stack.Peek
+		/// CurrentState()
 		/// </summary>
-		/// <returns>The state.</returns>
+		/// <returns>The top of this Unit's State stack</returns>
 		public AIState CurrentState()
 		{
 			if(StateStack.Count > 0)
@@ -254,16 +331,26 @@ namespace Assets.Scripts.Game_Logic.AI
 			return AIState.Idle;
 		}
 		
+        /// <summary>
+        /// Removes the current state
+        /// </summary>
 		public void RemoveCurrentState()
 		{
 			StateStack.Pop();
 		}
 		
+        /// <summary>
+        /// Pushes new waypoint state
+        /// </summary>
+        /// <param name="State"></param>
 		public void PushState(AIState State)
 		{
 			StateStack.Push(State);
 		}
 
+        /// <summary>
+        /// Gathers a list of every GameObject in the world tagged "AI Patrol Point"
+        /// </summary>
         private void UpdatePatrolPoints()
         {
             PatrolPoints = GameObject.FindGameObjectsWithTag("AI Patrol Point");
@@ -290,7 +377,7 @@ namespace Assets.Scripts.Game_Logic.AI
 		{
 			Controller = GetComponent<CharacterController>() as CharacterController;
 
-            NavigationAgent = GetComponent<NavMeshAgent>() as NavMeshAgent;
+            InitializeNavigation();
 			
 			Waypoints = new Stack<Vector3>();
 			
@@ -304,6 +391,16 @@ namespace Assets.Scripts.Game_Logic.AI
 
             UpdatePatrolPoints();
 		}
+
+        /// <summary>
+        /// Sets up this AI unit to use the Navigation System.
+        /// </summary>
+        private void InitializeNavigation()
+        {
+            NavigationAgent = GetComponent<NavMeshAgent>() as NavMeshAgent;
+
+            NavigationAgent.speed = Speed;
+        }
 		
 		/// <summary>
 		/// Acquires the AI manager.
