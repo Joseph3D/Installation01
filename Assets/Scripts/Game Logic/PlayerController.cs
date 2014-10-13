@@ -145,6 +145,7 @@ public class PlayerController : MonoBehaviour
             // Jump! But only if the jump button has been released and player has been grounded for a given number of frames
             if (!Input.GetButton("Jump")) // TODO: replace with hard input
                 jumpTimer++;
+
             else if (jumpTimer >= antiBunnyHopFactor)
             {
                 moveDirection.y = jumpSpeed;
