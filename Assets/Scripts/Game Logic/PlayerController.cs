@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour
     #region MonoBehavior Methods
     void Start()
     {
-
+        InitializeInternals();
     }
 
     void Update()
