@@ -23,4 +23,12 @@ public class Projectile : MonoBehaviour
     {
 
     }
+
+
+    private void InitializeDebugPathRenderer()
+    {
+#if DEBUG
+        gameObject.AddComponent(typeof(LineRenderer));
+#endif
+    }
 }
