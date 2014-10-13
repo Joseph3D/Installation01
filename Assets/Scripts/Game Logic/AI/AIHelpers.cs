@@ -26,10 +26,7 @@ namespace Assets.Scripts.Game_Logic.AI
 		Idle = 0,
 		SingleWaypoint = 1,
 		WaypointList = 2,
-		SeekingCover = 3,
-		AtCover = 4,
-		Patrolling = 5,
-		SearchingForTargets = 6,
+		Patrolling = 3,
 	}
 
 
