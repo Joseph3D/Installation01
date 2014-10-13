@@ -178,6 +178,8 @@ public class PlayerController : MonoBehaviour
     private void InitializeInternals()
     {
         InitializeCharacterController();
+
+        AcquireGameManager();
     }
 
     private void InitializeCharacterController()
@@ -193,7 +195,7 @@ public class PlayerController : MonoBehaviour
 
     private void AcquireGameManager()
     {
-        Manager = GlobalObjectPool.instance
+        Manager = GlobalObjectPool.instance["GameManager"] as GameManager;
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
