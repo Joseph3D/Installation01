@@ -123,7 +123,7 @@ public class PlayerController : MonoBehaviour
 
             // If running isn't on a toggle, then use the appropriate speed depending on whether the run button is down
             if (!toggleRun)
-                speed = Input.GetButton("Run") ? runSpeed : walkSpeed;
+                speed = Input.GetButton("Run") ? runSpeed : walkSpeed; // TODO: replace with hard input
 
             // If sliding (and it's allowed), or if we're on an object tagged "Slide", get a vector pointing down the slope we're on
             if ((sliding && slideWhenOverSlopeLimit) || (slideOnTaggedObjects && hit.collider.tag == "Slide"))
@@ -143,7 +143,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Jump! But only if the jump button has been released and player has been grounded for a given number of frames
-            if (!Input.GetButton("Jump"))
+            if (!Input.GetButton("Jump")) // TODO: replace with hard input
                 jumpTimer++;
             else if (jumpTimer >= antiBunnyHopFactor)
             {
