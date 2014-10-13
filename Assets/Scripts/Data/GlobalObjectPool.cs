@@ -16,6 +16,15 @@ namespace Assets.Scripts.Data
 
         public static GlobalObjectPool instance;
 
+
+        public object this[string ObjectName]
+        {
+            get
+            {
+                return Pool[ObjectName];
+            }
+        }
+
         /// <summary>
         /// Gets the number of objects in the pool
         /// </summary>
