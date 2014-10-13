@@ -57,6 +57,8 @@ public class PlayerController : MonoBehaviour
     private bool playerControl = false;
     private int jumpTimer;
     #endregion
+
+    private GameObject GameManager;
     #endregion
 
     #region Methods
