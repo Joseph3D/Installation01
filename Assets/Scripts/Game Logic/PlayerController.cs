@@ -3,6 +3,7 @@ using UnityEngine;
 using System.IO;
 using System.Threading;
 using System.Collections;
+using Assets.Scripts.Data;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -58,7 +59,7 @@ public class PlayerController : MonoBehaviour
     private int jumpTimer;
     #endregion
 
-    private GameObject GameManager;
+    private GameManager Manager;
     #endregion
 
     #region Methods
@@ -188,6 +189,11 @@ public class PlayerController : MonoBehaviour
         rayDistance = controller.height * .5f + controller.radius;
         slideLimit = controller.slopeLimit - .1f;
         jumpTimer = antiBunnyHopFactor;
+    }
+
+    private void AcquireGameManager()
+    {
+        Manager = GlobalObjectPool.instance
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
