@@ -83,7 +83,9 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-
+    /// <summary>
+    /// UpdateMovement()
+    /// </summary>
     private void UpdateMovement()
     {
         float inputX = Input.GetAxis("Horizontal"); // TODO, replace these with hard mouse positions
