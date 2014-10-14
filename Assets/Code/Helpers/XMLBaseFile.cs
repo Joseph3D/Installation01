@@ -8,7 +8,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Assets.Scripts.Data
+namespace Helpers
 {
     public class XMLBaseFile
     {

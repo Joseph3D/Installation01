@@ -4,23 +4,27 @@ using System.Threading;
 using System.Collections;
 using Assets.Scripts.Data;
 
-public class GameManager : MonoBehaviour
+namespace GameLogic
 {
-    #region Members
-    #endregion
-
-    void Start()
+    public class GameManager : MonoBehaviour
     {
+        #region Members
 
-    }
+        #endregion
 
-    void Update()
-    {
+        void Start()
+        {
 
-    }
+        }
 
-    private void InitializeInternals()
-    {
-        GlobalObjectPool.instance.AddObject("GameManager", this);
+        void Update()
+        {
+
+        }
+
+        private void InitializeInternals()
+        {
+            GlobalObjectPool.instance.AddObject("GameManager", this);
+        }
     }
 }

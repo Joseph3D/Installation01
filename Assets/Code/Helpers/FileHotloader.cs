@@ -8,7 +8,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using UnityEngine;
 
-namespace Assets.Scripts.Data
+namespace Helpers
 {
     public class XMLFileData
     {

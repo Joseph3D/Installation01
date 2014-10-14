@@ -1,34 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Projectile : MonoBehaviour
+namespace GameLogic
 {
-    #region Members
-    private Vector3 StartingPosition;
-    private float Velocity;
-    private float Weight;
-    private int Lifespan;
-    private Vector3 Direction;
-
-    private LineRenderer DebugPathRenderer;
-    #endregion
-
-
-    void Start()
+    public class Projectile : MonoBehaviour
     {
+        #region Members
+        private Vector3 StartingPosition;
+        private float Velocity;
+        private float Weight;
+        private int Lifespan;
+        private Vector3 Direction;
 
-    }
-
-    void Update()
-    {
-
-    }
+        private LineRenderer DebugPathRenderer;
+        #endregion
 
 
-    private void InitializeDebugPathRenderer()
-    {
+        void Start()
+        {
+
+        }
+
+        void Update()
+        {
+
+        }
+
+
+        private void InitializeDebugPathRenderer()
+        {
 #if DEBUG
-        gameObject.AddComponent(typeof(LineRenderer));
+            gameObject.AddComponent(typeof(LineRenderer));
 #endif
+        }
     }
 }

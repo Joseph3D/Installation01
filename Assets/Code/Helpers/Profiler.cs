@@ -3,61 +3,65 @@ using System.Collections;
 using System.Diagnostics;
 using System;
 
-/// <summary>
-/// Simple System.Diagnostics.Stopwatch based class used to time code execution
-/// </summary>
-public class Profiler
+
+namespace Helpers
 {
-	private static Stopwatch Timer;
+    /// <summary>
+    /// Simple System.Diagnostics.Stopwatch based class used to time code execution
+    /// </summary>
+    public class Profiler
+    {
+        private static Stopwatch Timer;
 
-	static Profiler()
-	{
-		Timer = new Stopwatch();
-	}
+        static Profiler()
+        {
+            Timer = new Stopwatch();
+        }
 
-	public static void BeginPerformanceTimer()
-	{
-		if(!Timer.IsRunning)
-		{
-			Timer.Start();
-		}
-	}
+        public static void BeginPerformanceTimer()
+        {
+            if (!Timer.IsRunning)
+            {
+                Timer.Start();
+            }
+        }
 
-	public static void EndPerformanceTimer()
-	{
-		if(Timer.IsRunning)
-		{
-			Timer.Stop();
-		}
-	}
-	
-	public static long GetElapsedMilliseconds(bool ResetTimer)
-	{
-		long Milliseconds = Timer.ElapsedMilliseconds;
+        public static void EndPerformanceTimer()
+        {
+            if (Timer.IsRunning)
+            {
+                Timer.Stop();
+            }
+        }
 
-		if(ResetTimer)
-			Timer.Reset();
+        public static long GetElapsedMilliseconds(bool ResetTimer)
+        {
+            long Milliseconds = Timer.ElapsedMilliseconds;
 
-		return Milliseconds;
-	}
+            if (ResetTimer)
+                Timer.Reset();
 
-	public static long GetElapsedTicks(bool ResetTimer)
-	{
-		long Ticks = Timer.ElapsedTicks;
+            return Milliseconds;
+        }
 
-		if(ResetTimer)
-			Timer.Reset();
+        public static long GetElapsedTicks(bool ResetTimer)
+        {
+            long Ticks = Timer.ElapsedTicks;
 
-		return Ticks;
-	}
+            if (ResetTimer)
+                Timer.Reset();
 
-	public static TimeSpan GetElapsedTimeSpan(bool ResetTimer)
-	{
-		TimeSpan Span = Timer.Elapsed;
+            return Ticks;
+        }
 
-		if(ResetTimer)
-			Timer.Reset();
+        public static TimeSpan GetElapsedTimeSpan(bool ResetTimer)
+        {
+            TimeSpan Span = Timer.Elapsed;
 
-		return Span;
-	}
+            if (ResetTimer)
+                Timer.Reset();
+
+            return Span;
+        }
+    }
 }

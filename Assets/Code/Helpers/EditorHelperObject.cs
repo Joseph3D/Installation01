@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.Scripts.Helpers
+namespace Helpers
 {
     /// <summary>
     /// Represents an object that is visible in the editor
