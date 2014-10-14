@@ -19,7 +19,7 @@ namespace GameLogic
 
         void Start()
         {
-
+            InitializeInternals();
         }
 
         void Update()
