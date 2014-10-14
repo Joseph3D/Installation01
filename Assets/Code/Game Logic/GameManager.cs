@@ -2,14 +2,19 @@
 using System.IO;
 using System.Threading;
 using System.Collections;
-using Assets.Scripts.Data;
+using GameLogic;
+using Helpers;
 
 namespace GameLogic
 {
     public class GameManager : MonoBehaviour
     {
         #region Members
+        public GameMode InitialMode;
 
+
+
+        private GameMode Mode;
         #endregion
 
         void Start()
