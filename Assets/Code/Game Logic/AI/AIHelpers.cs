@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 
-namespace Assets.Scripts.Game_Logic.AI
+namespace AI
 {
 	/// <summary>
 	/// Movement directions

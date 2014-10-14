@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityRandom = UnityEngine.Random;
 using UnityDebug  = UnityEngine.Debug;
 
-namespace Assets.Scripts.Game_Logic.AI
+namespace AI
 {
     public sealed class AIEntity : MonoBehaviour
     {

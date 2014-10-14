@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using Assets.Scripts.Data;
+using using Helpers;
 
-namespace Assets.Scripts.Game_Logic.AI
+namespace AI
 {
     /// <summary>
     /// A set of general traits that will modify all aspects of an AIEntitie's behavior

@@ -6,7 +6,7 @@ using System.Threading;
 using System.IO;
 using UnityEngine;
 
-namespace Assets.Scripts.Game_Logic.AI
+namespace AI
 {
 	/// <summary>
 	/// This class will be attached to an empty GameObject
