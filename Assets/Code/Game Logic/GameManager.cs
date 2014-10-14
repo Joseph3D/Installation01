@@ -29,7 +29,6 @@ namespace GameLogic
 
         private void InitializeInternals()
         {
-            GlobalObjectPool.instance.AddObject("GameManager", this);
         }
     }
 }

@@ -200,7 +200,8 @@ namespace GameLogic
 
         private void AcquireGameManager()
         {
-            Manager = GlobalObjectPool.instance["GameManager"] as GameManager;
+            GameObject ManagerObject = GameObject.FindGameObjectWithTag("GameManager");
+            Manager = ManagerObject.GetComponent<GameManager>();
         }
 
         void OnControllerColliderHit(ControllerColliderHit hit)
