@@ -24,16 +24,24 @@ namespace Assets.Code.Game_Logic
         public bool PlayerNearby { get; private set; }
         public int EnemyEntitiesNearby { get; private set; }
 
-
-
+        private int Counter;
+        private int CheckFrequency;
+        
         public void Start()
         {
             UpdateSurroundingAreaInformation();
+            Counter = 0;
+            CheckFrequency = 30;
         }
 
         public void Update()
         {
-
+            Counter++;
+            if(Counter == CheckFrequency)
+            {
+                UpdateSurroundingAreaInformation();
+                Counter = 0;
+            }
         }
 
         public void Spawn()
