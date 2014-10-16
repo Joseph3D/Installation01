@@ -37,10 +37,19 @@ namespace GameLogic
             }
             else
             {
-                Vector3 VelocityVector = Direction * Traits.Velocity;
-                transform.position += VelocityVector; // simple velocity per frame in Direction.
-                //things like bullet drop will come later
+                UpdateProjectileVelocity();
             }
+        }
+
+        private void UpdateProjectileVelocity()
+        {
+            Vector3 VelocityVector = Direction * Traits.Velocity;
+            transform.position += VelocityVector;
+        }
+
+        private void UpdateProjectileDrop()
+        {
+            
         }
 
         /// <summary>
