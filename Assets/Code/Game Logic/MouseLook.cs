@@ -11,53 +11,67 @@ namespace GameLogic
     {
 
         public enum RotationAxes { MouseXAndY = 0, MouseX = 1, MouseY = 2 }
-        public RotationAxes axes = RotationAxes.MouseXAndY;
+        public RotationAxes Axes = RotationAxes.MouseXAndY;
         public float sensitivityX = 15F;
-        public float sensitivityY = 15F;
+        public float SensitivityY = 15F;
 
-        public float minimumX = -360F;
-        public float maximumX = 360F;
+        public float MinimumX = -360F;
+        public float MaximumX = 360F;
 
-        public float minimumY = -60F;
-        public float maximumY = 60F;
+        public float MinimumY = -60F;
+        public float MaximumY = 60F;
 
-        float rotationX = 0F;
-        float rotationY = 0F;
+        float RotationX = 0F;
+        float RotationY = 0F;
 
         Quaternion originalRotation;
 
         void Update()
         {
-            if (axes == RotationAxes.MouseXAndY)
+            if (Axes == RotationAxes.MouseXAndY)
             {
-                // Read the mouse input axis
-                rotationX += Input.GetAxis("Mouse X") * sensitivityX;
-                rotationY += Input.GetAxis("Mouse Y") * sensitivityY;
-
-                rotationX = ClampAngle(rotationX, minimumX, maximumX);
-                rotationY = ClampAngle(rotationY, minimumY, maximumY);
-
-                Quaternion xQuaternion = Quaternion.AngleAxis(rotationX, Vector3.up);
-                Quaternion yQuaternion = Quaternion.AngleAxis(rotationY, -Vector3.right);
-
-                transform.localRotation = originalRotation * xQuaternion * yQuaternion;
+                UpdateMouseLookXY();
             }
-            else if (axes == RotationAxes.MouseX)
+            else if (Axes == RotationAxes.MouseX)
             {
-                rotationX += Input.GetAxis("Mouse X") * sensitivityX;
-                rotationX = ClampAngle(rotationX, minimumX, maximumX);
-
-                Quaternion xQuaternion = Quaternion.AngleAxis(rotationX, Vector3.up);
-                transform.localRotation = originalRotation * xQuaternion;
+                UpdateMouseLookX();
             }
             else
             {
-                rotationY += Input.GetAxis("Mouse Y") * sensitivityY;
-                rotationY = ClampAngle(rotationY, minimumY, maximumY);
-
-                Quaternion yQuaternion = Quaternion.AngleAxis(-rotationY, Vector3.right);
-                transform.localRotation = originalRotation * yQuaternion;
+                UpdateMouseLookY();
             }
+        }
+
+        private void UpdateMouseLookY()
+        {
+            RotationY += Input.GetAxis("Mouse Y") * SensitivityY;
+            RotationY = ClampAngle(RotationY, MinimumY, MaximumY);
+
+            Quaternion yQuaternion = Quaternion.AngleAxis(-RotationY, Vector3.right);
+            transform.localRotation = originalRotation * yQuaternion;
+        }
+
+        private void UpdateMouseLookX()
+        {
+            RotationX += Input.GetAxis("Mouse X") * sensitivityX;
+            RotationX = ClampAngle(RotationX, MinimumX, MaximumX);
+
+            Quaternion xQuaternion = Quaternion.AngleAxis(RotationX, Vector3.up);
+            transform.localRotation = originalRotation * xQuaternion;
+        }
+
+        private void UpdateMouseLookXY()
+        {
+            RotationX += Input.GetAxis("Mouse X") * sensitivityX;
+            RotationY += Input.GetAxis("Mouse Y") * SensitivityY;
+
+            RotationX = ClampAngle(RotationX, MinimumX, MaximumX);
+            RotationY = ClampAngle(RotationY, MinimumY, MaximumY);
+
+            Quaternion xQuaternion = Quaternion.AngleAxis(RotationX, Vector3.up);
+            Quaternion yQuaternion = Quaternion.AngleAxis(RotationY, -Vector3.right);
+
+            transform.localRotation = originalRotation * xQuaternion * yQuaternion;
         }
 
         void Start()
