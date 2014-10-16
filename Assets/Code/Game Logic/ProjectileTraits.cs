@@ -33,6 +33,17 @@ namespace GameLogic
         [XmlElement]
         public bool Tracer { get; private set; }
 
+        public ProjectileTraits(float velocity, float weight , float lifespan, float damage, bool homing , float max_homing_turn , bool tracer)
+        {
+            Velocity = velocity;
+            Weight = weight;
+            Lifespan = lifespan;
+            Damage = damage;
+            Homing = homing;
+            MaxHomingTurn = max_homing_turn;
+            Tracer = tracer;
+        }
+
         public static ProjectileTraits LoadFromFile(string TraitsFile)
         {
             if(File.Exists(TraitsFile))
