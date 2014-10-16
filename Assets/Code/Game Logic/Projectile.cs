@@ -7,6 +7,9 @@ namespace GameLogic
     {
         #region Members
         public string TraitsFile;
+        public Vector3 DebugDirection;
+        public ProjectileTraits DebugTraits;
+
         private ProjectileTraits Traits;
         private LineRenderer  DebugPathRenderer;
         private TrailRenderer TracerRenderer;
