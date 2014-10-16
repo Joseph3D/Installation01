@@ -28,7 +28,7 @@ namespace Assets.Code.Game_Logic
 
         public void Start()
         {
-
+            UpdateSurroundingAreaInformation();
         }
 
         public void Update()
@@ -39,7 +39,8 @@ namespace Assets.Code.Game_Logic
         private void UpdateSurroundingAreaInformation()
         {
 #if DEBUG
-            CodeTimeProfiler.BeginPerformanceTimer();
+            if(ProfileEnabled)
+                CodeTimeProfiler.BeginPerformanceTimer();
 #endif
             RaycastHit[] Hits = Physics.SphereCastAll(transform.position, AreaCheckRadius, Vector3.forward, 0.001f);
 
@@ -70,11 +71,14 @@ namespace Assets.Code.Game_Logic
                 EnemyEntitiesNearby = enemyEntitiesNearby;
             }
 #if DEBUG
-            CodeTimeProfiler.EndPerformanceTimer();
-            long ElapsedMilliseconds = CodeTimeProfiler.GetElapsedMilliseconds(true);
-            long ElapsedTicks = CodeTimeProfiler.GetElapsedTicks(true);
-            Debug.Log("SpawnPoint.UpdateSurroundingAreaInformation() took " + ElapsedMilliseconds.ToString() + " milliseconds.");
-            Debug.Log("SpawnPoint.UpdateSurroundingAreaInformation() took " + ElapsedTicks.ToString() + " ticks.");
+            if (ProfileEnabled)
+            {
+                CodeTimeProfiler.EndPerformanceTimer();
+                long ElapsedMilliseconds = CodeTimeProfiler.GetElapsedMilliseconds(true);
+                long ElapsedTicks = CodeTimeProfiler.GetElapsedTicks(true);
+                Debug.Log("SpawnPoint.UpdateSurroundingAreaInformation() took " + ElapsedMilliseconds.ToString() + " milliseconds.");
+                Debug.Log("SpawnPoint.UpdateSurroundingAreaInformation() took " + ElapsedTicks.ToString() + " ticks.");
+            }
 #endif
         }
     }
