@@ -71,10 +71,19 @@ namespace GameLogic
         /// Sets Direction of this projectile
         /// </summary>
         /// <param name="Direction"></param>
-        void SetDirection(Vector3 Direction)
+        public void SetDirection(Vector3 Direction)
         {
             this.Direction = Direction;
             this.Direction.Normalize(); // Pre-Normalize
+        }
+
+        /// <summary>
+        /// Sets the traits of this projectile
+        /// </summary>
+        /// <param name="Traits"></param>
+        public void SetProjectileTraits(ProjectileTraits Traits)
+        {
+            this.Traits = Traits;
         }
 
 
