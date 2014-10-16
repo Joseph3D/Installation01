@@ -24,7 +24,9 @@ namespace GameLogic
 
         void Start()
         {
+#if DEBUG
             InitializeDebugPathRenderer();
+#endif
 
             InitializeTraits();
         }
