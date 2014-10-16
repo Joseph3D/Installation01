@@ -12,8 +12,6 @@ namespace GameLogic
         #region Members
         public GameMode InitialMode;
 
-
-
         private GameMode Mode;
         #endregion
 
@@ -23,6 +21,11 @@ namespace GameLogic
         }
 
         void Update()
+        {
+
+        }
+
+        private void UpdateState()
         {
 
         }
