@@ -104,7 +104,7 @@ namespace GameLogic
                 if (Physics.Raycast(myTransform.position, -Vector3.up, out hit, rayDistance))
                 {
                     if (Vector3.Angle(hit.normal, Vector3.up) > slideLimit)
-                        sliding = true;
+                        sliding = true;//
                 }
                 // However, just raycasting straight down from the center can fail when on steep slopes
                 // So if the above raycast didn't catch anything, raycast down from the stored ControllerColliderHit point instead
