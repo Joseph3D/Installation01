@@ -8,8 +8,6 @@ namespace GameLogic
 {
     public class EntityTagManager : MonoBehaviour
     {
-        public string TagFile;
-
         private EntityTag _Tag;
 
         /// <summary>
@@ -20,6 +18,24 @@ namespace GameLogic
         public bool Is(EntityTag Tag)
         {
             return (_Tag & Tag) == Tag ? true : false;
+        }
+
+        /// <summary>
+        /// Adds a tag
+        /// </summary>
+        /// <param name="Tag">Tag to add</param>
+        public void AddTag(EntityTag Tag)
+        {
+            _Tag |= Tag;
+        }
+
+        /// <summary>
+        /// Removes a tag
+        /// </summary>
+        /// <param name="Tag">Tag to remove</param>
+        public void RemoveTag(EntityTag Tag)
+        {
+            _Tag &= ~Tag;
         }
 
         public void Start()
