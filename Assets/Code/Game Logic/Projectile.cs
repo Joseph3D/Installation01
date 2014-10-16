@@ -49,7 +49,9 @@ namespace GameLogic
 
         private void UpdateProjectileDrop()
         {
-            
+            Vector3 BulletDropVector = new Vector3(0,Traits.Weight, 0);
+
+            transform.position -= BulletDropVector; // simplistic bullet drop model for now
         }
 
         /// <summary>
