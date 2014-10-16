@@ -9,12 +9,16 @@ using System.Xml.Serialization;
 using UnityEngine;
 using GameLogic;
 
+using CodeTimeProfiler = Helpers.Profiler;
+
 
 namespace Assets.Code.Game_Logic
 {
     public class SpawnPoint : MonoBehaviour
     {
         public int AreaCheckRadius;
+
+        public bool ProfileEnabled;
 
         public int EntitiesNearby { get; private set; }
         public bool PlayerNearby { get; private set; }
@@ -34,6 +38,9 @@ namespace Assets.Code.Game_Logic
 
         private void UpdateSurroundingAreaInformation()
         {
+#if DEBUG
+            CodeTimeProfiler.BeginPerformanceTimer();
+#endif
             RaycastHit[] Hits = Physics.SphereCastAll(transform.position, AreaCheckRadius, Vector3.forward, 0.001f);
 
             int nearbyEntities = 0;
@@ -62,6 +69,11 @@ namespace Assets.Code.Game_Logic
                 PlayerNearby = playerNearby;
                 EnemyEntitiesNearby = enemyEntitiesNearby;
             }
+#if DEBUG
+            CodeTimeProfiler.EndPerformanceTimer();
+            long ElapsedMilliseconds = CodeTimeProfiler.GetElapsedMilliseconds(true);
+            long ElapsedTicks = CodeTimeProfiler.GetElapsedTicks(true);
+#endif
         }
     }
 }
