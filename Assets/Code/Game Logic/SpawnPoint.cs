@@ -36,6 +36,11 @@ namespace Assets.Code.Game_Logic
 
         }
 
+        public void Spawn()
+        {
+            throw new NotImplementedException();
+        }
+
         private void UpdateSurroundingAreaInformation()
         {
 #if DEBUG
