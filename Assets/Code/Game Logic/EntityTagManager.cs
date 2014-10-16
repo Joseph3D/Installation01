@@ -38,6 +38,15 @@ namespace GameLogic
             _Tag &= ~Tag;
         }
 
+        /// <summary>
+        /// Gets Tag
+        /// </summary>
+        /// <returns>The Tag</returns>
+        public EntityTag GetEntityTag()
+        {
+            return _Tag;
+        }
+
         public void Start()
         {
 
