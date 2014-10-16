@@ -58,6 +58,9 @@ namespace Assets.Code.Game_Logic
                             playerNearby = true;
                     }
                 }
+
+                PlayerNearby = playerNearby;
+                EnemyEntitiesNearby = enemyEntitiesNearby;
             }
         }
     }
