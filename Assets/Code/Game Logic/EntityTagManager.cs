@@ -10,6 +10,8 @@ namespace GameLogic
     {
         private EntityTag _Tag;
 
+        public EntityTag TestTagField;
+
         /// <summary>
         /// Checks to see if this Entity is tagged with a certain EntityTag
         /// </summary>
