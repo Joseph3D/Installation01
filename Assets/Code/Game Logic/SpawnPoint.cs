@@ -73,6 +73,8 @@ namespace Assets.Code.Game_Logic
             CodeTimeProfiler.EndPerformanceTimer();
             long ElapsedMilliseconds = CodeTimeProfiler.GetElapsedMilliseconds(true);
             long ElapsedTicks = CodeTimeProfiler.GetElapsedTicks(true);
+            Debug.Log("SpawnPoint.UpdateSurroundingAreaInformation() took " + ElapsedMilliseconds.ToString() + " milliseconds.");
+            Debug.Log("SpawnPoint.UpdateSurroundingAreaInformation() took " + ElapsedTicks.ToString() + " ticks.");
 #endif
         }
     }
