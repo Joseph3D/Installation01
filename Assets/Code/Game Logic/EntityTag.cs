@@ -15,5 +15,11 @@ namespace GameLogic
         SpawnPoint = 4,
         Projectile = 5,
         SceneryObject = 6,
+        Surface_Dirt = 7,
+        Surface_Glass = 8,
+        Surface_Metal = 9,
+        Surface_Gore = 10,
+        Surface_ForerunnerHardLight = 11,
+        Surface_Gravel = 12,
     }
 }
