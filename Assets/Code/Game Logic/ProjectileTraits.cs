@@ -30,6 +30,9 @@ namespace GameLogic
         [XmlElement]
         public float MaxHomingTurn { get; private set; }
 
+        [XmlElement]
+        public bool Tracer { get; private set; }
+
         public static ProjectileTraits LoadFromFile(string TraitsFile)
         {
             if(File.Exists(TraitsFile))
