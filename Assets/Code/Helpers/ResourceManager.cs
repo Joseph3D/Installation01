@@ -9,6 +9,8 @@ using System.Xml.Serialization;
 using System.Diagnostics;
 using UnityEngine;
 
+using UnityDebug = UnityEngine.Debug;
+
 namespace Helpers
 {
     public sealed class ResourceManager
@@ -44,6 +46,22 @@ namespace Helpers
 
         public void LoadGameObject(string File)
         {
+            if(ResourceCache.ContainsKey(File))
+            {
+                UnityDebug.Log("RESOURCE MANAGER MESSAGE: Runtime is attempting to load: " + File + " twice. Blocked");
+                return;
+            }
+            GameObject LoadedObject = Resources.Load(File) as GameObject;
+            ResourceCache.Add(File, LoadedObject);
+        }
+
+        public void LoadGameObject(string File,string HandleKey)
+        {
+            if (ResourceCache.ContainsKey(HandleKey))
+            {
+                UnityDebug.Log("RESOURCE MANAGER MESSAGE: Runtime is attempting to load: " + HandleKey + " twice. Blocked");
+                return;
+            }
             GameObject LoadedObject = Resources.Load(File) as GameObject;
             ResourceCache.Add(File, LoadedObject);
         }
