@@ -6,16 +6,32 @@ using System.Collections.Generic;
 using GameLogic;
 using Helpers;
 
+using UnityDebug = UnityEngine.Debug;
+
 namespace GameLogic
 {
     public class GameManager : MonoBehaviour
     {
         #region Members
+        #region Game State Management
         public GameMode InitialMode;
 
         private GameMode Mode;
         #endregion
 
+        #region Resource Management
+        private bool _CriticalAssetsLoaded;
+        public bool CriticalAssetsLoaded
+        {
+            get { return _CriticalAssetsLoaded; }
+            set { _CriticalAssetsLoaded = value; }
+        }
+
+        private Dictionary<string, object> ResourceCache;
+        #endregion
+        #endregion
+
+        #region Methods
         void Start()
         {
             InitializeInternals();
@@ -23,7 +39,7 @@ namespace GameLogic
 
         void Update()
         {
-
+            
         }
 
         private void UpdateState()
@@ -33,30 +49,36 @@ namespace GameLogic
 
         private void InitializeInternals()
         {
+            ResourceCache = new Dictionary<string, object>();
         }
 
         private void LoadCriticalAssets()
         {
+
         }
 
-        /// <summary>
-        /// Loads an asset via the resource manager and returns it
-        /// </summary>
-        /// <param name="AssetFile"></param>
-        /// <returns></returns>
-        public object LoadAsset(string AssetFile)
+        #region Resource Management
+        public void AddObjectToCache(string ObjectHandleName, object Handle)
         {
-            return ResourceManager.Instance.LoadGameObject(AssetFile);
+            ResourceCache.Add(ObjectHandleName, Handle);
         }
-        /// <summary>
-        /// Loads an asset via the resource manager and returns it
-        /// </summary>
-        /// <param name="AssetFile"></param>
-        /// <param name="AssetName"></param>
-        /// <returns></returns>
-        public object LoadAsset(string AssetFile, string AssetName)
+
+        public void LoadGameObject(string GameObjectFile,string GameObjectHandle)
         {
-            return ResourceManager.Instance.LoadGameObject(AssetFile, AssetName);
+            if(ResourceCache.ContainsKey(GameObjectHandle))
+            {
+                UnityDebug.Log("GameManager is attempting to load: " + GameObjectHandle + " Twice. Blocked.");
+                return;
+            }
+            GameObject LoadedObject = Resources.Load(GameObjectFile) as GameObject;
+            ResourceCache.Add(GameObjectHandle, LoadedObject);
         }
+
+        public bool CacheContains(string Handle)
+        {
+            return ResourceCache.ContainsKey(Handle);
+        }
+        #endregion
+        #endregion
     }
 }
