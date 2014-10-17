@@ -62,6 +62,8 @@ namespace GameLogic
         #endregion
 
         private GameManager Manager;
+
+        private GameObject ProjectilePrefab;
         #endregion
 
         #region Methods
@@ -185,6 +187,13 @@ namespace GameLogic
             InitializeCharacterController();
 
             AcquireGameManager();
+
+            AcquireAssets();
+        }
+
+        private void AcquireAssets()
+        {
+            
         }
 
         private void InitializeCharacterController()
