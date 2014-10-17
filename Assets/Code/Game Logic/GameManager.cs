@@ -20,12 +20,14 @@ namespace GameLogic
         #endregion
 
         #region Resource Management
-        private bool _CriticalAssetsLoaded;
-        public bool CriticalAssetsLoaded
+        private bool _AssetsLoaded;
+        public bool AssetsLoaded
         {
-            get { return _CriticalAssetsLoaded; }
-            set { _CriticalAssetsLoaded = value; }
+            get { return _AssetsLoaded; }
+            set { _AssetsLoaded = value; }
         }
+
+        public string[] StartupAssets;
 
         private Dictionary<string, object> ResourceCache;
         #endregion
@@ -39,7 +41,8 @@ namespace GameLogic
 
         void Update()
         {
-            
+            if (!_AssetsLoaded)
+                LoadAssets();
         }
 
         private void UpdateState()
@@ -52,9 +55,19 @@ namespace GameLogic
             ResourceCache = new Dictionary<string, object>();
         }
 
-        private void LoadCriticalAssets()
+        /// <summary>
+        /// Loads all assets that are critical and required before gameplay can start
+        /// </summary>
+        private void LoadAssets()
         {
-
+            if(StartupAssets.Length > 0)
+            {
+                for(int i = 0; i < StartupAssets.Length; ++i)
+                {
+                    LoadGameObject(StartupAssets[i], StartupAssets[i]);
+                }
+            }
+            _AssetsLoaded = true;
         }
 
         #region Resource Management
@@ -77,6 +90,14 @@ namespace GameLogic
         public bool CacheContains(string Handle)
         {
             return ResourceCache.ContainsKey(Handle);
+        }
+
+        public int CacheItemCount
+        {
+            get
+            {
+                return ResourceCache.Count;
+            }
         }
         #endregion
         #endregion
