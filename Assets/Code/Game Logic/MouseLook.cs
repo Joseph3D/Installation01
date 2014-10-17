@@ -6,89 +6,80 @@ using UnityEngine;
 
 namespace GameLogic
 {
-    [AddComponentMenu("Camera-Control/Mouse Look")]
+    [AddComponentMenu("Camera/Simple Smooth Mouse Look ")]
     public class MouseLook : MonoBehaviour
     {
+        Vector2 _mouseAbsolute;
+        Vector2 _smoothMouse;
 
-        public enum RotationAxes { MouseXAndY = 0, MouseX = 1, MouseY = 2 }
-        public RotationAxes Axes = RotationAxes.MouseXAndY;
-        public float sensitivityX = 15F;
-        public float SensitivityY = 15F;
+        public Vector2 clampInDegrees = new Vector2(360, 180);
+        public bool lockCursor;
+        public Vector2 sensitivity = new Vector2(2, 2);
+        public Vector2 smoothing = new Vector2(3, 3);
+        public Vector2 targetDirection;
+        public Vector2 targetCharacterDirection;
 
-        public float MinimumX = -360F;
-        public float MaximumX = 360F;
-
-        public float MinimumY = -60F;
-        public float MaximumY = 60F;
-
-        float RotationX = 0F;
-        float RotationY = 0F;
-
-        Quaternion originalRotation;
-
-        void Update()
-        {
-            if (Axes == RotationAxes.MouseXAndY)
-            {
-                UpdateMouseLookXY();
-            }
-            else if (Axes == RotationAxes.MouseX)
-            {
-                UpdateMouseLookX();
-            }
-            else
-            {
-                UpdateMouseLookY();
-            }
-        }
-
-        private void UpdateMouseLookY()
-        {
-            RotationY += Input.GetAxis("Mouse Y") * SensitivityY;
-            RotationY = ClampAngle(RotationY, MinimumY, MaximumY);
-
-            Quaternion yQuaternion = Quaternion.AngleAxis(-RotationY, Vector3.right);
-            transform.localRotation = originalRotation * yQuaternion;
-        }
-
-        private void UpdateMouseLookX()
-        {
-            RotationX += Input.GetAxis("Mouse X") * sensitivityX;
-            RotationX = ClampAngle(RotationX, MinimumX, MaximumX);
-
-            Quaternion xQuaternion = Quaternion.AngleAxis(RotationX, Vector3.up);
-            transform.localRotation = originalRotation * xQuaternion;
-        }
-
-        private void UpdateMouseLookXY()
-        {
-            RotationX += Input.GetAxis("Mouse X") * sensitivityX;
-            RotationY += Input.GetAxis("Mouse Y") * SensitivityY;
-
-            RotationX = ClampAngle(RotationX, MinimumX, MaximumX);
-            RotationY = ClampAngle(RotationY, MinimumY, MaximumY);
-
-            Quaternion xQuaternion = Quaternion.AngleAxis(RotationX, Vector3.up);
-            Quaternion yQuaternion = Quaternion.AngleAxis(RotationY, -Vector3.right);
-
-            transform.localRotation = originalRotation * xQuaternion * yQuaternion;
-        }
+        // Assign this if there's a parent object controlling motion, such as a Character Controller.
+        // Yaw rotation will affect this object instead of the camera if set.
+        public GameObject characterBody;
 
         void Start()
         {
-            // Make the rigid body not change rotation
-            if (rigidbody)
-                rigidbody.freezeRotation = true;
-            originalRotation = transform.localRotation;
+            // Set target direction to the camera's initial orientation.
+            targetDirection = transform.localRotation.eulerAngles;
+
+            // Set target direction for the character body to its inital state.
+            if (characterBody) targetCharacterDirection = characterBody.transform.localRotation.eulerAngles;
         }
 
-        public static float ClampAngle(float angle, float min, float max)
+        void Update()
         {
-            if (angle < -360F)
-                angle += 360F;
-            if (angle > 360F)
-                angle -= 360F;
-            return Mathf.Clamp(angle, min, max);
+            // Ensure the cursor is always locked when set
+            Screen.lockCursor = lockCursor;
+
+            // Allow the script to clamp based on a desired target value.
+            var targetOrientation = Quaternion.Euler(targetDirection);
+            var targetCharacterOrientation = Quaternion.Euler(targetCharacterDirection);
+
+            // Get raw mouse input for a cleaner reading on more sensitive mice.
+            var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+
+            // Scale input against the sensitivity setting and multiply that against the smoothing value.
+            mouseDelta = Vector2.Scale(mouseDelta, new Vector2(sensitivity.x * smoothing.x, sensitivity.y * smoothing.y));
+
+            // Interpolate mouse movement over time to apply smoothing delta.
+            _smoothMouse.x = Mathf.Lerp(_smoothMouse.x, mouseDelta.x, 1f / smoothing.x);
+            _smoothMouse.y = Mathf.Lerp(_smoothMouse.y, mouseDelta.y, 1f / smoothing.y);
+
+            // Find the absolute mouse movement value from point zero.
+            _mouseAbsolute += _smoothMouse;
+
+            // Clamp and apply the local x value first, so as not to be affected by world transforms.
+            if (clampInDegrees.x < 360)
+                _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -clampInDegrees.x * 0.5f, clampInDegrees.x * 0.5f);
+
+            var xRotation = Quaternion.AngleAxis(-_mouseAbsolute.y, targetOrientation * Vector3.right);
+            transform.localRotation = xRotation;
+
+            // Then clamp and apply the global y value.
+            if (clampInDegrees.y < 360)
+                _mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -clampInDegrees.y * 0.5f, clampInDegrees.y * 0.5f);
+
+            transform.localRotation *= targetOrientation;
+
+            // If there's a character body that acts as a parent to the camera
+            if (characterBody)
+            {
+                var yRotation = Quaternion.AngleAxis(_mouseAbsolute.x, characterBody.transform.up);
+                characterBody.transform.localRotation = yRotation;
+                characterBody.transform.localRotation *= targetCharacterOrientation;
+            }
+            else
+            {
+                var yRotation = Quaternion.AngleAxis(_mouseAbsolute.x, transform.InverseTransformDirection(Vector3.up));
+                transform.localRotation *= yRotation;
+            }
         }
     }
+ 
 }
