@@ -27,10 +27,6 @@ namespace GameLogic
 
         void Start()
         {
-#if DEBUG
-            InitializeDebugPathRenderer();
-#endif
-
             InitializeTraits();
         }
 
@@ -97,14 +93,6 @@ namespace GameLogic
             DebugPathRenderer.SetColors(Color.red, Color.red);
             DebugPathRenderer.SetWidth(2.0f, 2.0f);
 #endif
-        }
-
-        private void InitializeCollider()
-        {
-            gameObject.AddComponent<SphereCollider>();
-            SphereCollider collider = GetComponent<SphereCollider>();
-
-            collider.radius = 0.00762f; // radius of collider is 7.62 millimeters
         }
 
         private void InitializeTraits()
