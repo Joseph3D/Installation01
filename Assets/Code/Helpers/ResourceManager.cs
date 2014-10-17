@@ -44,26 +44,28 @@ namespace Helpers
             ResourceCache = new Dictionary<string, object>();
         }
 
-        public void LoadGameObject(string File)
+        public object LoadGameObject(string File)
         {
             if(ResourceCache.ContainsKey(File))
             {
-                UnityDebug.Log("RESOURCE MANAGER MESSAGE: Runtime is attempting to load: " + File + " twice. Blocked");
-                return;
+                UnityDebug.Log("RESOURCE MANAGER MESSAGE: Runtime is attempting to load: " + File + " twice. Blocked.");
+                return ResourceCache[File]; // return asset that already exists
             }
             GameObject LoadedObject = Resources.Load(File) as GameObject;
             ResourceCache.Add(File, LoadedObject);
+            return LoadedObject;
         }
 
-        public void LoadGameObject(string File,string HandleKey)
+        public object LoadGameObject(string File,string HandleKey)
         {
             if (ResourceCache.ContainsKey(HandleKey))
             {
-                UnityDebug.Log("RESOURCE MANAGER MESSAGE: Runtime is attempting to load: " + HandleKey + " twice. Blocked");
-                return;
+                UnityDebug.Log("RESOURCE MANAGER MESSAGE: Runtime is attempting to load: " + File + " twice. Blocked.");
+                return ResourceCache[HandleKey]; // return asset that already exists
             }
             GameObject LoadedObject = Resources.Load(File) as GameObject;
-            ResourceCache.Add(File, LoadedObject);
+            ResourceCache.Add(HandleKey, LoadedObject);
+            return LoadedObject;
         }
 
         public void UnloadGameObject(string Key)

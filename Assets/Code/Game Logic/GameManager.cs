@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using System.Collections;
+using System.Collections.Generic;
 using GameLogic;
 using Helpers;
 
@@ -36,23 +37,26 @@ namespace GameLogic
 
         private void LoadCriticalAssets()
         {
-
         }
 
         /// <summary>
-        /// Loads an asset via the resource manager and returns
+        /// Loads an asset via the resource manager and returns it
         /// </summary>
         /// <param name="AssetFile"></param>
         /// <returns></returns>
         public object LoadAsset(string AssetFile)
         {
-            ResourceManager.Instance.LoadGameObject(AssetFile);
-            return ResourceManager.Instance[AssetFile];
+            return ResourceManager.Instance.LoadGameObject(AssetFile);
         }
-
+        /// <summary>
+        /// Loads an asset via the resource manager and returns it
+        /// </summary>
+        /// <param name="AssetFile"></param>
+        /// <param name="AssetName"></param>
+        /// <returns></returns>
         public object LoadAsset(string AssetFile, string AssetName)
         {
-
+            return ResourceManager.Instance.LoadGameObject(AssetFile, AssetName);
         }
     }
 }
