@@ -33,5 +33,26 @@ namespace GameLogic
         private void InitializeInternals()
         {
         }
+
+        private void LoadCriticalAssets()
+        {
+
+        }
+
+        /// <summary>
+        /// Loads an asset via the resource manager and returns
+        /// </summary>
+        /// <param name="AssetFile"></param>
+        /// <returns></returns>
+        public object LoadAsset(string AssetFile)
+        {
+            ResourceManager.Instance.LoadGameObject(AssetFile);
+            return ResourceManager.Instance[AssetFile];
+        }
+
+        public object LoadAsset(string AssetFile, string AssetName)
+        {
+
+        }
     }
 }
