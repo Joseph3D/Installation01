@@ -12,7 +12,7 @@ using GameLogic;
 using CodeTimeProfiler = Helpers.Profiler;
 
 
-namespace Assets.Code.Game_Logic
+namespace GameLogic
 {
     public class SpawnPoint : MonoBehaviour
     {
@@ -70,12 +70,12 @@ namespace Assets.Code.Game_Logic
                     if(HitObject.tag == "GameEntity")
                     {
                         nearbyEntities++;
-                        EntityTagManager TagManager = GetComponent<EntityTagManager>() as EntityTagManager;
+                        EntityTag TagManager = GetComponent<EntityTag>() as EntityTag;
 
-                        if (TagManager.Is(EntityTag.Enemy))
+                        if (TagManager.Is(Tag.Enemy))
                             enemyEntitiesNearby++;
 
-                        if (TagManager.Is(EntityTag.Player))
+                        if (TagManager.Is(Tag.Player))
                             playerNearby = true;
                     }
                 }
