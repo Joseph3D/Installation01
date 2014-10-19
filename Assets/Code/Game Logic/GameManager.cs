@@ -15,8 +15,7 @@ namespace GameLogic
         public GameMode InitialMode;
         private GameMode Mode;
 
-        private bool _AssetsLoaded;
-        
+        private List<GameEntityCacheEntry> GameEntityCache;
         public string[] StartupAssets;
         private Dictionary<string, object> ResourceCache;
 
@@ -33,10 +32,15 @@ namespace GameLogic
             }
         }
         private bool _InternalsInitialized;
-
-        private List<GameEntityCacheEntry> GameEntityCache;
-
-
+        public int GameEntityCacheCount
+        {
+            get
+            {
+                return GameEntityCache.Count;
+            }
+        }
+        private bool _AssetsLoaded;
+        
         void Start()
         {
             InitializeInternals();
