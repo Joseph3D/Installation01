@@ -83,7 +83,7 @@ namespace GameLogic
             _AssetsLoaded = true;
         }
 
-        public void AddObjectToCache(string ObjectHandleName, object Handle)
+        public void AddObjectToResourceCache(string ObjectHandleName, object Handle)
         {
             ResourceCache.Add(ObjectHandleName, Handle);
         }
@@ -97,11 +97,11 @@ namespace GameLogic
             GameObject LoadedObject = Resources.Load(GameObjectFile) as GameObject;
             ResourceCache.Add(GameObjectHandle, LoadedObject);
         }
-        public bool CacheContains(string Handle)
+        public bool ResourceCacheContains(string Handle)
         {
             return ResourceCache.ContainsKey(Handle);
         }
-        public int CacheItemCount
+        public int ResourceCacheItemCount
         {
             get
             {
@@ -114,7 +114,6 @@ namespace GameLogic
             GameEntityCacheEntry NewCacheEntry = new GameEntityCacheEntry(Entity);
             GameEntityCache.Add(NewCacheEntry);
         }
-
         private void RemoveGameEntityCacheEntry(GameEntityCacheEntry Entry)
         {
             GameEntityCache.Remove(Entry);
@@ -128,6 +127,26 @@ namespace GameLogic
                     GameEntityCache.RemoveAt(i);
                     break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Caches all game entities in the world
+        /// </summary>
+        private void CacheAllGameEntities()
+        {
+            GameObject[] Entities = GameObject.FindGameObjectsWithTag("GameEntity");
+
+            if(Entities.Length == 0)
+            {
+                Debug.LogError("GAME MANAGER MESSAGE: FATAL ERROR: NO GAME ENTITIES IN SCENE. HALTING");
+                Debug.Break();
+                return;
+            }
+
+            for (int i = 0; i < Entities.Length; ++i )
+            {
+                AddGameEntityCacheEntry(Entities[i]);
             }
         }
     }
