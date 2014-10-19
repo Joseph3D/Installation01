@@ -40,6 +40,16 @@ namespace GameLogic
             }
         }
         private bool _AssetsLoaded;
+        public bool GameReadyToStart
+        {
+            get
+            {
+                if (_AssetsLoaded && _InternalsInitialized)
+                    return true;
+
+                return false;
+            }
+        }
         
         void Start()
         {
@@ -48,10 +58,6 @@ namespace GameLogic
 
         void Update()
         {
-            #region Content Load Check
-            if (!_AssetsLoaded)
-                LoadAssets();
-            #endregion
 
         }
 
@@ -69,6 +75,7 @@ namespace GameLogic
             GameEntityCache = new List<GameEntityCacheEntry>();
 
 
+            LoadAssets();
             _InternalsInitialized = true;
         }
 
