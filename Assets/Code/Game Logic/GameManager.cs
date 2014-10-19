@@ -18,6 +18,7 @@ namespace GameLogic
         private List<GameEntityCacheEntry> GameEntityCache;
         public string[] StartupAssets;
         private Dictionary<string, object> ResourceCache;
+        private SpawnPointCollection SpawnPoints;
 
         public bool AssetsLoaded
         {
@@ -67,6 +68,14 @@ namespace GameLogic
         }
 
         /// <summary>
+        /// Spawns player at a random spawn point.
+        /// </summary>
+        private void SpawnPlayer()
+        {
+
+        }
+
+        /// <summary>
         /// Initializes all objects/resources that GameManager needs to use
         /// </summary>
         private void InitializeInternals()
@@ -74,8 +83,11 @@ namespace GameLogic
             ResourceCache = new Dictionary<string, object>();
             GameEntityCache = new List<GameEntityCacheEntry>();
 
+            SpawnPoints = new SpawnPointCollection();
+            SpawnPoints.CacheAll();
 
             LoadAssets();
+
             _InternalsInitialized = true;
         }
 
