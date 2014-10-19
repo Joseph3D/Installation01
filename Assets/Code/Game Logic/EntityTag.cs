@@ -6,7 +6,7 @@ using System.Text;
 namespace GameLogic
 {
     [Flags]
-    public enum EntityTag
+    public enum Tag
     {
         GameEntity = 0,
         AIEntity = 1 << 0,
