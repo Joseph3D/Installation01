@@ -6,18 +6,18 @@ using UnityEngine;
 
 namespace GameLogic
 {
-    public class EntityTagManager : MonoBehaviour
+    public class EntityTag : MonoBehaviour
     {
-        private EntityTag _Tag;
+        private Tag _Tag;
 
-        public EntityTag TestTagField;
+        public Tag TestTagField;
 
         /// <summary>
         /// Checks to see if this Entity is tagged with a certain EntityTag
         /// </summary>
         /// <param name="Tag">Tag to check against</param>
         /// <returns></returns>
-        public bool Is(EntityTag Tag)
+        public bool Is(Tag Tag)
         {
             return (_Tag & Tag) == Tag ? true : false;
         }
@@ -26,7 +26,7 @@ namespace GameLogic
         /// Adds a tag
         /// </summary>
         /// <param name="Tag">Tag to add</param>
-        public void AddTag(EntityTag Tag)
+        public void AddTag(Tag Tag)
         {
             _Tag |= Tag;
         }
@@ -35,7 +35,7 @@ namespace GameLogic
         /// Removes a tag
         /// </summary>
         /// <param name="Tag">Tag to remove</param>
-        public void RemoveTag(EntityTag Tag)
+        public void RemoveTag(Tag Tag)
         {
             _Tag &= ~Tag;
         }
@@ -44,7 +44,7 @@ namespace GameLogic
         /// Gets Tag
         /// </summary>
         /// <returns>The Tag</returns>
-        public EntityTag GetEntityTag()
+        public Tag GetEntityTag()
         {
             return _Tag;
         }

@@ -12,28 +12,31 @@ namespace GameLogic
 {
     public class GameManager : MonoBehaviour
     {
-        #region Members
-        #region Game State Management
         public GameMode InitialMode;
-
         private GameMode Mode;
-        #endregion
 
-        #region Resource Management
         private bool _AssetsLoaded;
+        
+        public string[] StartupAssets;
+        private Dictionary<string, object> ResourceCache;
+
         public bool AssetsLoaded
         {
             get { return _AssetsLoaded; }
             set { _AssetsLoaded = value; }
         }
+        public bool InternalsInitialized
+        {
+            get
+            {
+                return _InternalsInitialized;
+            }
+        }
+        private bool _InternalsInitialized;
 
-        public string[] StartupAssets;
+        private List<GameEntityCacheEntry> GameEntityCache;
 
-        private Dictionary<string, object> ResourceCache;
-        #endregion
-        #endregion
 
-        #region Methods
         void Start()
         {
             InitializeInternals();
@@ -41,8 +44,11 @@ namespace GameLogic
 
         void Update()
         {
+            #region Content Load Check
             if (!_AssetsLoaded)
                 LoadAssets();
+            #endregion
+
         }
 
         private void UpdateState()
@@ -50,9 +56,16 @@ namespace GameLogic
 
         }
 
+        /// <summary>
+        /// Initializes all objects/resources that GameManager needs to use
+        /// </summary>
         private void InitializeInternals()
         {
             ResourceCache = new Dictionary<string, object>();
+            GameEntityCache = new List<GameEntityCacheEntry>();
+
+
+            _InternalsInitialized = true;
         }
 
         /// <summary>
@@ -70,12 +83,10 @@ namespace GameLogic
             _AssetsLoaded = true;
         }
 
-        #region Resource Management
         public void AddObjectToCache(string ObjectHandleName, object Handle)
         {
             ResourceCache.Add(ObjectHandleName, Handle);
         }
-
         public void LoadGameObject(string GameObjectFile,string GameObjectHandle)
         {
             if(ResourceCache.ContainsKey(GameObjectHandle))
@@ -86,12 +97,10 @@ namespace GameLogic
             GameObject LoadedObject = Resources.Load(GameObjectFile) as GameObject;
             ResourceCache.Add(GameObjectHandle, LoadedObject);
         }
-
         public bool CacheContains(string Handle)
         {
             return ResourceCache.ContainsKey(Handle);
         }
-
         public int CacheItemCount
         {
             get
@@ -99,7 +108,27 @@ namespace GameLogic
                 return ResourceCache.Count;
             }
         }
-        #endregion
-        #endregion
+
+        private void AddGameEntityCacheEntry(GameObject Entity)
+        {
+            GameEntityCacheEntry NewCacheEntry = new GameEntityCacheEntry(Entity);
+            GameEntityCache.Add(NewCacheEntry);
+        }
+
+        private void RemoveGameEntityCacheEntry(GameEntityCacheEntry Entry)
+        {
+            GameEntityCache.Remove(Entry);
+        }
+        private void RemoveGameEntityCacheEntry(int EntityHash)
+        {
+            for(int i = 0; i < GameEntityCache.Count; ++i)
+            {
+                if(GameEntityCache[i].EntityHash == EntityHash)
+                {
+                    GameEntityCache.RemoveAt(i);
+                    break;
+                }
+            }
+        }
     }
 }
