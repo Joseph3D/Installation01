@@ -24,9 +24,12 @@ namespace GameLogic
             }
         }
 
-        public SpawnPoint this[int Index]
+        public GameObject this[int Index]
         {
-            return SpawnPoints[Index];
+            get
+            {
+                return SpawnPoints[Index];
+            }
         }
 
         public SpawnPointCollection()

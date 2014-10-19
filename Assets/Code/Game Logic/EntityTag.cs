@@ -10,7 +10,7 @@ namespace GameLogic
     {
         private Tag _Tag;
 
-        public Tag TestTagField;
+        public Tag[] Tags;
 
         /// <summary>
         /// Checks to see if this Entity is tagged with a certain EntityTag
@@ -51,8 +51,15 @@ namespace GameLogic
 
         public void Start()
         {
-
+            if(Tags.Length > 0)
+            {
+                for(int i = 0; i < Tags.Length; ++i)
+                {
+                    AddTag(Tags[i]);
+                }
+            }
         }
+
         public void Update()
         {
 

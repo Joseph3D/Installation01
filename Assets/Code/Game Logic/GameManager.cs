@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using GameLogic;
 using Helpers;
 
-using UnityDebug = UnityEngine.Debug;
+using UnityDebug  = UnityEngine.Debug;
+using UnityRandom = UnityEngine.Random;
 
 namespace GameLogic
 {
@@ -51,6 +52,8 @@ namespace GameLogic
                 return false;
             }
         }
+
+        private const string PrefabsDirectory = "Prefabs/";
         
         void Start()
         {
@@ -72,7 +75,7 @@ namespace GameLogic
         /// </summary>
         private void SpawnPlayer()
         {
-
+            GameObject PlayerObject = GetResourceCacheItemByName("Player") as GameObject;
         }
 
         /// <summary>
@@ -130,6 +133,10 @@ namespace GameLogic
             {
                 return ResourceCache.Count;
             }
+        }
+        public object GetResourceCacheItemByName(string Name)
+        {
+            return ResourceCache[Name];
         }
 
         private void AddGameEntityCacheEntry(GameObject Entity)
