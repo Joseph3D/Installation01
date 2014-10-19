@@ -22,5 +22,6 @@ namespace GameLogic
         Surface_ForerunnerHardLight = 1 << 10,
         Surface_Gravel = 1 << 11,
         Surface_Grass = 1 << 12,
+        PointLight = 1 << 13,
     }
 }

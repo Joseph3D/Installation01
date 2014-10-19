@@ -103,7 +103,8 @@ namespace GameLogic
             {
                 for(int i = 0; i < StartupAssets.Length; ++i)
                 {
-                    LoadGameObject(StartupAssets[i], StartupAssets[i]);
+                    string AssetPath = PrefabsDirectory + StartupAssets[i];
+                    LoadGameObject(StartupAssets[i], AssetPath);
                 }
             }
             _AssetsLoaded = true;
