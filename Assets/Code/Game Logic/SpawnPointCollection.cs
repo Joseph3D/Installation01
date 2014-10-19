@@ -24,6 +24,11 @@ namespace GameLogic
             }
         }
 
+        public SpawnPoint this[int Index]
+        {
+            return SpawnPoints[Index];
+        }
+
         public SpawnPointCollection()
         {
             SpawnPoints = new List<GameObject>();
