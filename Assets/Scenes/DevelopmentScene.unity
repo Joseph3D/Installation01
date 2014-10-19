@@ -686,9 +686,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InitialMode: 0
   StartupAssets:
-  - Prefabs/Projectile_debug
-  - Prefabs/Player
-  - Prefabs/SpawnPoint
+  - Projectile_debug
+  - Player
+  - SpawnPoint
 --- !u!4 &2135131655
 Transform:
   m_ObjectHideFlags: 0

@@ -104,7 +104,7 @@ namespace GameLogic
                 for(int i = 0; i < StartupAssets.Length; ++i)
                 {
                     string AssetPath = PrefabsDirectory + StartupAssets[i];
-                    LoadGameObject(StartupAssets[i], AssetPath);
+                    LoadGameObject(AssetPath, StartupAssets[i]);
                 }
             }
             _AssetsLoaded = true;
@@ -114,6 +114,8 @@ namespace GameLogic
         {
             ResourceCache.Add(ObjectHandleName, Handle);
         }
+
+
         public void LoadGameObject(string GameObjectFile,string GameObjectHandle)
         {
             if(ResourceCache.ContainsKey(GameObjectHandle))
@@ -122,8 +124,9 @@ namespace GameLogic
                 return;
             }
             GameObject LoadedObject = Resources.Load(GameObjectFile) as GameObject;
-            ResourceCache.Add(GameObjectHandle, LoadedObject);
+            AddObjectToResourceCache(GameObjectHandle, LoadedObject);
         }
+
         public bool ResourceCacheContains(string Handle)
         {
             return ResourceCache.ContainsKey(Handle);
