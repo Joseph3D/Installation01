@@ -9,5 +9,6 @@ namespace GameLogic
     {
         DevelopmentTesting = 0,
         Firefight = 1,
+        Loading = 2,
     }
 }
