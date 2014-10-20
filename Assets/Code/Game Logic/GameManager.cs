@@ -173,6 +173,23 @@ namespace GameLogic
         }
 
         /// <summary>
+        /// Destroys game entity, removed it from the world and de-caches it in the GameEntityCache
+        /// </summary>
+        /// <param name="EntityHash">Hash code of entity to destroy</param>
+        private void DestroyGameEntity(int EntityHash)
+        {
+            for(int i = 0; i < GameEntityCache.Count; ++i)
+            {
+                if(GameEntityCache[i].EntityHash == EntityHash)
+                {
+                    GameObject.Destroy(GameEntityCache[i].Entity);
+
+                    RemoveGameEntityCacheEntry(GameEntityCache[i].EntityHash);
+                }
+            }
+        }
+
+        /// <summary>
         /// Caches all game entities in the world
         /// </summary>
         private void CacheAllGameEntities()
