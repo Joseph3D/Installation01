@@ -92,7 +92,7 @@ namespace GameLogic
         /// </summary>
         private void UpdateMovement()
         {
-            float inputX = Input.GetAxis("Horizontal"); // TODO, replace these with hard mouse positions
+            float inputX = Input.GetAxis("Horizontal");
             float inputY = Input.GetAxis("Vertical");
 
             // If both horizontal and vertical are used simultaneously, limit speed (if allowed), so the total doesn't exceed normal move speed
@@ -127,7 +127,7 @@ namespace GameLogic
 
                 // If running isn't on a toggle, then use the appropriate speed depending on whether the run button is down
                 if (!toggleRun)
-                    speed = Input.GetButton("Run") ? runSpeed : walkSpeed; // TODO: replace with hard input
+                    speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed; // TODO: replace with hard input
 
                 // If sliding (and it's allowed), or if we're on an object tagged "Slide", get a vector pointing down the slope we're on
                 if ((sliding && slideWhenOverSlopeLimit) || (slideOnTaggedObjects && hit.collider.tag == "Slide"))
@@ -137,7 +137,8 @@ namespace GameLogic
                     Vector3.OrthoNormalize(ref hitNormal, ref moveDirection);
                     moveDirection *= slideSpeed;
                     playerControl = false;
-                }
+                } // this "if sliding" block has compatability issues with the game framework, sliding is not currently allowed. This is pending safe removal.
+
                 // Otherwise recalculate moveDirection directly from axes, adding a bit of -y to avoid bumping down inclines
                 else
                 {
