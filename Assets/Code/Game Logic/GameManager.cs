@@ -121,10 +121,6 @@ namespace GameLogic
             }
             _AssetsLoaded = true;
         }
-        public void AddObjectToResourceCache(string ObjectHandleName, object Handle)
-        {
-            ResourceCache.Add(ObjectHandleName, Handle);
-        }
         public void LoadGameObject(string GameObjectFile,string GameObjectHandle)
         {
             if(ResourceCache.ContainsKey(GameObjectHandle))
@@ -135,6 +131,12 @@ namespace GameLogic
             GameObject LoadedObject = Resources.Load(GameObjectFile) as GameObject;
             AddObjectToResourceCache(GameObjectHandle, LoadedObject);
         }
+
+
+        public void AddObjectToResourceCache(string ObjectHandleName, object Handle)
+        {
+            ResourceCache.Add(ObjectHandleName, Handle);
+        }
         public bool ResourceCacheContains(string Handle)
         {
             return ResourceCache.ContainsKey(Handle);
@@ -142,6 +144,26 @@ namespace GameLogic
         public object GetResourceCacheItemByName(string Name)
         {
             return ResourceCache[Name];
+        }
+
+        /// <summary>
+        /// Caches all game entities in the world
+        /// </summary>
+        private void CacheAllGameEntities()
+        {
+            GameObject[] Entities = GameObject.FindGameObjectsWithTag("GameEntity");
+
+            if(Entities.Length == 0)
+            {
+                Debug.LogError("GAME MANAGER MESSAGE: FATAL ERROR: NO GAME ENTITIES IN SCENE. HALTING");
+                Debug.Break();
+                return;
+            }
+
+            for (int i = 0; i < Entities.Length; ++i )
+            {
+                AddGameEntityCacheEntry(Entities[i]);
+            }
         }
         private void AddGameEntityCacheEntry(GameObject Entity)
         {
@@ -178,26 +200,6 @@ namespace GameLogic
 
                     RemoveGameEntityCacheEntry(GameEntityCache[i].EntityHash);
                 }
-            }
-        }
-
-        /// <summary>
-        /// Caches all game entities in the world
-        /// </summary>
-        private void CacheAllGameEntities()
-        {
-            GameObject[] Entities = GameObject.FindGameObjectsWithTag("GameEntity");
-
-            if(Entities.Length == 0)
-            {
-                Debug.LogError("GAME MANAGER MESSAGE: FATAL ERROR: NO GAME ENTITIES IN SCENE. HALTING");
-                Debug.Break();
-                return;
-            }
-
-            for (int i = 0; i < Entities.Length; ++i )
-            {
-                AddGameEntityCacheEntry(Entities[i]);
             }
         }
     }
