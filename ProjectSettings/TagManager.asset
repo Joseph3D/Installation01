@@ -3,32 +3,14 @@
 --- !u!78 &1
 TagManager:
   tags:
-  - Target
-  - Dirt
-  - Metal
-  - Terrain
-  - AI
-  - AI Manager
-  - AI Patrol Point
-  - SpawnPoints
-  - Head
-  - 
-  - metal
-  - Concrete
-  - 
-  - Wood
-  - glass
-  - wood
-  - concrete
-  - 
-  - dirt
+  - GameEntity
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
   Builtin Layer 2: Ignore Raycast
   Builtin Layer 3: 
   Builtin Layer 4: Water
-  Builtin Layer 5: 
+  Builtin Layer 5: UI
   Builtin Layer 6: 
   Builtin Layer 7: 
   User Layer 8: 
@@ -60,7 +42,11 @@ TagManager:
     userID: 0
     uniqueID: 0
     locked: 0
-  - name: AI_Entity_Layer
+  - name: AIEntity_Layer
     userID: 1
     uniqueID: 1330550787
+    locked: 0
+  - name: Projectile_Layer
+    userID: 2
+    uniqueID: 2435505431
     locked: 0

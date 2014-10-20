@@ -1,0 +1,153 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fswiss\fprq2\fcharset0 Arial;}}
+{\colortbl ;\red0\green0\blue0;\red0\green0\blue255;\red17\green85\blue204;\red56\green118\blue29;\red106\green168\blue79;\red60\green120\blue216;\red204\green0\blue0;}
+{\*\generator Msftedit 5.41.21.2510;}\viewkind4\uc1\pard\nowidctlpar\sl276\slmult1\cf1\f0\fs36 "QuickBrush" Documentation\f1\fs22\par
+\f0 6-30-2014;  v1.0.6\par
+\fs24 "\f1\fs22{\field{\*\fldinst{HYPERLINK "http://www.protoolsforunity3d.com/quickbrush"}}{\fldrslt{\cf3\ul\f0 www\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/quickbrush"\cf3\ul\v0\f0 .\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/quickbrush"\cf3\ul\v0\f0 proCore\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/quickbrush"\cf3\ul\v0\f0 3\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/quickbrush"\cf3\ul\v0\f0 d\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/quickbrush"\cf3\ul\v0\f0 .\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/quickbrush"\cf3\ul\v0\f0 com\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/quickbrush"\cf3\ul\v0\f0 /\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/quickbrush"\cf3\ul\v0\f0 quickbrush}}}\cf1\ulnone\f0\fs22 "\fs24\par
+\fs22\par
+\b\i Note: If you would like to receive updates, beta access, and info via email also, you can \ldblquote register\rdblquote :\par
+\b0\i0 To register, just send an email with your invoice number to \fs24 "\f1\fs22{\field{\*\fldinst{HYPERLINK "mailto:playTangent@procore3d.com"}}{\fldrslt{\cf3\ul\f0 playTangent\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 @\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 procore\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 3\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 d\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 .\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 com}}}\cf1\ulnone\f0\fs24 "\fs22 . This is not at all required, but allows us to send you updates instantly. We also send out a newsletter once a month or so, with info on new features, bug fixes, tools, etc\'85 We will never use/sell/etc your email for anything other than ProCore info. We hate spam, too!\par
+\par
+\b\fs28 Description:\par
+\b0\fs22 QuickBrush is a convenient tool for placing large quantities of prefab objects in a scene by \ldblquote painting\rdblquote  them onto other surfaces, such as terrain or walls. QuickBrush contains several convenient settings for scattering, scaling, and rotating the objects it places.\par
+\par
+Table of Contents:\par
+1. \f1{\field{\*\fldinst{HYPERLINK "#id.lfohiovet0n4"}}{\fldrslt{\cf3\ul\f0 Installation\cf1\ulnone\v\f1 HYPERLINK "#id.lfohiovet0n4"\cf3\ul\v0\f0  & \cf1\ulnone\v\f1 HYPERLINK "#id.lfohiovet0n4"\cf3\ul\v0\f0 Setup}}}\cf1\ulnone\f0\fs22\par
+2. \f1{\field{\*\fldinst{HYPERLINK "#id.y52xmtom5ndj"}}{\fldrslt{\cf3\ul\f0 Using\cf1\ulnone\v\f1 HYPERLINK "#id.y52xmtom5ndj"\cf3\ul\v0\f0  \cf1\ulnone\v\f1 HYPERLINK "#id.y52xmtom5ndj"\cf3\ul\v0\f0 QuickBrush}}}\cf1\ulnone\f0\fs22\par
+\tab\f1{\field{\*\fldinst{HYPERLINK "\\\\l "}}{\fldrslt{\cf3\ul\f0 Tool\cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0  \cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0 Overview}}}\cf1\ulnone\f0\fs22\par
+\tab\f1{\field{\*\fldinst{HYPERLINK "\\\\l "}}{\fldrslt{\cf3\ul\f0 Prefab\cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0  \cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0 Area}}}\cf1\ulnone\f0\fs22\par
+\tab\f1{\field{\*\fldinst{HYPERLINK "#id.85mlifzcn0d2"}}{\fldrslt{\cf3\ul\f0 Painting\cf1\ulnone\v\f1 HYPERLINK "#id.85mlifzcn0d2"\cf3\ul\v0\f0  \cf1\ulnone\v\f1 HYPERLINK "#id.85mlifzcn0d2"\cf3\ul\v0\f0 Basics}}}\cf1\ulnone\f0\fs22\par
+\tab\f1{\field{\*\fldinst{HYPERLINK "\\\\l "}}{\fldrslt{\cf3\ul\f0 Precision\cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0  \cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0 Placement}}}\cf1\ulnone\f0\fs22\par
+\tab\f1{\field{\*\fldinst{HYPERLINK "\\\\l "}}{\fldrslt{\cf3\ul\f0 Brush\cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0  \cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0 Settings}}}\cf1\ulnone\f0\fs22\par
+\tab\f1{\field{\*\fldinst{HYPERLINK "\\\\l "}}{\fldrslt{\cf3\ul\f0 Sorting\cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0  \cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0 Settings}}}\cf1\ulnone\f0\fs22\par
+\tab\f1{\field{\*\fldinst{HYPERLINK "\\\\l "}}{\fldrslt{\cf3\ul\f0 Rotation\cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0  \cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0 Settings}}}\cf1\ulnone\f0\fs22\par
+\tab\f1{\field{\*\fldinst{HYPERLINK "\\\\l "}}{\fldrslt{\cf3\ul\f0 Position\cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0  \cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0 Settings}}}\cf1\ulnone\f0\fs22\par
+\tab\f1{\field{\*\fldinst{HYPERLINK "\\\\l "}}{\fldrslt{\cf3\ul\f0 Scale\cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0  \cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0 Settings}}}\cf1\ulnone\f0\fs22\par
+\tab\f1{\field{\*\fldinst{HYPERLINK "\\\\l "}}{\fldrslt{\cf3\ul\f0 Eraser\cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0  \cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0 Settings}}}\cf1\ulnone\f0\fs22\par
+\tab\f1{\field{\*\fldinst{HYPERLINK "\\\\l "}}{\fldrslt{\cf3\ul\f0 Save\cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0  \cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0 Slots\cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0  & \cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0 Brush\cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0  \cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0 Templates}}}\cf1\ulnone\f0\fs22\par
+\tab\f1{\field{\*\fldinst{HYPERLINK "\\\\l "}}{\fldrslt{\cf3\ul\f0 Help\cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0  \cf1\ulnone\v\f1 HYPERLINK "\\l "\cf3\ul\v0\f0 Box}}}\cf1\ulnone\f0\fs22\par
+\par
+\b\fs28 Installation and Setup\par
+\b0\fs22 Installation of QuickBrush is standard Unity Procedure:\par
+\pard\nowidctlpar\fi720\sl276\slmult1 1.    If you haven\rquote t already, open the Unity project in which you want to use QuickBrush.\par
+\pard\nowidctlpar\li720\sl276\slmult1 2.    Find the QuickBrush UnityPackage in your file browser, and double-click it, or import it from the Unity Asset Store if you purchased it there.\par
+\pard\nowidctlpar\fi720\sl276\slmult1 3.    Unity will show and \ldblquote import files\rdblquote  dialogue - just click \ldblquote yes\rdblquote  and import all files\par
+\pard\nowidctlpar\sl276\slmult1\tab\tab a.    Allow any overrides if prompted\par
+\tab\tab b.    After the files are installed, you may move the ProCore folder into sub-folders of your project, if you wish (QuickBrush is not location dependent, although other ProCore tools may be affected, depending on the version)\par
+\par
+\b\fs28 Using QuickBrush\par
+\b0\fs22 QuickBrush is organized to give ready access to the most often used controls. Keyboard shortcuts are added for convenience. Feel free to send feedback on your usage patterns to \fs24 "\f1\fs22{\field{\*\fldinst{HYPERLINK "mailto:playTangent@procore3d.com"}}{\fldrslt{\cf3\ul\f0 playTangent\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 @\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 procore\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 3\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 d\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 .\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 com}}}\cf1\ulnone\f0\fs24 "\fs22 . I\rquote ll use feedback to improve the tool in future revisions.\par
+\par
+\b\fs28 Tool Overview\par
+\b0\fs22 Looking from the top down, QuickBrush has a brush/eraser On/Off indicator at the top, along with a couple of keyboard shortcut reminders. These are followed by a Drag & Drop field for prefabs. Below that are several foldouts containing different settings. At the bottom, there is an area for managing and storing brush templates, and finally a handy helpbox at the very bottom.\par
+\pard\sl276\slmult1\f1\par
+\pard\pagebb\nowidctlpar\sl276\slmult1\b\f0\fs28 Prefab Area\b0\fs22\par
+\pard\nowidctlpar\sl276\slmult1 The \cf4\b Prefab Drag & Drop Field\cf1\b0  spans the editor window.\par
+\par
+You can drag any GameObject prefab onto the \cf5\b Prefab Drag & Drop Field\cf1\b0 . You can also drag multiple prefabs onto the field at a time. Once prefabs are dropped in, the Drag & Drop field collapses to the left and becomes small. A list of prefabs cues up on the right. When it fills beyond the size of the editor window, it becomes scrollable.\par
+\par
+\par
+By default, QuickBrush picks prefabs at random from this list and places them according to tool settings. Each prefab in the list is represented by a tile containing a slider, a preview window, and two overlaid controls (a \cf4\b Red X\cf1\b0  icon and a \cf4\b Green Checkmark\cf1\b0 ). \par
+\par
+The \cf4\b Vertical Slider\cf1\b0  sets the likelihood, vs other prefabs in the list, that the item will be randomly selected for placement each brush iteration.\par
+\par
+Clicking the \cf4\b Red X\cf1\b0  icon removes the prefab from the list. \par
+\par
+The \cf4\b Green Checkmark\cf1\b0  is used to toggle one prefab for exclusive placement. When an item is checked, the tool will only place that item instead of randomly selecting one.\par
+\par
+\pard\sl276\slmult1\b\fs28 Painting Basics\par
+\pard\nowidctlpar\sl276\slmult1\b0\fs22 When the window is open, you activate the brush by \cf6\b holding down Ctrl.\cf1\b0  You can easily make manual scene adjustments and then simply \cf6\b hold down Ctrl\cf1\b0  any time you want to paint. The Indicator turns blue when the brush (or eraser) is ON. \par
+\par
+Pressing \cf6\b Ctrl + x\cf1\b0  toggles between brush and eraser. The indicator icon will change to reflect this. \par
+\b\fs28\par
+Precision Placement\par
+\b0\fs22 Checking an item can be especially useful when using Individual Precision Placement. Precision Placement is triggered by holding down \cf6\b Ctrl + Shift\cf1\b0  and then \cf6\b Clicking & Dragging the mouse\cf1\b0 . Clicking Down the Mouse spawns a single instance of the selected prefab. Dragging the Mouse while still holding the mouse button down, scales and rotates the object. Releasing the mouse button finalizes placement. This tool displays a special handle to indicate scale and direction.\par
+\par
+\par
+\cf4\b The Brush Indicator\cf1\b0  and \cf4\b Prefab Drag Drop Field\cf1\b0  will always remain anchored to the top of the window. Below are foldouts for different categories of settings. Here they are in order:\cf4\b\par
+\cf1\b0\par
+\b\fs28 Brush Settings\par
+\b0\fs22 Settings in this foldout pertain to the size of the brush and the way it interacts with paintable surfaces.\par
+\par
+\cf4\b Brush Radius\cf1\b0  sets the total radius of the brush/eraser tool in world units. The \cf4\b Min\cf1\b0  and \cf4\b Max\cf1\b0  fields below allow you to set the limits of the slider.\cf4\b\par
+\cf1\b0\par
+\cf4\b Scatter Amount\cf1\b0  allows you to set how much of the total brush radius is used to randomly scatter objects when they are being placed on the paintable surface, from 0.0 (none) to 1.0 (all).\cf4\b\par
+\cf1\b0\par
+\cf4\b Stroke Spacing\cf1\b0  sets the distance between brush iterations (meaning that this is the world distance you will drag the brush before it attempts to place an object again). As with brush radius, the \cf4\b Min\cf1\b0  and \cf4\b Max\cf1\b0  fields allow you to set the limits of the slider.\cf4\b\par
+\cf1\fs28\par
+Sorting Settings\par
+\b0\fs22 This foldout deals with layers and groups.\par
+\par
+\cf4\b Paint to Layer\cf1\b0  restricts the brush from painting on any layer other than the one designated via the \cf4\b Choose Layers\cf1\b0  dropdown. As of version 1.0.4 it is possible to select multiple layers.\cf4\b\par
+\cf1\b0\par
+\cf4\b Paint to Selection\cf1\b0  toggles an additional restriction which restricts the brush from painting to any but the objects selected in the scene. This setting stacks with \cf4\b Paint to Layer\cf1\b0 .\cf4\b\par
+\cf1\b0\par
+\cf4\b Group Placed Objects\cf7  \cf1\b0 allows you to toggle whether placed objects should be parented to a group object in the scene. When toggled on, you can use the options below to either choose a group that\rquote s already in the scene, or name and create a new group.\cf4\b\par
+\cf1\b0\par
+\cf4\b Choose Existing Group\cf1\b0  is a dropdown which allows you to pick a group from those which have already been created in the scene. \cf4\b\par
+\cf1\b0\par
+\cf4\b Name New Group\cf1\b0  Type a name for your new group here and then click the Add button to add it to the scene. Once a group is created, it shows up in the Choose Existing Group dropdown.\cf4\b\par
+\cf1\fs28\par
+Mesh Rotation Settings\fs22  \fs28\par
+\b0\fs22 This foldout contains alignment toggles and sliders for offsetting from there.\par
+\b\par
+\cf4 Align to Surface\cf1\b0  puts placed prefabs upright on the paintable surface. Meaning that it aligns the up vector of the each prefab to the normal of the surface on which it is being placed.\cf4\b\par
+\cf1\par
+\cf4 Align to Stroke\cf1\b0  conforms the forward vector of each prefab to the direction of the brush stroke. This setting stacks with Align to Surface. \cf4\b\par
+\cf1\b0\par
+Both settings have a Flip option, which simply flips the way that the prefab instance aligns to that axis.\par
+\par
+If neither Alignment feature is toggled ON, objects are aligned to world up and world forward.\par
+\par
+\cf4\b Offset Sliders\cf1\b0  allow you to set a random range of deviation from the initial alignment per axis. Each slider allows you to set the upper and lower maximum deviation in degrees up to which the placed prefabs will be randomly rotated about the given axis.\cf4\b\par
+\cf1\b0\par
+The bow-tie looking icon next to these sliders can be clicked to re-center them to 0 degrees deviation.\par
+\par
+These offsets are applied on top of any previous placement settings such as \cf4\b Align to Surface\cf1\b0  or \cf4\b Align to Stroke\cf1\b0 . \par
+\b\fs28\par
+Object Position Settings\par
+\b0\fs22 This Object Position Foldout allows you to offset the objects along the axes established by the Object Rotation settings.\par
+\cf0\lang9\par
+\cf1\lang1033\par
+Each of the three float fields here allows you to enter how far along each axis the object will be offset.\par
+\par
+\b\fs28 Object Scale Settings\par
+\b0\fs22 Much like the Mesh Rotation foldout, the Mesh Scale Range foldout allows you to set the range within which a property is randomized. This foldout uses split sliders so you can set the upper and lower limits for the random scaling of placed objects.\par
+\b\par
+\b0 The \cf4\b Min\cf7  \cf1\b0 and \cf4\b Max\cf7  \cf1\b0 fields on the right allow you to set the minimum and maximum available slider values.\par
+\par
+The \cf4\b Uniform Scale\cf1\b0  and \cf4\b Per Axis Scale\cf1\b0  toggles allow you to determine whether randomness is applied to scale on all axes the same, or if each axis is randomized separately.\par
+\par
+The minimum and maximum values of each split slider set the smallest and largest scale that an object can randomly be scaled to. If you don\rquote t split the sliders, you will essentially be setting the exact scale you want objects to be spawned at rather than a random range.\par
+\par
+\b\fs28 Eraser Settings\par
+\b0\fs22 The Eraser Settings foldout offers settings to restrict which objects are affected by the eraser.\par
+\par
+\par
+\cf4\b Erase by Group\cf1\b0  restricts erasing to just the group selected in the Sorting Settings foldout, if Paint to Layer is checked and a group is selected. Otherwise the eraser ignores this setting.\cf4\b\par
+\cf1\b0\par
+\cf4\b Erase Selected Prefab\cf1\b0  restricts erasing only to instances of the prefab checked in the prefab panel. If no prefab is checked, the eraser ignores this setting.\cf4\b\par
+\cf1\b0\par
+These settings stack, so you can elect to erase only objects that are instances of a specific prefab belonging to a specific group.\par
+\par
+\b\fs28 Save Slots & Brush Templates\par
+\b0\fs22 Anchored to the bottom segment of the QuickBrush window is a save menu with a series of 6 brush slots. Each slot can hold an active brush template, and you can switch between these templates by clicking on the individual slot icons.\par
+\f1\par
+\par
+\f0 To create a new brush template, simply click the \cf4\b Blue Arrow\cf1\b0  icon above the slot in which you would like to create it. Then select \cf4\b\ldblquote New Template\rdblquote\cf1\b0  from the dropdown that appears. \par
+\par
+To save the brush template, name it using the text entry field and click the \cf4\b Save Icon\cf1\b0  next to it.\par
+\par
+Your saved brush templates will appear in the dropdown list so you can load it into a slot. The files are located in your project folder under \cf4 ProCore/QuickBrush/Templates\cf1 . To delete a brush template, just delete it from the project hierarchy.\par
+\par
+Make sure to save any updates you make to your template before you close QuickBrush.\par
+\par
+\par
+\b\fs28 Help Box\par
+\fs22\par
+\b0 Anchored at the very bottom of the panel, there is a \cf4\b Help Box\cf1\b0 . This basically serves as a tool-tip. Whenever you hover your cursor over any of the controls, the Help Box will display a short explanation of what that control does. I did my best to do get them all. Let me know if I missed anything. I have a feeling this will become more relevant as more fancy features are added to QuickBrush.\par
+\b\fs28\par
+\par
+Additional Resources\par
+\b0\fs22 Documentation is a useful reference, but lousy teaching. Don\rquote t forget to check out the videos at \fs24 "\f1\fs22{\field{\*\fldinst{HYPERLINK "http://www.protoolsforunity3d.com/probrush"}}{\fldrslt{\cf3\ul\f0 www\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/probrush"\cf3\ul\v0\f0 .\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/probrush"\cf3\ul\v0\f0 proCore\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/probrush"\cf3\ul\v0\f0 3\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/probrush"\cf3\ul\v0\f0 d\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/probrush"\cf3\ul\v0\f0 .\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/probrush"\cf3\ul\v0\f0 com\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/probrush"\cf3\ul\v0\f0 /\cf1\ulnone\v\f1 HYPERLINK "http://www.protoolsforunity3d.com/probrush"\cf3\ul\v0\f0 quickbrush}}}\cf1\ulnone\f0\fs24 "\fs22 . New videos will be added as future revisions of QuickBrush are released with new features that need explaining. If you have any questions or suggestions for features and workflow improvements, please email: \fs24 "\f1\fs22{\field{\*\fldinst{HYPERLINK "mailto:playTangent@procore3d.com"}}{\fldrslt{\cf3\ul\f0 playTangent\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 @\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 procore\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 3\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 d\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 .\cf1\ulnone\v\f1 HYPERLINK "mailto:playTangent@procore3d.com"\cf3\ul\v0\f0 com}}}\cf1\ulnone\f0\fs24 "\fs22 .\par
+}
+ 

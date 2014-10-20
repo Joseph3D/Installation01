@@ -1,0 +1,6 @@
+name: ProBuilder
+identifier: ProBuilder2_AboutWindowIdentifier
+version: 2.3.0f14
+revision: 2861
+date: 09-17-2014
+changelog: Assets/ProCore/ProBuilder/About/changelog.txt
