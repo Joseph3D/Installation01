@@ -52,7 +52,13 @@ namespace GameLogic
                 return false;
             }
         }
-
+        public int ResourceCacheItemCount
+        {
+            get
+            {
+                return ResourceCache.Count;
+            }
+        }
         private const string PrefabsDirectory = "Prefabs/";
         
         void Start()
@@ -85,7 +91,6 @@ namespace GameLogic
             GamePlayerObject.name = "Player";
             AddGameEntityCacheEntry(GamePlayerObject);
         }
-
         /// <summary>
         /// Initializes all objects/resources that GameManager needs to use
         /// </summary>
@@ -101,7 +106,6 @@ namespace GameLogic
 
             _InternalsInitialized = true;
         }
-
         /// <summary>
         /// Loads all assets that are critical and required before gameplay can start
         /// </summary>
@@ -117,13 +121,10 @@ namespace GameLogic
             }
             _AssetsLoaded = true;
         }
-
         public void AddObjectToResourceCache(string ObjectHandleName, object Handle)
         {
             ResourceCache.Add(ObjectHandleName, Handle);
         }
-
-
         public void LoadGameObject(string GameObjectFile,string GameObjectHandle)
         {
             if(ResourceCache.ContainsKey(GameObjectHandle))
@@ -134,23 +135,14 @@ namespace GameLogic
             GameObject LoadedObject = Resources.Load(GameObjectFile) as GameObject;
             AddObjectToResourceCache(GameObjectHandle, LoadedObject);
         }
-
         public bool ResourceCacheContains(string Handle)
         {
             return ResourceCache.ContainsKey(Handle);
-        }
-        public int ResourceCacheItemCount
-        {
-            get
-            {
-                return ResourceCache.Count;
-            }
         }
         public object GetResourceCacheItemByName(string Name)
         {
             return ResourceCache[Name];
         }
-
         private void AddGameEntityCacheEntry(GameObject Entity)
         {
             GameEntityCacheEntry NewCacheEntry = new GameEntityCacheEntry(Entity);
