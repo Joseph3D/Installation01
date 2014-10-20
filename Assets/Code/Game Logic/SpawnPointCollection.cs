@@ -49,9 +49,16 @@ namespace GameLogic
                 {
                     EntityTag TagManager = Entities[i].GetComponent<EntityTag>();
 
-                    if(TagManager.Is(Tag.SpawnPoint))
+                    if (TagManager != null)
                     {
-                        SpawnPoints.Add(Entities[i]);
+                        if (TagManager.Is(Tag.SpawnPoint))
+                        {
+                            SpawnPoints.Add(Entities[i]);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("ERROR: Entity does not have EntityTag: " + Entities[i].ToString());
                     }
                 }
             }
