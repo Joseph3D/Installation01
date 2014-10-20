@@ -58,6 +58,8 @@ namespace GameLogic
         void Start()
         {
             InitializeInternals();
+
+            SpawnPlayer();
         }
 
         void Update()
@@ -75,7 +77,13 @@ namespace GameLogic
         /// </summary>
         private void SpawnPlayer()
         {
-            GameObject PlayerObject = GetResourceCacheItemByName("Player") as GameObject;
+            GameObject player = GetResourceCacheItemByName("Player") as GameObject;
+            Vector3 SpawnPointPosition = SpawnPoints[UnityRandom.Range(0, SpawnPoints.Count)].transform.position;
+            SpawnPointPosition.y += 5;
+
+            GameObject GamePlayerObject = GameObject.Instantiate(player, SpawnPointPosition, this.transform.rotation) as GameObject;
+            GamePlayerObject.name = "Player";
+            AddGameEntityCacheEntry(GamePlayerObject);
         }
 
         /// <summary>
