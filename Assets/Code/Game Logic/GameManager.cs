@@ -52,7 +52,13 @@ namespace GameLogic
                 return false;
             }
         }
-
+        public int ResourceCacheItemCount
+        {
+            get
+            {
+                return ResourceCache.Count;
+            }
+        }
         private const string PrefabsDirectory = "Prefabs/";
         
         void Start()
@@ -85,7 +91,6 @@ namespace GameLogic
             GamePlayerObject.name = "Player";
             AddGameEntityCacheEntry(GamePlayerObject);
         }
-
         /// <summary>
         /// Initializes all objects/resources that GameManager needs to use
         /// </summary>
@@ -101,7 +106,6 @@ namespace GameLogic
 
             _InternalsInitialized = true;
         }
-
         /// <summary>
         /// Loads all assets that are critical and required before gameplay can start
         /// </summary>
@@ -117,13 +121,6 @@ namespace GameLogic
             }
             _AssetsLoaded = true;
         }
-
-        public void AddObjectToResourceCache(string ObjectHandleName, object Handle)
-        {
-            ResourceCache.Add(ObjectHandleName, Handle);
-        }
-
-
         public void LoadGameObject(string GameObjectFile,string GameObjectHandle)
         {
             if(ResourceCache.ContainsKey(GameObjectHandle))
@@ -135,22 +132,39 @@ namespace GameLogic
             AddObjectToResourceCache(GameObjectHandle, LoadedObject);
         }
 
+
+        public void AddObjectToResourceCache(string ObjectHandleName, object Handle)
+        {
+            ResourceCache.Add(ObjectHandleName, Handle);
+        }
         public bool ResourceCacheContains(string Handle)
         {
             return ResourceCache.ContainsKey(Handle);
-        }
-        public int ResourceCacheItemCount
-        {
-            get
-            {
-                return ResourceCache.Count;
-            }
         }
         public object GetResourceCacheItemByName(string Name)
         {
             return ResourceCache[Name];
         }
 
+        /// <summary>
+        /// Caches all game entities in the world
+        /// </summary>
+        private void CacheAllGameEntities()
+        {
+            GameObject[] Entities = GameObject.FindGameObjectsWithTag("GameEntity");
+
+            if(Entities.Length == 0)
+            {
+                Debug.LogError("GAME MANAGER MESSAGE: FATAL ERROR: NO GAME ENTITIES IN SCENE. HALTING");
+                Debug.Break();
+                return;
+            }
+
+            for (int i = 0; i < Entities.Length; ++i )
+            {
+                AddGameEntityCacheEntry(Entities[i]);
+            }
+        }
         private void AddGameEntityCacheEntry(GameObject Entity)
         {
             GameEntityCacheEntry NewCacheEntry = new GameEntityCacheEntry(Entity);
@@ -173,22 +187,19 @@ namespace GameLogic
         }
 
         /// <summary>
-        /// Caches all game entities in the world
+        /// Destroys game entity, removed it from the world and de-caches it in the GameEntityCache
         /// </summary>
-        private void CacheAllGameEntities()
+        /// <param name="EntityHash">Hash code of entity to destroy</param>
+        private void DestroyGameEntity(int EntityHash)
         {
-            GameObject[] Entities = GameObject.FindGameObjectsWithTag("GameEntity");
-
-            if(Entities.Length == 0)
+            for(int i = 0; i < GameEntityCache.Count; ++i)
             {
-                Debug.LogError("GAME MANAGER MESSAGE: FATAL ERROR: NO GAME ENTITIES IN SCENE. HALTING");
-                Debug.Break();
-                return;
-            }
+                if(GameEntityCache[i].EntityHash == EntityHash)
+                {
+                    GameObject.Destroy(GameEntityCache[i].Entity);
 
-            for (int i = 0; i < Entities.Length; ++i )
-            {
-                AddGameEntityCacheEntry(Entities[i]);
+                    RemoveGameEntityCacheEntry(GameEntityCache[i].EntityHash);
+                }
             }
         }
     }
