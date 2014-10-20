@@ -7,14 +7,15 @@ namespace GameLogic
     {
         #region Members
         public string TraitsFile;
-        public Vector3 DebugDirection;
-        public ProjectileTraits DebugTraits;
 
-        private ProjectileTraits Traits;
-        private LineRenderer  DebugPathRenderer;
+        public Vector3 DebugDirection;
+
+        public ProjectileTraits Traits;
+
         private TrailRenderer TracerRenderer;
 
         private Vector3 Direction;
+
         public Vector3 ProjectileDirection
         {
             get
@@ -82,17 +83,6 @@ namespace GameLogic
         public void SetProjectileTraits(ProjectileTraits Traits)
         {
             this.Traits = Traits;
-        }
-
-
-        private void InitializeDebugPathRenderer()
-        {
-#if DEBUG
-            gameObject.AddComponent(typeof(LineRenderer));
-            DebugPathRenderer = GetComponent<LineRenderer>();
-            DebugPathRenderer.SetColors(Color.red, Color.red);
-            DebugPathRenderer.SetWidth(2.0f, 2.0f);
-#endif
         }
 
         private void InitializeTraits()
