@@ -43,6 +43,10 @@ namespace Helpers
         {
             CacheList.Remove(Item);
         }
+        public void Remove(int Index)
+        {
+            CacheList.RemoveAt(Index);
+        }
 
         public T Get(int Index)
         {
