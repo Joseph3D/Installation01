@@ -91,7 +91,7 @@ namespace Helpers
 
         public void Add(K Key, T Object)
         {
-            CacheDictionary.Add(K, T);
+            CacheDictionary.Add(Key, Object);
         }
     }
 }
