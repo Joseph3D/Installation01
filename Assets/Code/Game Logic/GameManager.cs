@@ -92,7 +92,6 @@ namespace GameLogic
             GamePlayerObject.name = "Player";
             AddGameEntityCacheEntry(GamePlayerObject);
         }
-
         /// <summary>
         /// Initializes all objects/resources that GameManager needs to use
         /// </summary>
@@ -133,8 +132,6 @@ namespace GameLogic
             GameObject LoadedObject = Resources.Load(GameObjectFile) as GameObject;
             AddObjectToResourceCache(GameObjectHandle, LoadedObject);
         }
-
-
         public void AddObjectToResourceCache(string ObjectHandleName, object Handle)
         {
             ResourceCache.Add(ObjectHandleName, Handle);
@@ -147,7 +144,6 @@ namespace GameLogic
         {
             return ResourceCache[Name];
         }
-
         /// <summary>
         /// Caches all game entities in the world
         /// </summary>
@@ -176,7 +172,6 @@ namespace GameLogic
         {
             GameEntityCache.Remove(Entry);
         }
-
         private void RemoveGameEntityCacheEntry(int EntityHash)
         {
             for(int i = 0; i < GameEntityCache.Count; ++i)
@@ -189,7 +184,6 @@ namespace GameLogic
                 }
             }
         }
-
         /// <summary>
         /// Destroys game entity, removed it from the world and de-caches it in the GameEntityCache
         /// </summary>
