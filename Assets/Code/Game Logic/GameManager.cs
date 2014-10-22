@@ -17,9 +17,9 @@ namespace GameLogic
         private GameMode Mode;
 
         private Cache<GameEntityCacheEntry> GameEntityCache;
+        private KeyedCache<string, object> ResourceCache;
 
         public string[] StartupAssets;
-        private Dictionary<string, object> ResourceCache;
         private SpawnPointCollection SpawnPoints;
 
         public bool AssetsLoaded
@@ -92,12 +92,13 @@ namespace GameLogic
             GamePlayerObject.name = "Player";
             AddGameEntityCacheEntry(GamePlayerObject);
         }
+
         /// <summary>
         /// Initializes all objects/resources that GameManager needs to use
         /// </summary>
         private void InitializeInternals()
         {
-            ResourceCache = new Dictionary<string, object>();
+            ResourceCache = new KeyedCache<string, object>();
             GameEntityCache = new Cache<GameEntityCacheEntry>();
 
             SpawnPoints = new SpawnPointCollection();
