@@ -16,7 +16,8 @@ namespace GameLogic
         public GameMode InitialMode;
         private GameMode Mode;
 
-        private List<GameEntityCacheEntry> GameEntityCache;
+        private Cache<GameEntityCacheEntry> GameEntityCache;
+
         public string[] StartupAssets;
         private Dictionary<string, object> ResourceCache;
         private SpawnPointCollection SpawnPoints;
@@ -97,7 +98,7 @@ namespace GameLogic
         private void InitializeInternals()
         {
             ResourceCache = new Dictionary<string, object>();
-            GameEntityCache = new List<GameEntityCacheEntry>();
+            GameEntityCache = new Cache<GameEntityCacheEntry>();
 
             SpawnPoints = new SpawnPointCollection();
             SpawnPoints.CacheAll();
@@ -174,13 +175,15 @@ namespace GameLogic
         {
             GameEntityCache.Remove(Entry);
         }
+
         private void RemoveGameEntityCacheEntry(int EntityHash)
         {
             for(int i = 0; i < GameEntityCache.Count; ++i)
             {
                 if(GameEntityCache[i].EntityHash == EntityHash)
                 {
-                    GameEntityCache.RemoveAt(i);
+                    GameEntityCache.Remove(i);
+
                     break;
                 }
             }
