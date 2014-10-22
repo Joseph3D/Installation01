@@ -29,6 +29,10 @@ namespace Helpers
         {
             CacheList = new List<T>();
         }
+        public Cache(int MaxCapacity)
+        {
+            CacheList = new List<T>(MaxCapacity);
+        }
 
         public void Add(T Item)
         {
@@ -38,6 +42,47 @@ namespace Helpers
         public void Remove(T Item)
         {
             CacheList.Remove(Item);
+        }
+
+        public T Get(int Index)
+        {
+            return CacheList[Index];
+        }
+    }
+
+    public class KeyedCache<K,T>
+    {
+        private Dictionary<K, T> CacheDictionary;
+
+        public int Count
+        {
+            get
+            {
+                return CacheDictionary.Count;
+            }
+        }
+
+        public T this[K Key]
+        {
+            get
+            {
+                return CacheDictionary[Key];
+            }
+        }
+
+        public KeyedCache()
+        {
+            CacheDictionary = new Dictionary<K, T>();
+        }
+
+        public KeyedCache(int MaxCapacity)
+        {
+            CacheDictionary = new Dictionary<K, T>(MaxCapacity);
+        }
+
+        public bool ContainsKey(K Key)
+        {
+            return CacheDictionary.ContainsKey(Key);
         }
     }
 }
