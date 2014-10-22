@@ -88,5 +88,10 @@ namespace Helpers
         {
             return CacheDictionary.ContainsKey(Key);
         }
+
+        public void Add(K Key, T Object)
+        {
+            CacheDictionary.Add(K, T);
+        }
     }
 }
