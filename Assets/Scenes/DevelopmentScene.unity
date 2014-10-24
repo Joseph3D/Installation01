@@ -148,7 +148,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AreaCheckRadius: 5000
-  ProfileEnabled: 0
 --- !u!114 &331214170
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,7 +203,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AreaCheckRadius: 5000
-  ProfileEnabled: 0
 --- !u!114 &541458865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,7 +258,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AreaCheckRadius: 5000
-  ProfileEnabled: 0
 --- !u!114 &588822873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,7 +357,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AreaCheckRadius: 5000
-  ProfileEnabled: 0
 --- !u!114 &1188695893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -614,6 +610,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 483a8d19721d6ac41bfcb809bd74b1c7, type: 2}
+      propertyPath: ProfileEnabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 483a8d19721d6ac41bfcb809bd74b1c7, type: 2}
   m_RootGameObject: {fileID: 1188695891}
@@ -693,7 +693,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AreaCheckRadius: 5000
-  ProfileEnabled: 0
 --- !u!114 &1699880645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -793,7 +792,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AreaCheckRadius: 5000
-  ProfileEnabled: 0
 --- !u!114 &1971921089
 MonoBehaviour:
   m_ObjectHideFlags: 0
