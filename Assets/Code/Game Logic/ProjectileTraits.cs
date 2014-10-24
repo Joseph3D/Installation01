@@ -48,7 +48,7 @@ namespace GameLogic
         {
             if(File.Exists(TraitsFile))
             {
-                ProjectileTraits LoadedTraits = XMLBaseFile.LoadXMLFile(TraitsFile, typeof(ProjectileTraits)) as ProjectileTraits;
+                ProjectileTraits LoadedTraits = XMLHelper.LoadXMLFile(TraitsFile, typeof(ProjectileTraits)) as ProjectileTraits;
                 return LoadedTraits;
             }
             return null;
