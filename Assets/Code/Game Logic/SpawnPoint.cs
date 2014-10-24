@@ -26,12 +26,17 @@ namespace GameLogic
 
         private int Counter;
         private int CheckFrequency;
+
+        private GameManager Manager;
         
         public void Start()
         {
             UpdateSurroundingAreaInformation();
             Counter = 0;
             CheckFrequency = 30;
+
+
+            Manager = GameManagerLocator.Manager;
         }
 
         public void Update()
