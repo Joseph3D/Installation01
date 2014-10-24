@@ -65,8 +65,6 @@ namespace GameLogic
         void Start()
         {
             InitializeInternals();
-
-            SpawnPlayer();
         }
 
         void Update()
