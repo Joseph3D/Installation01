@@ -61,6 +61,11 @@ namespace GameLogic
             }
         }
         private const string PrefabsDirectory = "Prefabs/";
+
+        void Awake()
+        {
+            Screen.lockCursor = true;
+        }
         
         void Start()
         {
