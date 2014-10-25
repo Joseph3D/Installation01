@@ -65,6 +65,7 @@ namespace GameLogic
         void Awake()
         {
             Screen.lockCursor = true;
+            Thread.Sleep(100);
         }
         
         void Start()

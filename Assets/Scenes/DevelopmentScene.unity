@@ -216,15 +216,15 @@ MonoBehaviour:
   Family: []
   Renderers: []
   AudioSources: []
-  MotorAcceleration: .180000007
-  MotorDamping: .170000002
+  MotorAcceleration: .25
+  MotorDamping: .0799999982
   MotorBackwardsSpeed: .649999976
   MotorAirSpeed: .349999994
   MotorSlopeSpeedUp: 1
   MotorSlopeSpeedDown: 1
   MotorFreeFly: 0
-  MotorJumpForce: .200000003
-  MotorJumpForceDamping: 0
+  MotorJumpForce: .150000006
+  MotorJumpForceDamping: .25
   MotorJumpForceHold: 0
   MotorJumpForceHoldDamping: 0
   PhysicsForceDamping: .0500000007
@@ -288,7 +288,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 452725304}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.165996015, y: 7.0689106, z: -1.66661072}
+  m_LocalPosition: {x: -.165996015, y: 1.7166748, z: -1.66661072}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1004094987}
@@ -473,7 +473,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1004094986}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: .823199272, z: .377905965}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 452725312}
@@ -528,8 +528,8 @@ MonoBehaviour:
   RotationEarthQuakeFactor: 0
   ShakeSpeed: 0
   ShakeAmplitude: {x: 10, y: 10, z: 0}
-  BobRate: {x: 0, y: 1.39999998, z: 0, w: .699999988}
-  BobAmplitude: {x: 0, y: .25, z: 0, w: .5}
+  BobRate: {x: 0, y: .5, z: 0, w: .5}
+  BobAmplitude: {x: 0, y: .0500000007, z: 0, w: .5}
   BobInputVelocityScale: 1
   BobMaxInputVelocity: 100
   BobRequireGroundContact: 1
