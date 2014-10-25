@@ -25,9 +25,13 @@ namespace GameLogic
         private GameManager Manager;
         #endregion
 
-        public void Start()
+        public void Awake()
         {
             Manager = GameManagerLocator.Manager;
+        }
+
+        public void Start()
+        {
         }
 
         public void Update()
@@ -37,7 +41,12 @@ namespace GameLogic
 
         void OnTriggerEnter(Collider Other)
         {
+            EntityTag OtherColliderTag = Other.gameObject.GetComponent<EntityTag>();
 
+            for(int i = 0; i < TriggerTags.Length; ++i)
+            {
+
+            }
         }
     }
 }
