@@ -23,6 +23,7 @@ namespace GameLogic
         public int EnemyEntitiesNearby { get; private set; }
 
         private int Counter;
+
         private int CheckFrequency;
 
         private GameManager Manager;
@@ -39,7 +40,13 @@ namespace GameLogic
 
         public void Update()
         {
+            Counter++;
+            if(Counter == CheckFrequency)
+            {
+                UpdateSurroundingAreaInformation();
 
+                Counter = 0;
+            }
         }
 
         public void Spawn()
