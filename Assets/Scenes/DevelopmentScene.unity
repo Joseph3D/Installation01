@@ -223,10 +223,10 @@ MonoBehaviour:
   MotorSlopeSpeedUp: 1
   MotorSlopeSpeedDown: 1
   MotorFreeFly: 0
-  MotorJumpForce: .180000007
-  MotorJumpForceDamping: .0799999982
-  MotorJumpForceHold: .00300000003
-  MotorJumpForceHoldDamping: .5
+  MotorJumpForce: .200000003
+  MotorJumpForceDamping: 0
+  MotorJumpForceHold: 0
+  MotorJumpForceHoldDamping: 0
   PhysicsForceDamping: .0500000007
   PhysicsPushForce: 5
   PhysicsGravityModifier: .200000003
@@ -288,7 +288,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 452725304}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.165996015, y: 14.2254906, z: -1.66661072}
+  m_LocalPosition: {x: -.165996015, y: 7.0689106, z: -1.66661072}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1004094987}
@@ -509,7 +509,7 @@ MonoBehaviour:
   MouseAccelerationThreshold: .400000006
   RenderingFieldOfView: 60
   RenderingZoomDamping: .200000003
-  PositionOffset: {x: 0, y: 1.75, z: .100000001}
+  PositionOffset: {x: 0, y: 5, z: .100000001}
   PositionGroundLimit: .100000001
   PositionSpringStiffness: .00999999978
   PositionSpringDamping: .25
