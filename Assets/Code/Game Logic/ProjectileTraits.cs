@@ -9,7 +9,7 @@ using Helpers;
 
 namespace GameLogic
 {
-    [XmlRoot]
+    [Serializable]
     public sealed class ProjectileTraits
     {
         [XmlElement]

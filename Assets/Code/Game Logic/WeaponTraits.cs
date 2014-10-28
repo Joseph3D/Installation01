@@ -13,7 +13,7 @@ using UnityRandom = UnityEngine.Random;
 
 namespace GameLogic
 {
-    [Serial]
+    []
     public sealed class WeaponTraits
     {
     }
