@@ -65,7 +65,7 @@ namespace AI
         /// <returns>Deserialized AITraits</returns>
         public static AITraits LoadFromFile(string FilePath)
         {
-            return XMLBaseFile.LoadXMLFile(FilePath, typeof(AITraits)) as AITraits;
+            return XMLHelper.LoadXMLFile(FilePath, typeof(AITraits)) as AITraits;
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace AI
         /// <param name="Traits">AITraits to serialize</param>
         public static void WriteToFile(string FilePath, AITraits Traits)
         {
-            XMLBaseFile.CreateXMLFile(FilePath, Traits);
+            XMLHelper.CreateXMLFile(FilePath, Traits);
         }
     }
 }

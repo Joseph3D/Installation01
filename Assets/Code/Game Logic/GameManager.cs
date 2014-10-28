@@ -16,9 +16,10 @@ namespace GameLogic
         public GameMode InitialMode;
         private GameMode Mode;
 
-        private List<GameEntityCacheEntry> GameEntityCache;
+        private Cache<GameEntityCacheEntry> GameEntityCache;
+        private KeyedCache<string, object> ResourceCache;
+
         public string[] StartupAssets;
-        private Dictionary<string, object> ResourceCache;
         private SpawnPointCollection SpawnPoints;
 
         public bool AssetsLoaded
@@ -60,12 +61,14 @@ namespace GameLogic
             }
         }
         private const string PrefabsDirectory = "Prefabs/";
+
+        void Awake()
+        {
+        }
         
         void Start()
         {
             InitializeInternals();
-
-            SpawnPlayer();
         }
 
         void Update()
@@ -96,8 +99,8 @@ namespace GameLogic
         /// </summary>
         private void InitializeInternals()
         {
-            ResourceCache = new Dictionary<string, object>();
-            GameEntityCache = new List<GameEntityCacheEntry>();
+            ResourceCache = new KeyedCache<string, object>();
+            GameEntityCache = new Cache<GameEntityCacheEntry>();
 
             SpawnPoints = new SpawnPointCollection();
             SpawnPoints.CacheAll();
@@ -131,8 +134,6 @@ namespace GameLogic
             GameObject LoadedObject = Resources.Load(GameObjectFile) as GameObject;
             AddObjectToResourceCache(GameObjectHandle, LoadedObject);
         }
-
-
         public void AddObjectToResourceCache(string ObjectHandleName, object Handle)
         {
             ResourceCache.Add(ObjectHandleName, Handle);
@@ -145,7 +146,6 @@ namespace GameLogic
         {
             return ResourceCache[Name];
         }
-
         /// <summary>
         /// Caches all game entities in the world
         /// </summary>
@@ -180,12 +180,12 @@ namespace GameLogic
             {
                 if(GameEntityCache[i].EntityHash == EntityHash)
                 {
-                    GameEntityCache.RemoveAt(i);
+                    GameEntityCache.Remove(i);
+
                     break;
                 }
             }
         }
-
         /// <summary>
         /// Destroys game entity, removed it from the world and de-caches it in the GameEntityCache
         /// </summary>

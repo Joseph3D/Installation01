@@ -18,20 +18,24 @@ namespace GameLogic
     {
         public int AreaCheckRadius;
 
-        public bool ProfileEnabled;
-
         public int EntitiesNearby { get; private set; }
         public bool PlayerNearby { get; private set; }
         public int EnemyEntitiesNearby { get; private set; }
 
         private int Counter;
+
         private int CheckFrequency;
+
+        private GameManager Manager;
         
         public void Start()
         {
             UpdateSurroundingAreaInformation();
             Counter = 0;
             CheckFrequency = 30;
+
+
+            Manager = GameManagerLocator.Manager;
         }
 
         public void Update()
@@ -40,6 +44,7 @@ namespace GameLogic
             if(Counter == CheckFrequency)
             {
                 UpdateSurroundingAreaInformation();
+
                 Counter = 0;
             }
         }
@@ -51,10 +56,6 @@ namespace GameLogic
 
         private void UpdateSurroundingAreaInformation()
         {
-#if DEBUG
-            if(ProfileEnabled)
-                CodeTimeProfiler.BeginPerformanceTimer();
-#endif
             RaycastHit[] Hits = Physics.SphereCastAll(transform.position, AreaCheckRadius, Vector3.forward, 0.001f);
 
             int nearbyEntities = 0;
@@ -83,16 +84,6 @@ namespace GameLogic
                 PlayerNearby = playerNearby;
                 EnemyEntitiesNearby = enemyEntitiesNearby;
             }
-#if DEBUG
-            if (ProfileEnabled)
-            {
-                CodeTimeProfiler.EndPerformanceTimer();
-                long ElapsedMilliseconds = CodeTimeProfiler.GetElapsedMilliseconds(true);
-                long ElapsedTicks = CodeTimeProfiler.GetElapsedTicks(true);
-                Debug.Log("SpawnPoint.UpdateSurroundingAreaInformation() took " + ElapsedMilliseconds.ToString() + " milliseconds.");
-                Debug.Log("SpawnPoint.UpdateSurroundingAreaInformation() took " + ElapsedTicks.ToString() + " ticks.");
-            }
-#endif
         }
     }
 }
