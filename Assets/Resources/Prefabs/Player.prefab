@@ -44,7 +44,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: .681479454, z: .221017361}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400002}
@@ -131,7 +131,7 @@ MonoBehaviour:
   MotorSlopeSpeedUp: 1
   MotorSlopeSpeedDown: 1
   MotorFreeFly: 0
-  MotorJumpForce: .180000007
+  MotorJumpForce: .25
   MotorJumpForceDamping: .0799999982
   MotorJumpForceHold: .00300000003
   MotorJumpForceHoldDamping: .5
