@@ -68,5 +68,26 @@ namespace GameLogic
         {
 
         }
+
+        /// <summary>
+        /// Checks to see if an entity is tagged with a specified tag
+        /// </summary>
+        /// <param name="Entity"></param>
+        /// <param name="Tag"></param>
+        /// <returns></returns>
+        public static bool EntityIs(GameObject Entity,Tag Tag)
+        {
+            EntityTag _Tag = Entity.GetComponent<EntityTag>();
+
+            if (!_Tag)
+            {
+                Debug.Log("Game Object does not contain an EntityTag: " + Entity.ToString());
+                return false;
+            }
+            else
+            {
+                return _Tag.Is(Tag);
+            }
+        }
     }
 }
