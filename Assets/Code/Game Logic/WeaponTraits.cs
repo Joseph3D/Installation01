@@ -19,6 +19,6 @@ namespace GameLogic
     public sealed class WeaponTraits
     {
         public int MagazineSize { get; private set; }
-        public float BaseDamage { get; private set; }
+        public float Damage { get; private set; }
     }
 }
