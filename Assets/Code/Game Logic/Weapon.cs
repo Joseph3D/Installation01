@@ -64,6 +64,7 @@ namespace GameLogic
             {
                 return true;
             }
+            return true;
         }
     }
 }

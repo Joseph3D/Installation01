@@ -478,8 +478,8 @@ MonoBehaviour:
   ShakeSpeed: 0
   ShakeAmplitude: {x: 0, y: 0, z: 0}
   FallShakeEnabled: 0
-  BobRate: {x: 0, y: 1.39999998, z: 0, w: .699999988}
-  BobAmplitude: {x: 0, y: .25, z: 0, w: .5}
+  BobRate: {x: 0, y: 0, z: 0, w: 0}
+  BobAmplitude: {x: 0, y: 0, z: 0, w: 0}
   BobInputVelocityScale: 1
   BobMaxInputVelocity: 100
   BobRequireGroundContact: 1
@@ -648,14 +648,14 @@ MonoBehaviour:
   Family: []
   Renderers: []
   AudioSources: []
-  MotorAcceleration: .180000007
-  MotorDamping: .170000002
-  MotorBackwardsSpeed: .649999976
-  MotorAirSpeed: .349999994
+  MotorAcceleration: .5
+  MotorDamping: .200000003
+  MotorBackwardsSpeed: .5
+  MotorAirSpeed: .0500000007
   MotorSlopeSpeedUp: 1
   MotorSlopeSpeedDown: 1
   MotorFreeFly: 0
-  MotorJumpForce: .25
+  MotorJumpForce: .5
   MotorJumpForceDamping: .0799999982
   MotorJumpForceHold: .00300000003
   MotorJumpForceHoldDamping: .5
@@ -1398,6 +1398,42 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
       propertyPath: ShakeAmplitude.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
+      propertyPath: MotorAcceleration
+      value: .5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
+      propertyPath: MotorDamping
+      value: .200000003
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
+      propertyPath: MotorBackwardsSpeed
+      value: .5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
+      propertyPath: MotorAirSpeed
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
+      propertyPath: MotorJumpForce
+      value: .5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
+      propertyPath: BobRate.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
+      propertyPath: BobRate.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
+      propertyPath: BobAmplitude.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
+      propertyPath: BobAmplitude.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
