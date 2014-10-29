@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
-using System.IO;
-using System.Threading;
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.IO;
+using Helpers;
 using GameLogic;
 using Helpers;
 
@@ -13,8 +15,10 @@ using UnityRandom = UnityEngine.Random;
 
 namespace GameLogic
 {
-    []
+    [Serializable]
     public sealed class WeaponTraits
     {
+        public int MagazineSize { get; private set; }
+        public float BaseDamage { get; private set; }
     }
 }
