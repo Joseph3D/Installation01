@@ -65,6 +65,7 @@ namespace GameLogic
 
         void Awake()
         {
+            
         }
         
         void Start()
