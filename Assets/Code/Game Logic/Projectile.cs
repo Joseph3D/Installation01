@@ -15,6 +15,7 @@ namespace GameLogic
         private TrailRenderer TracerRenderer;
 
         private Vector3 Direction;
+        private GameManager Manager;
 
         public Vector3 ProjectileDirection
         {
@@ -25,6 +26,10 @@ namespace GameLogic
         }
         #endregion
 
+        void Awake()
+        {
+
+        }
 
         void Start()
         {
@@ -36,7 +41,7 @@ namespace GameLogic
             Traits.Lifespan--;
             if(Traits.Lifespan == 0)
             {
-                Destroy(this);
+                RemoveFromWorld();
             }
             else
             {
@@ -91,6 +96,12 @@ namespace GameLogic
             {
                 Traits = ProjectileTraits.LoadFromFile(TraitsFile);
             }
+        }
+
+        private void RemoveFromWorld()
+        {
+            Manager.RemoveGameEntityCacheEntry(this.GetHashCode());
+            Destroy(this);
         }
     }
 }
