@@ -41,8 +41,8 @@ namespace GameLogic
 
         void Update()
         {
-            Traits.Lifespan--;
-            if(Traits.Lifespan == 0)
+            Lifespan--;
+            if(Lifespan == 0)
             {
                 RemoveFromWorld();
             }
@@ -57,13 +57,13 @@ namespace GameLogic
         #region Ballistics Update Functions
         private void UpdateProjectileVelocity()
         {
-            Vector3 VelocityVector = Direction * Traits.Velocity;
+            Vector3 VelocityVector = Direction * Velocity;
             transform.position += VelocityVector;
         }
 
         private void UpdateProjectileDrop()
         {
-            Vector3 BulletDropVector = new Vector3(0,Traits.Weight, 0);
+            Vector3 BulletDropVector = new Vector3(0,Weight, 0);
 
             transform.position -= BulletDropVector; // simplistic bullet drop model for now
         }
@@ -82,23 +82,6 @@ namespace GameLogic
         {
             this.Direction = Direction;
             this.Direction.Normalize(); // Pre-Normalize
-        }
-
-        /// <summary>
-        /// Sets the traits of this projectile
-        /// </summary>
-        /// <param name="Traits"></param>
-        public void SetProjectileTraits(ProjectileTraits Traits)
-        {
-            this.Traits = Traits;
-        }
-
-        private void InitializeTraits()
-        {
-            if(TraitsFile != string.Empty)
-            {
-                Traits = ProjectileTraits.LoadFromFile(TraitsFile);
-            }
         }
 
         private void RemoveFromWorld()
