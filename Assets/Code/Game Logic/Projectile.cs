@@ -6,12 +6,15 @@ namespace GameLogic
     public class Projectile : MonoBehaviour
     {
         #region Members
-        public string TraitsFile;
-
-        public Vector3 DebugDirection;
-
-        public ProjectileTraits Traits;
-
+        #region Editor Visible Traits
+        public float Velocity;
+        public float Weight;
+        public float Lifespan;
+        public float Damage;
+        public bool Homing;
+        public float MaxHomingTurn;
+        public bool Tracer;
+        #endregion
         private TrailRenderer TracerRenderer;
 
         private Vector3 Direction;
