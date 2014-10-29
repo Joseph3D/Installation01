@@ -254,149 +254,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
---- !u!43 &417598714
-Mesh:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  serializedVersion: 8
-  m_SubMeshes:
-  - serializedVersion: 2
-    firstByte: 0
-    indexCount: 0
-    topology: 0
-    firstVertex: 0
-    vertexCount: 0
-    localAABB:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
-  m_Shapes:
-    vertices: []
-    shapes: []
-    channels: []
-    fullWeights: []
-  m_BindPose: []
-  m_BoneNameHashes: 
-  m_RootBoneNameHash: 0
-  m_MeshCompression: 0
-  m_StreamCompression: 0
-  m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
-  m_IndexBuffer: 
-  m_Skin: []
-  m_VertexData:
-    m_CurrentChannels: 0
-    m_VertexCount: 0
-    m_Channels:
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    m_Streams:
-    - channelMask: 0
-      offset: 0
-      stride: 0
-      dividerOp: 0
-      frequency: 0
-    - channelMask: 0
-      offset: 0
-      stride: 0
-      dividerOp: 0
-      frequency: 0
-    - channelMask: 0
-      offset: 0
-      stride: 0
-      dividerOp: 0
-      frequency: 0
-    - channelMask: 0
-      offset: 0
-      stride: 0
-      dividerOp: 0
-      frequency: 0
-    m_DataSize: 0
-    _typelessdata: 
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BindPoses:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Colors:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-  m_LocalAABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  m_MeshUsageFlags: 0
-  m_MeshOptimized: 0
 --- !u!1 &541458863
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,7 +451,7 @@ MonoBehaviour:
   Renderers: []
   AudioSources: []
   FPController: {fileID: 0}
-  MouseSensitivity: {x: 5, y: 6}
+  MouseSensitivity: {x: 5, y: 5}
   MouseSmoothSteps: 10
   MouseSmoothWeight: .5
   MouseAcceleration: 0
@@ -620,11 +477,12 @@ MonoBehaviour:
   RotationEarthQuakeFactor: 0
   ShakeSpeed: 0
   ShakeAmplitude: {x: 0, y: 0, z: 0}
-  BobRate: {x: 0, y: 0, z: 0, w: 0}
-  BobAmplitude: {x: 0, y: 0, z: 0, w: 0}
-  BobInputVelocityScale: 0
-  BobMaxInputVelocity: 0
-  BobRequireGroundContact: 0
+  FallShakeEnabled: 0
+  BobRate: {x: 0, y: 1.39999998, z: 0, w: .699999988}
+  BobAmplitude: {x: 0, y: .25, z: 0, w: .5}
+  BobInputVelocityScale: 1
+  BobMaxInputVelocity: 100
+  BobRequireGroundContact: 1
   BobStepThreshold: 10
 --- !u!81 &1104656514
 AudioListener:
@@ -679,32 +537,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1328950432}
   m_RootOrder: 0
---- !u!21 &1135188079
-Material:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Hidden/ProBuilder/UnlitColor
-  m_Shader: {fileID: 4800000, guid: 3db76c19f0b3fa84f936c19caeaab17c, type: 3}
-  m_ShaderKeywords: []
-  m_CustomRenderQueue: -1
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats: {}
-    m_Colors:
-      data:
-        first:
-          name: _Color
-        second: {r: 0, g: .860000014, b: 1, a: .275000006}
 --- !u!1 &1188695891
 GameObject:
   m_ObjectHideFlags: 0
@@ -786,7 +618,7 @@ Transform:
   m_PrefabInternal: {fileID: 2057768532}
   m_GameObject: {fileID: 1328950431}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.0616474152, y: 2.66054726, z: 1.64571476}
+  m_LocalPosition: {x: -.0616474152, y: 20.4129543, z: 1.64571476}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 1104656516}
@@ -816,14 +648,14 @@ MonoBehaviour:
   Family: []
   Renderers: []
   AudioSources: []
-  MotorAcceleration: .5
-  MotorDamping: .200000003
-  MotorBackwardsSpeed: .5
-  MotorAirSpeed: .0500000007
+  MotorAcceleration: .180000007
+  MotorDamping: .170000002
+  MotorBackwardsSpeed: .649999976
+  MotorAirSpeed: .349999994
   MotorSlopeSpeedUp: 1
   MotorSlopeSpeedDown: 1
   MotorFreeFly: 0
-  MotorJumpForce: .5
+  MotorJumpForce: .25
   MotorJumpForceDamping: .0799999982
   MotorJumpForceHold: .00300000003
   MotorJumpForceHoldDamping: .5
@@ -946,6 +778,69 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
+--- !u!1 &1444980859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1444980861}
+  - 108: {fileID: 1444980860}
+  m_Layer: 0
+  m_Name: Point light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!108 &1444980860
+Light:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1444980859}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Type: 2
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_Range: 10
+  m_SpotAngle: 30
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_Strength: 1
+    m_Bias: .0500000007
+    m_Softness: 4
+    m_SoftnessFade: 1
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_ActuallyLightmapped: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 1
+  m_ShadowSamples: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_IndirectIntensity: 1
+  m_AreaSize: {x: 1, y: 1}
+--- !u!4 &1444980861
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1444980859}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.7423954, y: -.763199806, z: -96.0496368}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
 --- !u!1001 &1455582964
 Prefab:
   m_ObjectHideFlags: 0
@@ -1395,62 +1290,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 11
---- !u!1 &1835983210
-GameObject:
-  m_ObjectHideFlags: 11
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1835983213}
-  - 33: {fileID: 1835983212}
-  - 23: {fileID: 1835983211}
-  m_Layer: 0
-  m_Name: ProBuilderSelectionMeshObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!23 &1835983211
-Renderer:
-  m_ObjectHideFlags: 11
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1835983210}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_LightmapIndex: 255
-  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
-  m_Materials:
-  - {fileID: 1135188079}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
-  m_LightProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
---- !u!33 &1835983212
-MeshFilter:
-  m_ObjectHideFlags: 11
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1835983210}
-  m_Mesh: {fileID: 417598714}
---- !u!4 &1835983213
-Transform:
-  m_ObjectHideFlags: 11
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1835983210}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
 --- !u!1 &1971921087
 GameObject:
   m_ObjectHideFlags: 0
@@ -1523,7 +1362,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.66054726
+      value: 20.4129543
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1560,58 +1399,6 @@ Prefab:
     - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
       propertyPath: ShakeAmplitude.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
-      propertyPath: BobRate.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
-      propertyPath: BobRate.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
-      propertyPath: BobAmplitude.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
-      propertyPath: BobAmplitude.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
-      propertyPath: BobInputVelocityScale
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
-      propertyPath: BobMaxInputVelocity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
-      propertyPath: BobRequireGroundContact
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
-      propertyPath: MotorAcceleration
-      value: .5
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
-      propertyPath: MotorDamping
-      value: .200000003
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
-      propertyPath: MotorBackwardsSpeed
-      value: .5
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
-      propertyPath: MotorAirSpeed
-      value: .0500000007
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
-      propertyPath: MotorJumpForce
-      value: .5
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
-      propertyPath: MouseSensitivity.y
-      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
