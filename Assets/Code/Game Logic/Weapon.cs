@@ -12,6 +12,15 @@ using UnityRandom = UnityEngine.Random;
 
 namespace GameLogic
 {
+    public enum WeaponState
+    {
+        Idle = 0,
+        Firing = 1,
+        Reloading = 2,
+        Jammed_DoubleFeed = 3,
+        Jammed_StovePiped = 4,
+    }
+
     public sealed class Weapon : MonoBehaviour
     {
         #region Editor Visible Traits
@@ -28,6 +37,8 @@ namespace GameLogic
 
         private GameManager Manager;
         private Projectile Projectile;
+        private WeaponState State = WeaponState.Idle;
+        private int Magazine;
 
         public void Awake()
         {
@@ -52,13 +63,18 @@ namespace GameLogic
         private void InitializeInternals()
         {
             Manager = GameManagerLocator.Manager;
+
+            if(!VerifyProjectile())
+            {
+                Debug.LogError("Unable to verify projectile");
+            }
         }
 
         /// <summary>
         /// Verifies that the selected projectile is properly configured
         /// to be used in engine as a projectile
         /// </summary>
-        /// <returns></returns>
+        /// <returns>true if the specified projectile prefab has been loaded by the GameManager</returns>
         private bool VerifyProjectile()
         {
             if(Manager.ResourceCacheContains(ProjectileAssetName)) // the specified projectile prefab has already been loaded by the game manager
