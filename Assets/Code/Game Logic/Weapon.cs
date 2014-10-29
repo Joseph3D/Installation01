@@ -62,7 +62,7 @@ namespace GameLogic
         {
             if(Manager.ResourceCacheContains(ProjectileAssetName))
             {
-
+                return true;
             }
         }
     }
