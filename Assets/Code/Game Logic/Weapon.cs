@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.IO;
 using System.Threading;
 using System.Collections;
@@ -13,20 +14,34 @@ namespace GameLogic
 {
     public sealed class Weapon : MonoBehaviour
     {
+        #region Editor Visible Traits
+        public float Damage;
+        public int MagazineSize;
+        public TimeSpan FireInterval;
+        public TimeSpan ReloadTime;
+        public int RoundsPerTriggerPull;
+        public float AccuracyFalloff; // higher values == gets innacurate faster
+        public bool SemiAutomatic;
+        public GameObject Projectile;
+        #endregion
+
         private GameManager Manager;
 
         public void Awake()
         {
             InitializeInternals();
         }
+
         public void Start()
         {
 
         }
+
         public void Update()
         {
 
         }
+
         public void FixedUpdate()
         {
 
@@ -35,6 +50,24 @@ namespace GameLogic
         private void InitializeInternals()
         {
             Manager = GameManagerLocator.Manager;
+        }
+
+        /// <summary>
+        /// Verifies that the selected projectile is properly configured
+        /// to be used in engine as a projectile
+        /// </summary>
+        /// <returns></returns>
+        private bool VerifyProjectile()
+        {
+            if(Projectile != null)
+            {
+                if(EntityTag.EntityIs(Projectile,Tag.Projectile))
+                {
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
     }
 }
