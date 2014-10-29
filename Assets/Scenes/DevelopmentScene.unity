@@ -476,7 +476,8 @@ MonoBehaviour:
   RotationStrafeRoll: .00999999978
   RotationEarthQuakeFactor: 0
   ShakeSpeed: 0
-  ShakeAmplitude: {x: 10, y: 10, z: 0}
+  ShakeAmplitude: {x: 0, y: 0, z: 0}
+  FallShakeEnabled: 0
   BobRate: {x: 0, y: 1.39999998, z: 0, w: .699999988}
   BobAmplitude: {x: 0, y: .25, z: 0, w: .5}
   BobInputVelocityScale: 1
@@ -617,7 +618,7 @@ Transform:
   m_PrefabInternal: {fileID: 2057768532}
   m_GameObject: {fileID: 1328950431}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.0616474152, y: 2.66054726, z: 1.64571476}
+  m_LocalPosition: {x: -.0616474152, y: 20.4129543, z: 1.64571476}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 1104656516}
@@ -777,6 +778,69 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
+--- !u!1 &1444980859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1444980861}
+  - 108: {fileID: 1444980860}
+  m_Layer: 0
+  m_Name: Point light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!108 &1444980860
+Light:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1444980859}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Type: 2
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_Range: 10
+  m_SpotAngle: 30
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_Strength: 1
+    m_Bias: .0500000007
+    m_Softness: 4
+    m_SoftnessFade: 1
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_ActuallyLightmapped: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 1
+  m_ShadowSamples: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_IndirectIntensity: 1
+  m_AreaSize: {x: 1, y: 1}
+--- !u!4 &1444980861
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1444980859}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.7423954, y: -.763199806, z: -96.0496368}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
 --- !u!1001 &1455582964
 Prefab:
   m_ObjectHideFlags: 0
@@ -1298,7 +1362,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.66054726
+      value: 20.4129543
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1327,6 +1391,14 @@ Prefab:
     - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
       propertyPath: PositionOffset.y
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
+      propertyPath: ShakeAmplitude.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400006, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}
+      propertyPath: ShakeAmplitude.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6a810d472f085e74b8e73b481e32bd98, type: 2}

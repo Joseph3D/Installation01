@@ -22,10 +22,11 @@ namespace GameLogic
         public int RoundsPerTriggerPull;
         public float AccuracyFalloff; // higher values == gets innacurate faster
         public bool SemiAutomatic;
-        public GameObject Projectile;
+        public string ProjectileAssetName;
         #endregion
 
         private GameManager Manager;
+        private GameObject Projectile;
 
         public void Awake()
         {
@@ -59,15 +60,10 @@ namespace GameLogic
         /// <returns></returns>
         private bool VerifyProjectile()
         {
-            if(Projectile != null)
+            if(Manager.ResourceCacheContains(ProjectileAssetName))
             {
-                if(EntityTag.EntityIs(Projectile,Tag.Projectile))
-                {
-                    return true;
-                }
-                return false;
+
             }
-            return false;
         }
     }
 }
