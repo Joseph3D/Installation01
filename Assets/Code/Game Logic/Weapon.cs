@@ -25,9 +25,9 @@ namespace GameLogic
     {
         #region Editor Visible Traits
         public float Damage;
-        public int MagazineSize;
-        public TimeSpan FireInterval;
-        public TimeSpan ReloadTime;
+        public int MagazineCapacity;
+        public float FireInterval; // time between shots ( seconds )
+        public float ReloadInterval; // time it takes to reload ( seconds )
         public int RoundsPerTriggerPull;
         public float AccuracyFalloff; // higher values == gets innacurate faster
         public bool SemiAutomatic;
@@ -37,8 +37,9 @@ namespace GameLogic
 
         private GameManager Manager;
         private Projectile Projectile;
-        private WeaponState State = WeaponState.Idle;
-        private int Magazine = 0;
+
+        private WeaponState State = WeaponState.Idle; 
+        private int Magazine = 0; // Weapons magazine
 
         public void Awake()
         {
@@ -59,6 +60,18 @@ namespace GameLogic
         {
 
         }
+
+        IEnumerator Reload()
+        {
+            State = WeaponState.Reloading;
+
+            // eventually trigger reload animations
+
+            yield return new WaitForSeconds(ReloadInterval); // Wait to complete reload interval
+
+            Magazine = MagazineCapacity;
+        }
+
 
         private void InitializeInternals()
         {
