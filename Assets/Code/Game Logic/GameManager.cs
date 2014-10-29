@@ -161,7 +161,7 @@ namespace GameLogic
                 AddGameEntityCacheEntry(Entities[i]);
             }
         }
-        private void AddGameEntityCacheEntry(GameObject Entity)
+        public void AddGameEntityCacheEntry(GameObject Entity)
         {
             GameEntityCacheEntry NewCacheEntry = new GameEntityCacheEntry(Entity);
             GameEntityCache.Add(NewCacheEntry);
@@ -170,7 +170,7 @@ namespace GameLogic
         {
             GameEntityCache.Remove(Entry);
         }
-        private void RemoveGameEntityCacheEntry(int EntityHash)
+        public void RemoveGameEntityCacheEntry(int EntityHash)
         {
             for(int i = 0; i < GameEntityCache.Count; ++i)
             {

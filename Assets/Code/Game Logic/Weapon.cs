@@ -23,10 +23,11 @@ namespace GameLogic
         public float AccuracyFalloff; // higher values == gets innacurate faster
         public bool SemiAutomatic;
         public string ProjectileAssetName;
+        public bool BottomlessClip;
         #endregion
 
         private GameManager Manager;
-        private GameObject Projectile;
+        private Projectile Projectile;
 
         public void Awake()
         {
@@ -60,11 +61,17 @@ namespace GameLogic
         /// <returns></returns>
         private bool VerifyProjectile()
         {
-            if(Manager.ResourceCacheContains(ProjectileAssetName))
+            if(Manager.ResourceCacheContains(ProjectileAssetName)) // the specified projectile prefab has already been loaded by the game manager
             {
+                Projectile = Manager.GetResourceCacheItemByName(ProjectileAssetName) as Projectile;
+                if(Projectile == null)
+                {
+                    Debug.LogError("Unable to acquire reference to projectile prefab from GameManager");
+                    return false;
+                }
                 return true;
             }
-            return true;
+            return false; // for now. later we might want to trigger the GameManager to load this asset, possible asyncronously.
         }
     }
 }
