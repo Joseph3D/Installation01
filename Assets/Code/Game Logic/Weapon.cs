@@ -65,11 +65,15 @@ namespace GameLogic
         {
             State = WeaponState.Reloading;
 
-            // eventually trigger reload animations
+            // eventually trigger reload animations somewhere here.
 
-            yield return new WaitForSeconds(ReloadInterval); // Wait to complete reload interval
+            // and anything else that has to happen to "start" the reload process
 
-            Magazine = MagazineCapacity;
+            yield return new WaitForSeconds(ReloadInterval); // Wait to complete reload interval ( this is when the entity would be pysically removing and replacing the magazine )
+
+            Magazine = MagazineCapacity; // reset magazine count
+
+            State = WeaponState.Idle;
         }
 
 
