@@ -38,7 +38,7 @@ namespace GameLogic
         private GameManager Manager;
         private Projectile Projectile;
         private WeaponState State = WeaponState.Idle;
-        private int Magazine;
+        private int Magazine = 0;
 
         public void Awake()
         {
