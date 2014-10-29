@@ -36,7 +36,7 @@ namespace GameLogic
 
         void Start()
         {
-            InitializeTraits();
+            
         }
 
         void Update()
