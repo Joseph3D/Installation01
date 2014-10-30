@@ -90,8 +90,7 @@ namespace GameLogic
             {
                 case WeaponType.SemiAutomatic:
                     {
-                        Projectile SpawnedProjectile = GameObject.Instantiate(_Projectile) as Projectile;
-                        SpawnedProjectile.SetDirection(Direction);
+                        TestFire();
                         Magazine--;
                         CanFire = false;
                         yield return new WaitForSeconds(FireInterval);
@@ -99,6 +98,11 @@ namespace GameLogic
                         break;
                     }
             }
+        }
+
+        private void TestFire()
+        {
+            Debug.Log("BANG!");
         }
 
 
