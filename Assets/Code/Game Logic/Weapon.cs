@@ -39,6 +39,7 @@ namespace GameLogic
         public float AccuracyFalloff; // higher values == gets innacurate faster
         public string ProjectileAssetName;
         public bool BottomlessClip;
+        public bool AutomaticReload = true; // will a reload be triggered automatically when the magazine is empty
         public WeaponType Type;
         #endregion
 
@@ -90,14 +91,31 @@ namespace GameLogic
             {
                 case WeaponType.SemiAutomatic:
                     {
-                        TestFire();
-                        Magazine--;
-                        CanFire = false;
-                        yield return new WaitForSeconds(FireInterval);
-                        CanFire = true;
+                        if (Magazine > 0) // more than 0 rounds in the magazine
+                        {
+                            TestFire();
+                            Magazine--;
+                            CanFire = false;
+                            yield return new WaitForSeconds(FireInterval);
+                            CanFire = true;
+                        }
+                        else if(Magazine == 0 && AutomaticReload)
+                        {
+                            StartCoroutine(Reload());
+                        }
+                        else if(Magazine == 0 && !AutomaticReload)
+                        {
+                            // Click!, the hammer just dropped on an empty chamber.
+                            State = WeaponState.Idle;
+                        }
                         break;
                     }
             }
+        }
+
+        private void CreateAndSpawnProjectile(Vector3 Direction)
+        {
+
         }
 
         private void TestFire()
