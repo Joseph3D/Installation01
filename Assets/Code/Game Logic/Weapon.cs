@@ -145,11 +145,9 @@ namespace GameLogic
                 Debug.LogError("Unable to verify projectile");
             }
 
-            MuzzleNode = transform.FindChild("MuzzleNode");
-
-            if(MuzzleNode == null)
+            if(!GetMuzzleNode())
             {
-                Debug.Log("Unable to locate muzzle node");
+                Debug.Log("Unable to locate weapon's muzzle");
             }
         }
 
@@ -172,6 +170,18 @@ namespace GameLogic
                 return true;
             }
             return false; // for now. later we might want to trigger the GameManager to load this asset, possible asyncronously.
+        }
+
+        private bool GetMuzzleNode()
+        {
+            MuzzleNode = transform.FindChild("MuzzleNode");
+
+            if (MuzzleNode == null)
+            {
+                Debug.Log("Unable to locate muzzle node");
+                return false;
+            }
+            return true;
         }
     }
 }
