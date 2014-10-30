@@ -43,10 +43,11 @@ namespace GameLogic
         #endregion
 
         private GameManager Manager;
-        private Projectile Projectile;
+        private Projectile _Projectile;
 
         private WeaponState State = WeaponState.Idle; 
         private int Magazine = 0; // Weapons magazine
+        private bool CanFire = true;
 
         public void Awake()
         {
@@ -85,19 +86,19 @@ namespace GameLogic
 
         IEnumerator Fire(Vector3 Direction)
         {
-            if(SemiAutomatic)
+            switch(Type)
             {
-
+                case WeaponType.SemiAutomatic:
+                    {
+                        Projectile SpawnedProjectile = GameObject.Instantiate(_Projectile) as Projectile;
+                        SpawnedProjectile.SetDirection(Direction);
+                        Magazine--;
+                        CanFire = false;
+                        yield return new WaitForSeconds(FireInterval);
+                        CanFire = true;
+                        break;
+                    }
             }
-        }
-
-        /// <summary>
-        /// Internally used method to fire a single round
-        /// </summary>
-        /// <param name="Direction"></param>
-        private void FireRound(Vector3 Direction)
-        {
-
         }
 
 
