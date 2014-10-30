@@ -125,9 +125,9 @@ namespace GameLogic
         {
             if(Manager.ResourceCacheContains(ProjectileAssetName)) // the specified projectile prefab has already been loaded by the game manager
             {
-                Projectile = Manager.GetResourceCacheItemByName(ProjectileAssetName) as Projectile;
+                _Projectile = Manager.GetResourceCacheItemByName(ProjectileAssetName) as Projectile;
 
-                if(Projectile == null)
+                if(_Projectile == null)
                 {
                     Debug.LogError("Unable to acquire reference to projectile prefab from GameManager");
                     return false;
