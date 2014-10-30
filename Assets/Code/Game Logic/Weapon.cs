@@ -21,18 +21,25 @@ namespace GameLogic
         Jammed_StovePiped = 4,
     }
 
+    public enum WeaponType
+    {
+        SemiAutomatic = 0,
+        Burst = 1,
+        FullyAutomatic = 2,
+    }
+
     public sealed class Weapon : MonoBehaviour
     {
         #region Editor Visible Traits
-        public float Damage;
         public int MagazineCapacity;
         public float FireInterval; // time between shots ( seconds )
+        public float BurstFireInterval; // time between rounds in the burst
         public float ReloadInterval; // time it takes to reload ( seconds )
         public int RoundsPerTriggerPull;
         public float AccuracyFalloff; // higher values == gets innacurate faster
-        public bool SemiAutomatic;
         public string ProjectileAssetName;
         public bool BottomlessClip;
+        public WeaponType Type;
         #endregion
 
         private GameManager Manager;
@@ -76,6 +83,23 @@ namespace GameLogic
             State = WeaponState.Idle;
         }
 
+        IEnumerator Fire(Vector3 Direction)
+        {
+            if(SemiAutomatic)
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// Internally used method to fire a single round
+        /// </summary>
+        /// <param name="Direction"></param>
+        private void FireRound(Vector3 Direction)
+        {
+
+        }
+
 
         private void InitializeInternals()
         {
@@ -97,6 +121,7 @@ namespace GameLogic
             if(Manager.ResourceCacheContains(ProjectileAssetName)) // the specified projectile prefab has already been loaded by the game manager
             {
                 Projectile = Manager.GetResourceCacheItemByName(ProjectileAssetName) as Projectile;
+
                 if(Projectile == null)
                 {
                     Debug.LogError("Unable to acquire reference to projectile prefab from GameManager");
