@@ -20,7 +20,6 @@ namespace GameLogic
         Jammed_DoubleFeed = 3,
         Jammed_StovePiped = 4,
     }
-
     public enum WeaponType
     {
         SemiAutomatic = 0,
@@ -49,6 +48,7 @@ namespace GameLogic
         private WeaponState State = WeaponState.Idle; 
         private int Magazine = 0; // Weapons magazine
         private bool CanFire = true;
+        private Transform MuzzleNode;
 
         public void Awake()
         {
@@ -74,11 +74,15 @@ namespace GameLogic
         {
             State = WeaponState.Reloading;
 
-            // eventually trigger reload animations somewhere here.
+            // eventually trigger reload animations here.
 
             // and anything else that has to happen to "start" the reload process
 
+            TestReloadStart();
+
             yield return new WaitForSeconds(ReloadInterval); // Wait to complete reload interval ( this is when the entity would be pysically removing and replacing the magazine )
+
+            TestReloadEnd();
 
             Magazine = MagazineCapacity; // reset magazine count
 
@@ -122,6 +126,14 @@ namespace GameLogic
         {
             Debug.Log("BANG!");
         }
+        private void TestReloadStart()
+        {
+            Debug.Log("RELOAD STARTED");
+        }
+        private void TestReloadEnd()
+        {
+            Debug.Log("RELOAD ENDED");
+        }
 
 
         private void InitializeInternals()
@@ -131,6 +143,13 @@ namespace GameLogic
             if(!VerifyProjectile())
             {
                 Debug.LogError("Unable to verify projectile");
+            }
+
+            MuzzleNode = transform.FindChild("MuzzleNode");
+
+            if(MuzzleNode == null)
+            {
+                Debug.Log("Unable to locate muzzle node");
             }
         }
 
