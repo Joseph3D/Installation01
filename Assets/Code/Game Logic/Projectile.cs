@@ -6,15 +6,19 @@ namespace GameLogic
     public class Projectile : MonoBehaviour
     {
         #region Members
-        public string TraitsFile;
-
-        public Vector3 DebugDirection;
-
-        public ProjectileTraits Traits;
-
+        #region Editor Visible Traits
+        public float Velocity;
+        public float Weight;
+        public float Lifespan;
+        public float Damage;
+        public bool Homing;
+        public float MaxHomingTurn;
+        public bool Tracer;
+        #endregion
         private TrailRenderer TracerRenderer;
 
         private Vector3 Direction;
+        private GameManager Manager;
 
         public Vector3 ProjectileDirection
         {
@@ -25,18 +29,22 @@ namespace GameLogic
         }
         #endregion
 
+        void Awake()
+        {
+
+        }
 
         void Start()
         {
-            InitializeTraits();
+            
         }
 
         void Update()
         {
-            Traits.Lifespan--;
-            if(Traits.Lifespan == 0)
+            Lifespan--;
+            if(Lifespan == 0)
             {
-                Destroy(this);
+                RemoveFromWorld();
             }
             else
             {
@@ -49,13 +57,13 @@ namespace GameLogic
         #region Ballistics Update Functions
         private void UpdateProjectileVelocity()
         {
-            Vector3 VelocityVector = Direction * Traits.Velocity;
+            Vector3 VelocityVector = Direction * Velocity;
             transform.position += VelocityVector;
         }
 
         private void UpdateProjectileDrop()
         {
-            Vector3 BulletDropVector = new Vector3(0,Traits.Weight, 0);
+            Vector3 BulletDropVector = new Vector3(0,Weight, 0);
 
             transform.position -= BulletDropVector; // simplistic bullet drop model for now
         }
@@ -76,21 +84,10 @@ namespace GameLogic
             this.Direction.Normalize(); // Pre-Normalize
         }
 
-        /// <summary>
-        /// Sets the traits of this projectile
-        /// </summary>
-        /// <param name="Traits"></param>
-        public void SetProjectileTraits(ProjectileTraits Traits)
+        private void RemoveFromWorld()
         {
-            this.Traits = Traits;
-        }
-
-        private void InitializeTraits()
-        {
-            if(TraitsFile != string.Empty)
-            {
-                Traits = ProjectileTraits.LoadFromFile(TraitsFile);
-            }
+            Manager.RemoveGameEntityCacheEntry(this.GetHashCode());
+            Destroy(this);
         }
     }
 }
