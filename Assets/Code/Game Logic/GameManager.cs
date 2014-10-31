@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.IO;
 using System.Threading;
 using System.Collections;
@@ -64,6 +65,7 @@ namespace GameLogic
 
         void Awake()
         {
+            
         }
         
         void Start()
@@ -86,14 +88,9 @@ namespace GameLogic
         /// </summary>
         private void SpawnPlayer()
         {
-            GameObject player = GetResourceCacheItemByName("Player") as GameObject;
-            Vector3 SpawnPointPosition = SpawnPoints[UnityRandom.Range(0, SpawnPoints.Count)].transform.position;
-            SpawnPointPosition.y += 5;
-
-            GameObject GamePlayerObject = GameObject.Instantiate(player, SpawnPointPosition, this.transform.rotation) as GameObject;
-            GamePlayerObject.name = "Player";
-            AddGameEntityCacheEntry(GamePlayerObject);
+            
         }
+
         /// <summary>
         /// Initializes all objects/resources that GameManager needs to use
         /// </summary>
@@ -165,7 +162,7 @@ namespace GameLogic
                 AddGameEntityCacheEntry(Entities[i]);
             }
         }
-        private void AddGameEntityCacheEntry(GameObject Entity)
+        public void AddGameEntityCacheEntry(GameObject Entity)
         {
             GameEntityCacheEntry NewCacheEntry = new GameEntityCacheEntry(Entity);
             GameEntityCache.Add(NewCacheEntry);
@@ -174,7 +171,7 @@ namespace GameLogic
         {
             GameEntityCache.Remove(Entry);
         }
-        private void RemoveGameEntityCacheEntry(int EntityHash)
+        public void RemoveGameEntityCacheEntry(int EntityHash)
         {
             for(int i = 0; i < GameEntityCache.Count; ++i)
             {

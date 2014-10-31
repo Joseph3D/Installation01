@@ -23,5 +23,7 @@ namespace GameLogic
         Surface_Gravel = 1 << 11,
         Surface_Grass = 1 << 12,
         PointLight = 1 << 13,
+        Weapon = 1 << 14,
+        Node = 1 << 15,
     }
 }

@@ -70,6 +70,7 @@ public class vp_FPCamera : vp_Component
 	public float ShakeSpeed = 0.0f;
 	public Vector3 ShakeAmplitude = new Vector3(10, 10, 0);
 	protected Vector3 m_Shake = Vector3.zero;
+    public bool FallShakeEnabled = false;
 
 	// camera bob
 	public Vector4 BobRate = new Vector4(0.0f, 1.4f, 0.0f, 0.7f);			// TIP: use x for a mech / dino like walk cycle. y should be (x * 2) for a nice classic curve of motion. typical defaults for y are 0.9 (rate) and 0.1 (amp)
@@ -900,30 +901,31 @@ public class vp_FPCamera : vp_Component
 	/// </summary>
 	protected virtual void OnMessage_FallImpact(float impact)
 	{
+        if (FallShakeEnabled)
+        {
+            impact = (float)Mathf.Abs((float)impact * 55.0f);
+            // ('55' is for preset backwards compatibility)
 
-		impact = (float)Mathf.Abs((float)impact * 55.0f);
-		// ('55' is for preset backwards compatibility)
+            float posImpact = (float)impact * PositionKneeling;
+            float rotImpact = (float)impact * RotationKneeling;
 
-		float posImpact = (float)impact * PositionKneeling;
-		float rotImpact = (float)impact * RotationKneeling;
+            // smooth step the impacts to make the springs react more subtly
+            // from short falls, and more aggressively from longer falls
+            posImpact = Mathf.SmoothStep(0, 1, posImpact);
+            rotImpact = Mathf.SmoothStep(0, 1, rotImpact);
+            rotImpact = Mathf.SmoothStep(0, 1, rotImpact);
 
-		// smooth step the impacts to make the springs react more subtly
-		// from short falls, and more aggressively from longer falls
-		posImpact = Mathf.SmoothStep(0, 1, posImpact);
-		rotImpact = Mathf.SmoothStep(0, 1, rotImpact);
-		rotImpact = Mathf.SmoothStep(0, 1, rotImpact);
+            // apply impact to camera position spring
+            if (m_PositionSpring != null)
+                m_PositionSpring.AddSoftForce(Vector3.down * posImpact, PositionKneelingSoftness);
 
-		// apply impact to camera position spring
-		if (m_PositionSpring != null)
-			m_PositionSpring.AddSoftForce(Vector3.down * posImpact, PositionKneelingSoftness);
-
-		// apply impact to camera rotation spring
-		if (m_RotationSpring != null)
-		{
-			float roll = Random.value > 0.5f ? (rotImpact * 2) : -(rotImpact * 2);
-			m_RotationSpring.AddSoftForce(Vector3.forward * roll, RotationKneelingSoftness);
-		}
-
+            // apply impact to camera rotation spring
+            if (m_RotationSpring != null)
+            {
+                float roll = Random.value > 0.5f ? (rotImpact * 2) : -(rotImpact * 2);
+                m_RotationSpring.AddSoftForce(Vector3.forward * roll, RotationKneelingSoftness);
+            }
+        }
 	}
 
 
