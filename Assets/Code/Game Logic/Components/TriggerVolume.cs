@@ -39,6 +39,11 @@ namespace GameLogic
 
         }
 
+        private void TriggerAction()
+        {
+
+        }
+
         void OnTriggerEnter(Collider Other)
         {
             EntityTag OtherColliderTag = Other.gameObject.GetComponent<EntityTag>();
