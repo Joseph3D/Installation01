@@ -8,7 +8,6 @@ using Helpers;
 
 namespace GameLogic
 {
-    [RequireComponent(typeof(BoxCollider))]
     public sealed class TriggerVolume : MonoBehaviour
     {
         #region Members
@@ -20,14 +19,21 @@ namespace GameLogic
         /// <summary>
         /// If set this trigger volume will trigger when any GameEntity with these tags enters
         /// </summary>
-        public Tag[] TriggerTags;
+        public Tag[] TriggerOnTagEnter;
 
         private GameManager Manager;
+        private BoxCollider TriggerCollider;
         #endregion
 
         public void Awake()
         {
             Manager = GameManagerLocator.Manager;
+
+            gameObject.AddComponent<BoxCollider>();
+
+            TriggerCollider = GetComponent<BoxCollider>();
+
+            TriggerCollider.isTrigger = true;
         }
 
         public void Start()
@@ -48,9 +54,12 @@ namespace GameLogic
         {
             EntityTag OtherColliderTag = Other.gameObject.GetComponent<EntityTag>();
 
-            for(int i = 0; i < TriggerTags.Length; ++i)
+            for(int i = 0; i < TriggerOnTagEnter.Length; ++i)
             {
-
+                if(OtherColliderTag.Is(TriggerOnTagEnter[i]))
+                {
+                    TriggerAction();
+                }
             }
         }
     }
