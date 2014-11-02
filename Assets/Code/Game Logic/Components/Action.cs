@@ -15,6 +15,6 @@ namespace GameLogic
 {
     public class Action : MonoBehaviour
     {
-
+        public ActionType Type;
     }
 }
