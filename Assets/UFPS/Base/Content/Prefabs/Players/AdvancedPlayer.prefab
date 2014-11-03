@@ -1333,6 +1333,7 @@ MonoBehaviour:
   RotationEarthQuakeFactor: 0
   ShakeSpeed: 0
   ShakeAmplitude: {x: 10, y: 10, z: 0}
+  FallShakeEnabled: 0
   BobRate: {x: 0, y: 1.39999998, z: 0, w: .699999988}
   BobAmplitude: {x: 0, y: .25, z: 0, w: .5}
   BobInputVelocityScale: 1
@@ -1867,7 +1868,7 @@ MonoBehaviour:
   SpawnOnAwake: 0
   SpawnSound: {fileID: 8300000, guid: c6ffb5ccbd00a114494143e33e747a05, type: 3}
   SpawnFXPrefabs: []
-  helpbox: 221
+  helpbox: 177
 --- !u!143 &14300000
 CharacterController:
   m_ObjectHideFlags: 1
