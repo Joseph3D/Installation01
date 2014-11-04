@@ -1,45 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &100000
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 400000}
-  - 82: {fileID: 8200000}
-  - 114: {fileID: 11400000}
-  - 114: {fileID: 11400002}
-  - 114: {fileID: 11400036}
-  - 114: {fileID: 11400050}
-  m_Layer: 0
-  m_Name: 2Revolver
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &100002
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 400002}
-  - 82: {fileID: 8200002}
-  - 114: {fileID: 11400004}
-  - 114: {fileID: 11400006}
-  - 114: {fileID: 11400022}
-  - 114: {fileID: 11400052}
-  m_Layer: 0
-  m_Name: 1Pistol
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &100004
 GameObject:
   m_ObjectHideFlags: 1
@@ -54,7 +14,7 @@ GameObject:
   - 114: {fileID: 11400032}
   - 114: {fileID: 11400048}
   m_Layer: 0
-  m_Name: 3Machinegun
+  m_Name: 1Machinegun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -81,7 +41,6 @@ GameObject:
   - 114: {fileID: 11400044}
   - 114: {fileID: 11400046}
   - 114: {fileID: 11400042}
-  - 114: {fileID: 11400024}
   - 114: {fileID: 11400054}
   m_Layer: 0
   m_Name: AdvancedPlayer
@@ -108,65 +67,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &100010
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 400010}
-  - 20: {fileID: 2000002}
-  m_Layer: 0
-  m_Name: WeaponCamera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &100012
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 400012}
-  - 82: {fileID: 8200008}
-  - 114: {fileID: 11400034}
-  - 114: {fileID: 11400038}
-  - 114: {fileID: 11400026}
-  m_Layer: 0
-  m_Name: 4Mace
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &400000
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 400008}
-  m_RootOrder: 1
---- !u!4 &400002
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 400008}
-  m_RootOrder: 0
 --- !u!4 &400004
 Transform:
   m_ObjectHideFlags: 1
@@ -178,7 +78,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400008}
-  m_RootOrder: 2
+  m_RootOrder: 0
 --- !u!4 &400006
 Transform:
   m_ObjectHideFlags: 1
@@ -186,8 +86,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100006}
   m_LocalRotation: {x: 0, y: -.976672292, z: 0, w: -.214735314}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -22.4799995, y: 7.64300013, z: -13.9519997}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 400008}
   m_Father: {fileID: 0}
@@ -202,37 +102,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 400002}
-  - {fileID: 400000}
   - {fileID: 400004}
-  - {fileID: 400012}
-  - {fileID: 400010}
   m_Father: {fileID: 400006}
   m_RootOrder: 0
---- !u!4 &400010
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100010}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 400008}
-  m_RootOrder: 4
---- !u!4 &400012
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100012}
-  m_LocalRotation: {x: 0, y: .976672292, z: -0, w: -.214735314}
-  m_LocalPosition: {x: 0, y: -1.10161614, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 400008}
-  m_RootOrder: 3
 --- !u!20 &2000000
 Camera:
   m_ObjectHideFlags: 1
@@ -249,39 +121,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .100000001
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 0
-  orthographic size: 100
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_HDR: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: .0219999999
---- !u!20 &2000002
-Camera:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100010}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: .300000012
+  near clip plane: .00999999978
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -311,122 +151,6 @@ AudioListener:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100006}
   m_Enabled: 1
---- !u!82 &8200000
-AudioSource:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
---- !u!82 &8200002
-AudioSource:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
 --- !u!82 &8200004
 AudioSource:
   m_ObjectHideFlags: 1
@@ -543,422 +267,6 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
---- !u!82 &8200008
-AudioSource:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100012}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Priority: 128
-  DopplerLevel: 0
-  MinDistance: 3
-  MaxDistance: 50
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8227215081904e84a97ab858e04ca55d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Persist: 0
-  EventHandler: {fileID: 0}
-  States:
-  - TypeName: vp_FPWeapon
-    Name: Reload
-    TextAsset: {fileID: 4900000, guid: 0287b9d368d2a494d91e2105cb04a05c, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: Zoom
-    TextAsset: {fileID: 4900000, guid: 87c4dea27dc72bf4d93da0a042aab92c, type: 3}
-    StatesToBlock: 060000000500000003000000
-  - TypeName: vp_FPWeapon
-    Name: MegaSpeed
-    TextAsset: {fileID: 4900000, guid: c9c3aabfea2c210458692c71c5a06cc6, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: SlideFast
-    TextAsset: {fileID: 4900000, guid: c9c3aabfea2c210458692c71c5a06cc6, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: Slide
-    TextAsset: {fileID: 4900000, guid: 8f4ca09b628553643959321feafddc49, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: Crouch
-    TextAsset: {fileID: 4900000, guid: 8de08ab03393e014ebc30ac3fc620d7f, type: 3}
-    StatesToBlock: 06000000
-  - TypeName: vp_FPWeapon
-    Name: Run
-    TextAsset: {fileID: 4900000, guid: b1aa01824d65f544087e30ed46f6b0c1, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: Attack
-    TextAsset: {fileID: 4900000, guid: 28b9cce4d7d6c7c429f28f6f4cf3e227, type: 3}
-    StatesToBlock: 06000000050000000300000002000000
-  - TypeName: vp_FPWeapon
-    Name: Default
-    TextAsset: {fileID: 0}
-    StatesToBlock: 
-  Children: []
-  Siblings: []
-  Family: []
-  Renderers: []
-  AudioSources: []
-  WeaponPrefab: {fileID: 100010, guid: 6b5efb76f83e7dd4ba7b3291b5590327, type: 2}
-  RenderingZoomDamping: .5
-  RenderingFieldOfView: 21.8450603
-  RenderingClippingPlanes: {x: .5, y: 10}
-  RenderingZScale: 1
-  PositionOffset: {x: .100113101, y: -.28341341, z: .496078014}
-  PositionSpringStiffness: .00999999978
-  PositionSpringDamping: .25
-  PositionFallRetract: 1.92592597
-  PositionPivotSpringStiffness: .100000001
-  PositionPivotSpringDamping: .5
-  PositionSpring2Stiffness: .678260922
-  PositionSpring2Damping: .7789855
-  PositionKneeling: .105871603
-  PositionKneelingSoftness: 1
-  PositionWalkSlide: {x: 1, y: 2, z: 3}
-  PositionPivot: {x: 0, y: -.138321295, z: -.453389496}
-  RotationPivot: {x: 0, y: 0, z: 0}
-  PositionInputVelocityScale: 2
-  PositionMaxInputVelocity: 20
-  RotationOffset: {x: -2.98088598, y: -5, z: 0}
-  RotationSpringStiffness: .00999999978
-  RotationSpringDamping: .218444303
-  RotationPivotSpringStiffness: .00999999978
-  RotationPivotSpringDamping: .25
-  RotationSpring2Stiffness: .35877201
-  RotationSpring2Damping: .354386002
-  RotationKneeling: 0
-  RotationKneelingSoftness: 1
-  RotationLookSway: {x: 1, y: 1, z: 0}
-  RotationStrafeSway: {x: 2, y: 1, z: 1}
-  RotationFallSway: {x: 2, y: 0, z: 0}
-  RotationSlopeSway: 1
-  RotationInputVelocityScale: 1
-  RotationMaxInputVelocity: 5
-  RetractionDistance: .200000003
-  RetractionOffset: {x: 0, y: 0}
-  RetractionRelaxSpeed: .25
-  ShakeSpeed: .075000003
-  ShakeAmplitude: {x: 1, y: 1, z: 0}
-  BobRate: {x: 1.39999998, y: .699999988, z: .699999988, w: .699999988}
-  BobAmplitude: {x: 3.5, y: 2.45000005, z: 5.25, w: .0350000001}
-  BobInputVelocityScale: .5
-  BobMaxInputVelocity: 500
-  BobRequireGroundContact: 1
-  StepPositionForce: {x: 0, y: .00999999978, z: 0}
-  StepRotationForce: {x: 1.5, y: 0, z: 0}
-  StepSoftness: 5
-  StepMinVelocity: 2
-  StepPositionBalance: 0
-  StepRotationBalance: 0
-  StepForceScale: .0500000007
-  SoundWield: {fileID: 8300000, guid: 18c1af46063fcbc448626c630247928a, type: 3}
-  SoundUnWield: {fileID: 8300000, guid: 1121f8e8542b4ad4db2becdfb8edf6a8, type: 3}
-  AnimationWield: {fileID: 0}
-  AnimationUnWield: {fileID: 0}
-  AnimationAmbient: []
-  AmbientInterval: {x: 2.5, y: 7.5}
-  PositionExitOffset: {x: 0, y: -1, z: 0}
-  RotationExitOffset: {x: 40, y: 0, z: 0}
---- !u!114 &11400002
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3320cb8b89dc2547959c4c6e6621e03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Persist: 0
-  EventHandler: {fileID: 0}
-  States:
-  - TypeName: vp_FPWeaponShooter
-    Name: Zoom
-    TextAsset: {fileID: 4900000, guid: 8228b6d3a7daea847bb74862b2ff14f6, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeaponShooter
-    Name: Default
-    TextAsset: {fileID: 0}
-    StatesToBlock: 
-  Children: []
-  Siblings: []
-  Family: []
-  Renderers: []
-  AudioSources: []
-  ProjectilePrefab: {fileID: 100000, guid: b468e2c06761eff4db6862aa008a26fa, type: 2}
-  ProjectileScale: 1
-  ProjectileFiringRate: .5
-  ProjectileSpawnDelay: 0
-  ProjectileCount: 1
-  ProjectileSpread: 2
-  MuzzleFlashPosition: {x: .0614162013, y: -.0256990008, z: 1.36461103}
-  MuzzleFlashScale: {x: .5, y: .5, z: .5}
-  MuzzleFlashFadeSpeed: .075000003
-  MuzzleFlashPrefab: {fileID: 100000, guid: d50f94443b478a74dbdaf688907d184a, type: 2}
-  MuzzleFlashDelay: 0
-  ShellPrefab: {fileID: 0}
-  ShellScale: 1
-  ShellEjectDirection: {x: 1, y: 1, z: 1}
-  ShellEjectPosition: {x: 1, y: 0, z: 1}
-  ShellEjectVelocity: .5
-  ShellEjectDelay: 0
-  ShellEjectSpin: 0
-  SoundFire: {fileID: 8300000, guid: c812ed08e6bddbc4e889ad452441cc8d, type: 3}
-  SoundFireDelay: 0
-  SoundFirePitch: {x: 1, y: 1}
-  ProjectileTapFiringRate: .25
-  MotionPositionRecoil: {x: 0, y: 0, z: -.0250000004}
-  MotionRotationRecoil: {x: -20, y: 0, z: 0}
-  MotionRotationRecoilDeadZone: .5
-  MotionRotationRecoilCameraFactor: 0
-  MotionPositionRecoilCameraFactor: 1
-  MotionPositionReset: 0
-  MotionRotationReset: 0
-  MotionPositionPause: 0
-  MotionRotationPause: 1
-  MotionDryFireRecoil: -.100000001
-  MotionRecoilDelay: 0
-  AnimationFire: {fileID: 0}
-  SoundDryFire: {fileID: 8300000, guid: 17a20244025722c4387359c88bd319a1, type: 3}
---- !u!114 &11400004
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8227215081904e84a97ab858e04ca55d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Persist: 0
-  EventHandler: {fileID: 0}
-  States:
-  - TypeName: vp_FPWeapon
-    Name: Reload
-    TextAsset: {fileID: 4900000, guid: 74de2bc957508df4a9d07d8e865729d6, type: 3}
-    StatesToBlock: 070000000600000005000000
-  - TypeName: vp_FPWeapon
-    Name: Reload2
-    TextAsset: {fileID: 4900000, guid: 12765ac2659e07e43bc6d19589d425e5, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: Zoom
-    TextAsset: {fileID: 4900000, guid: 339945a302603004ba11faef72fff091, type: 3}
-    StatesToBlock: 060000000500000003000000
-  - TypeName: vp_FPWeapon
-    Name: SlideFast
-    TextAsset: {fileID: 4900000, guid: 5ef3aaf5efa79084996d959565c3ae5f, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: Slide
-    TextAsset: {fileID: 4900000, guid: 8f4ca09b628553643959321feafddc49, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: Crouch
-    TextAsset: {fileID: 4900000, guid: b9da03374705f6c4592e4c5e61ad24a7, type: 3}
-    StatesToBlock: 06000000
-  - TypeName: vp_FPWeapon
-    Name: Run
-    TextAsset: {fileID: 4900000, guid: dee45e6da0dc2a34abef920c5ad48b6d, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: Attack
-    TextAsset: {fileID: 4900000, guid: 28b9cce4d7d6c7c429f28f6f4cf3e227, type: 3}
-    StatesToBlock: 060000000500000003000000
-  - TypeName: vp_FPWeapon
-    Name: Default
-    TextAsset: {fileID: 0}
-    StatesToBlock: 
-  Children: []
-  Siblings: []
-  Family: []
-  Renderers: []
-  AudioSources: []
-  WeaponPrefab: {fileID: 100014, guid: 49d795f62fdd8ad49a1f04523d691f9e, type: 2}
-  RenderingZoomDamping: .5
-  RenderingFieldOfView: 35
-  RenderingClippingPlanes: {x: .00999999978, y: 10}
-  RenderingZScale: 1
-  PositionOffset: {x: .149367198, y: -.266593695, z: .1704005}
-  PositionSpringStiffness: .00999999978
-  PositionSpringDamping: .25
-  PositionFallRetract: 1
-  PositionPivotSpringStiffness: .100000001
-  PositionPivotSpringDamping: .5
-  PositionSpring2Stiffness: .200000003
-  PositionSpring2Damping: .561594188
-  PositionKneeling: .0599999987
-  PositionKneelingSoftness: 1
-  PositionWalkSlide: {x: 1, y: 1, z: 1}
-  PositionPivot: {x: 0, y: 0, z: -.274137497}
-  RotationPivot: {x: 0, y: 0, z: 0}
-  PositionInputVelocityScale: 3
-  PositionMaxInputVelocity: 20
-  RotationOffset: {x: -3.15825796, y: -5, z: 0}
-  RotationSpringStiffness: .00999999978
-  RotationSpringDamping: .25
-  RotationPivotSpringStiffness: .00999999978
-  RotationPivotSpringDamping: .25
-  RotationSpring2Stiffness: .850000024
-  RotationSpring2Damping: .600000024
-  RotationKneeling: 0
-  RotationKneelingSoftness: 1
-  RotationLookSway: {x: 1, y: 1, z: 0}
-  RotationStrafeSway: {x: 1, y: 1, z: -1}
-  RotationFallSway: {x: 2, y: 0, z: 0}
-  RotationSlopeSway: .75
-  RotationInputVelocityScale: 1
-  RotationMaxInputVelocity: 5
-  RetractionDistance: .400000006
-  RetractionOffset: {x: 0, y: 0}
-  RetractionRelaxSpeed: .25
-  ShakeSpeed: .100000001
-  ShakeAmplitude: {x: .25, y: 0, z: 1}
-  BobRate: {x: 1.39999998, y: .699999988, z: .699999988, w: .699999988}
-  BobAmplitude: {x: .5, y: .400000006, z: .200000003, w: .00499999989}
-  BobInputVelocityScale: 3.5
-  BobMaxInputVelocity: 250
-  BobRequireGroundContact: 1
-  StepPositionForce: {x: 0, y: .0149999997, z: 0}
-  StepRotationForce: {x: 1.5, y: 0, z: 0}
-  StepSoftness: 5
-  StepMinVelocity: 2
-  StepPositionBalance: 0
-  StepRotationBalance: 0
-  StepForceScale: .0500000007
-  SoundWield: {fileID: 8300000, guid: 6fde2b0b9b5901b448526892922ee554, type: 3}
-  SoundUnWield: {fileID: 8300000, guid: 1121f8e8542b4ad4db2becdfb8edf6a8, type: 3}
-  AnimationWield: {fileID: 0}
-  AnimationUnWield: {fileID: 0}
-  AnimationAmbient: []
-  AmbientInterval: {x: 2.5, y: 7.5}
-  PositionExitOffset: {x: 0, y: -1, z: 0}
-  RotationExitOffset: {x: 40, y: 0, z: 0}
---- !u!114 &11400006
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3320cb8b89dc2547959c4c6e6621e03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Persist: 0
-  EventHandler: {fileID: 0}
-  States:
-  - TypeName: vp_FPWeaponShooter
-    Name: Zoom
-    TextAsset: {fileID: 4900000, guid: 0b0d44f482a71e442b3cffbfc7dc7616, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeaponShooter
-    Name: SlideFast
-    TextAsset: {fileID: 4900000, guid: 35a0e300b8a7df949bad56f65c81e20f, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeaponShooter
-    Name: Default
-    TextAsset: {fileID: 0}
-    StatesToBlock: 
-  Children: []
-  Siblings: []
-  Family: []
-  Renderers: []
-  AudioSources: []
-  ProjectilePrefab: {fileID: 100000, guid: a015ca9d6a1aeb148941bb3544885cc1, type: 2}
-  ProjectileScale: .400000006
-  ProjectileFiringRate: .400000006
-  ProjectileSpawnDelay: 0
-  ProjectileCount: 1
-  ProjectileSpread: 1
-  MuzzleFlashPosition: {x: .115268297, y: -.0760660022, z: .902065098}
-  MuzzleFlashScale: {x: .349999994, y: .349999994, z: 1}
-  MuzzleFlashFadeSpeed: .075000003
-  MuzzleFlashPrefab: {fileID: 100000, guid: d50f94443b478a74dbdaf688907d184a, type: 2}
-  MuzzleFlashDelay: 0
-  ShellPrefab: {fileID: 100000, guid: 0645d85cd7b7e334299539b03d28395a, type: 2}
-  ShellScale: .0500000007
-  ShellEjectDirection: {x: 2, y: 1, z: 1}
-  ShellEjectPosition: {x: .200000003, y: -.0500000007, z: .5}
-  ShellEjectVelocity: .200000003
-  ShellEjectDelay: 0
-  ShellEjectSpin: 1
-  SoundFire: {fileID: 8300000, guid: c32822916b4505846bea6008e361bc5d, type: 3}
-  SoundFireDelay: 0
-  SoundFirePitch: {x: 1, y: 1}
-  ProjectileTapFiringRate: .150000006
-  MotionPositionRecoil: {x: 0, y: 0, z: -.0350000001}
-  MotionRotationRecoil: {x: -10, y: 0, z: 0}
-  MotionRotationRecoilDeadZone: .5
-  MotionRotationRecoilCameraFactor: 0
-  MotionPositionRecoilCameraFactor: 0
-  MotionPositionReset: .5
-  MotionRotationReset: .5
-  MotionPositionPause: 0
-  MotionRotationPause: 1
-  MotionDryFireRecoil: -.100000001
-  MotionRecoilDelay: 0
-  AnimationFire: {fileID: 0}
-  SoundDryFire: {fileID: 8300000, guid: 17a20244025722c4387359c88bd319a1, type: 3}
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -971,7 +279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Persist: 0
-  EventHandler: {fileID: 0}
+  EventHandler: {fileID: 11400016}
   States:
   - TypeName: vp_FPWeapon
     Name: Reload
@@ -1006,21 +314,34 @@ MonoBehaviour:
     TextAsset: {fileID: 0}
     StatesToBlock: 
   Children: []
-  Siblings: []
-  Family: []
-  Renderers: []
-  AudioSources: []
-  WeaponPrefab: {fileID: 100006, guid: 8e05d8cb81303df4ebf68764d18ed006, type: 2}
+  Siblings:
+  - {fileID: 11400010}
+  Family:
+  - {fileID: 11400012}
+  - {fileID: 11400020}
+  - {fileID: 11400010}
+  Renderers:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  AudioSources:
+  - {fileID: 8200004}
+  WeaponPrefab: {fileID: 100016, guid: 49815b6e53f246048af5fdf0b24d4a3a, type: 2}
   RenderingZoomDamping: .5
-  RenderingFieldOfView: 31.7339497
-  RenderingClippingPlanes: {x: .00999999978, y: 10}
+  RenderingFieldOfView: 14
+  RenderingClippingPlanes: {x: .00999999978, y: 11.9899998}
   RenderingZScale: 1
-  PositionOffset: {x: .200719699, y: -.2370774, z: .223703593}
+  PositionOffset: {x: -.159999996, y: -1.5, z: .25999999}
   PositionSpringStiffness: .00999999978
   PositionSpringDamping: .25
   PositionFallRetract: 1
-  PositionPivotSpringStiffness: .0350000001
-  PositionPivotSpringDamping: .550000012
+  PositionPivotSpringStiffness: .100000001
+  PositionPivotSpringDamping: .5
   PositionSpring2Stiffness: .942028999
   PositionSpring2Damping: .536231875
   PositionKneeling: .105871603
@@ -1030,13 +351,13 @@ MonoBehaviour:
   RotationPivot: {x: 0, y: 0, z: 0}
   PositionInputVelocityScale: 1
   PositionMaxInputVelocity: 20
-  RotationOffset: {x: -2.98088598, y: -5, z: 0}
+  RotationOffset: {x: 0, y: 90, z: 0}
   RotationSpringStiffness: .00999999978
   RotationSpringDamping: .302752286
   RotationPivotSpringStiffness: .00999999978
   RotationPivotSpringDamping: .25
-  RotationSpring2Stiffness: .949999988
-  RotationSpring2Damping: .945652187
+  RotationSpring2Stiffness: .200000003
+  RotationSpring2Damping: .550000012
   RotationKneeling: 0
   RotationKneelingSoftness: 1
   RotationLookSway: {x: 2, y: 1, z: 0}
@@ -1045,15 +366,15 @@ MonoBehaviour:
   RotationSlopeSway: .75
   RotationInputVelocityScale: 1
   RotationMaxInputVelocity: 5
-  RetractionDistance: .5
+  RetractionDistance: 0
   RetractionOffset: {x: 0, y: 0}
-  RetractionRelaxSpeed: .25
-  ShakeSpeed: .0500000007
+  RetractionRelaxSpeed: .0500000007
+  ShakeSpeed: 0
   ShakeAmplitude: {x: .5, y: 0, z: 2}
-  BobRate: {x: 1.39999998, y: 0, z: 0, w: .699999988}
-  BobAmplitude: {x: -.400000006, y: -1.5, z: -.75, w: -.00999999978}
-  BobInputVelocityScale: 3
-  BobMaxInputVelocity: 100
+  BobRate: {x: 0, y: 0, z: 0, w: 0}
+  BobAmplitude: {x: 0, y: 0, z: 0, w: 0}
+  BobInputVelocityScale: 8.06000042
+  BobMaxInputVelocity: 0
   BobRequireGroundContact: 1
   StepPositionForce: {x: 0, y: -.00120000006, z: -.00120000006}
   StepRotationForce: {x: .0149999997, y: .0149999997, z: -.119999997}
@@ -1134,7 +455,7 @@ MonoBehaviour:
   MotionRotationPause: .5
   MotionDryFireRecoil: -.075000003
   MotionRecoilDelay: 0
-  AnimationFire: {fileID: 0}
+  AnimationFire: {fileID: 7400000, guid: f75f3233756b77a49b0ab57daaf2cb90, type: 3}
   SoundDryFire: {fileID: 8300000, guid: 17a20244025722c4387359c88bd319a1, type: 3}
 --- !u!114 &11400012
 MonoBehaviour:
@@ -1151,30 +472,6 @@ MonoBehaviour:
   EventHandler: {fileID: 0}
   States:
   - TypeName: vp_FPController
-    Name: Dead
-    TextAsset: {fileID: 4900000, guid: e222cb90f03cc1d42b1b55ca715abf56, type: 3}
-    StatesToBlock: 04000000010000000500000003000000
-  - TypeName: vp_FPController
-    Name: MegaSpeed
-    TextAsset: {fileID: 4900000, guid: 3b5f9829c5b658548b1880cec7bf5da9, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPController
-    Name: Freeze
-    TextAsset: {fileID: 4900000, guid: 09de3ba1cb6297c40a443e98bb566ef1, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPController
-    Name: Zoom
-    TextAsset: {fileID: 4900000, guid: 28eae9255eef703418634b11fd7722f8, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPController
-    Name: Crouch
-    TextAsset: {fileID: 4900000, guid: 6ff826a04e7101a4ca8a1b40ba233f63, type: 3}
-    StatesToBlock: 01000000
-  - TypeName: vp_FPController
-    Name: Run
-    TextAsset: {fileID: 4900000, guid: bc8f29f3e3f471c48a1961a327e5f20e, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPController
     Name: Default
     TextAsset: {fileID: 0}
     StatesToBlock: 
@@ -1183,14 +480,14 @@ MonoBehaviour:
   Family: []
   Renderers: []
   AudioSources: []
-  MotorAcceleration: .180000007
-  MotorDamping: .170000002
-  MotorBackwardsSpeed: .649999976
-  MotorAirSpeed: .349999994
+  MotorAcceleration: .5
+  MotorDamping: .200000003
+  MotorBackwardsSpeed: .5
+  MotorAirSpeed: .0500000007
   MotorSlopeSpeedUp: 1
   MotorSlopeSpeedDown: 1
   MotorFreeFly: 0
-  MotorJumpForce: .109999999
+  MotorJumpForce: .5
   MotorJumpForceDamping: .0799999982
   MotorJumpForceHold: .00300000003
   MotorJumpForceHoldDamping: .5
@@ -1334,51 +631,12 @@ MonoBehaviour:
   ShakeSpeed: 0
   ShakeAmplitude: {x: 10, y: 10, z: 0}
   FallShakeEnabled: 0
-  BobRate: {x: 0, y: 1.39999998, z: 0, w: .699999988}
-  BobAmplitude: {x: 0, y: .25, z: 0, w: .5}
-  BobInputVelocityScale: 1
-  BobMaxInputVelocity: 100
+  BobRate: {x: 0, y: 0, z: 0, w: 0}
+  BobAmplitude: {x: 0, y: 0, z: 0, w: 0}
+  BobInputVelocityScale: 0
+  BobMaxInputVelocity: 0
   BobRequireGroundContact: 1
-  BobStepThreshold: 10
---- !u!114 &11400022
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5131c803e81a7ca4fb98d5610b377297, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SoundReload: {fileID: 8300000, guid: b1c95453033c9f040b2fd982c436e4fe, type: 3}
-  AnimationReload: {fileID: 0}
-  ReloadDuration: 1.5
---- !u!114 &11400024
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63ac6224fb5304b4394b608718aa7099, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &11400026
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100012}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dc13c48b5ea45f47abb1efd236a5812, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Type: {fileID: 11400000, guid: 946f653b3250fba4caf20b0e8589e14a, type: 2}
-  ID: 0
-  weaponHelp: 210
+  BobStepThreshold: 0
 --- !u!114 &11400028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1416,241 +674,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SoundReload: {fileID: 8300000, guid: 4e06e9d7cb985264fbd988f16ae47efc, type: 3}
-  AnimationReload: {fileID: 0}
+  AnimationReload: {fileID: 7400000, guid: 6a97d4752b1b41c479d8842200b5de9d, type: 3}
   ReloadDuration: 1
---- !u!114 &11400034
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100012}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8227215081904e84a97ab858e04ca55d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Persist: 0
-  EventHandler: {fileID: 0}
-  States:
-  - TypeName: vp_FPWeapon
-    Name: SystemOFF
-    TextAsset: {fileID: 4900000, guid: 424be732d9866a64ba852eacb301bc1c, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: PullUpRight
-    TextAsset: {fileID: 4900000, guid: ebaad5251e2e65f4ea6312667b2197a9, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: SwingDownLeft
-    TextAsset: {fileID: 4900000, guid: 6b93b388e62018a42a4176598b05d592, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: PullUpLeft
-    TextAsset: {fileID: 4900000, guid: d4dca8f29d929d54fb6268d4e65f0161, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: SwingDownRight
-    TextAsset: {fileID: 4900000, guid: 6ddce1f9b012c0b42850fbcc90d97de8, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: PullRight
-    TextAsset: {fileID: 4900000, guid: af67669530bb0d84e938b7c7d29d6329, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: SwingLeft
-    TextAsset: {fileID: 4900000, guid: 271a4eb61359648489c4d0658da4840a, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: PullLeft
-    TextAsset: {fileID: 4900000, guid: ae0201429f4fc7345aad38bdcdef2407, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: SwingRight
-    TextAsset: {fileID: 4900000, guid: e7c826f00a3c24246bd4acc5004670c1, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: PullUp
-    TextAsset: {fileID: 4900000, guid: e22eca456fb441e46b1fbdb39495192a, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: SwingDown
-    TextAsset: {fileID: 4900000, guid: 686091436c86b434ea6617f262a86309, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: PullDown
-    TextAsset: {fileID: 4900000, guid: 799184b8f0d4d3c4ba5aa54d277917fa, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: SwingUp
-    TextAsset: {fileID: 4900000, guid: fff6b049a28e323478ff04e575b61a32, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: Barbarian
-    TextAsset: {fileID: 4900000, guid: cd3ad2893d213744690e68d10551c8c5, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeapon
-    Name: Default
-    TextAsset: {fileID: 0}
-    StatesToBlock: 
-  Children: []
-  Siblings: []
-  Family: []
-  Renderers: []
-  AudioSources: []
-  WeaponPrefab: {fileID: 100006, guid: ccaab9ca069752d47b94780020db5da2, type: 2}
-  RenderingZoomDamping: .5
-  RenderingFieldOfView: 35
-  RenderingClippingPlanes: {x: .00999999978, y: 10}
-  RenderingZScale: 1
-  PositionOffset: {x: .0844016001, y: -.364926189, z: .372900397}
-  PositionSpringStiffness: .00999999978
-  PositionSpringDamping: .379629612
-  PositionFallRetract: 1
-  PositionPivotSpringStiffness: .100000001
-  PositionPivotSpringDamping: .5
-  PositionSpring2Stiffness: .949999988
-  PositionSpring2Damping: .25
-  PositionKneeling: .0599999987
-  PositionKneelingSoftness: 1
-  PositionWalkSlide: {x: 1, y: 1, z: 1}
-  PositionPivot: {x: 0, y: -.188420504, z: -.0447730012}
-  RotationPivot: {x: 0, y: 0, z: 0}
-  PositionInputVelocityScale: 1
-  PositionMaxInputVelocity: 25
-  RotationOffset: {x: -4.03881884, y: 18.9936905, z: 0}
-  RotationSpringStiffness: .00925930031
-  RotationSpringDamping: .370370507
-  RotationPivotSpringStiffness: .00999999978
-  RotationPivotSpringDamping: .25
-  RotationSpring2Stiffness: .899999976
-  RotationSpring2Damping: .300000012
-  RotationKneeling: 0
-  RotationKneelingSoftness: 1
-  RotationLookSway: {x: 1, y: 1, z: -2.5}
-  RotationStrafeSway: {x: 0, y: 2, z: 5}
-  RotationFallSway: {x: 2, y: 0, z: 0}
-  RotationSlopeSway: 1
-  RotationInputVelocityScale: 1
-  RotationMaxInputVelocity: 15
-  RetractionDistance: 0
-  RetractionOffset: {x: 0, y: 0}
-  RetractionRelaxSpeed: .25
-  ShakeSpeed: .0500000007
-  ShakeAmplitude: {x: .25, y: .5, z: 1}
-  BobRate: {x: .800000012, y: .400000006, z: .400000006, w: .400000006}
-  BobAmplitude: {x: -2.5, y: 2.5, z: .200000003, w: .00999999978}
-  BobInputVelocityScale: 1
-  BobMaxInputVelocity: 250
-  BobRequireGroundContact: 1
-  StepPositionForce: {x: 0, y: -.00120000006, z: -.00120000006}
-  StepRotationForce: {x: 0, y: 0, z: 0}
-  StepSoftness: 4
-  StepMinVelocity: 0
-  StepPositionBalance: 0
-  StepRotationBalance: 0
-  StepForceScale: 1
-  SoundWield: {fileID: 8300000, guid: 99482ac48e3acbd478c5c7d5ce6a3241, type: 3}
-  SoundUnWield: {fileID: 8300000, guid: 1121f8e8542b4ad4db2becdfb8edf6a8, type: 3}
-  AnimationWield: {fileID: 0}
-  AnimationUnWield: {fileID: 0}
-  AnimationAmbient: []
-  AmbientInterval: {x: 2.5, y: 7.5}
-  PositionExitOffset: {x: 0, y: -1, z: 0}
-  RotationExitOffset: {x: 40, y: 0, z: 0}
---- !u!114 &11400036
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28dff080eb100b14190cc15bff12b397, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SoundReload: {fileID: 8300000, guid: 03605c826951a3742a2f7c57d36957e8, type: 3}
-  AnimationReload: {fileID: 0}
-  ReloadDuration: 3
---- !u!114 &11400038
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100012}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58955c9b7d638644cbad895ecaf10c79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Persist: 0
-  EventHandler: {fileID: 0}
-  States:
-  - TypeName: vp_FPWeaponSwinger
-    Name: ToUp
-    TextAsset: {fileID: 4900000, guid: 2a043d8da94a5c947865c55ded189ee3, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeaponSwinger
-    Name: ToRight
-    TextAsset: {fileID: 4900000, guid: 9bc365992a20bb840bbeb949dd4b2988, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeaponSwinger
-    Name: ToLeft
-    TextAsset: {fileID: 4900000, guid: af24bd7c35f89d44bad9844a6a0eca39, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeaponSwinger
-    Name: ToDown
-    TextAsset: {fileID: 4900000, guid: e11d6f846c4f4cb43b88f24f7217d275, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeaponSwinger
-    Name: ToDownRight
-    TextAsset: {fileID: 4900000, guid: 9e8399cf0edb9154698728422568339c, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPWeaponSwinger
-    Name: ToDownLeft
-    TextAsset: {fileID: 4900000, guid: d997122a864619c46b12ffb4753e0808, type: 3}
-    StatesToBlock: 
-  - TypeName: vp_FPSMeleeAttack
-    Name: Default
-    TextAsset: {fileID: 0}
-    StatesToBlock: 
-  Children: []
-  Siblings: []
-  Family: []
-  Renderers: []
-  AudioSources: []
-  DrawDebugObjects: 0
-  WeaponStatePull: Pull
-  WeaponStateSwing: Swing
-  SwingDelay: .400000006
-  SwingDuration: .200000003
-  SwingRate: .800000012
-  SwingSoftForceFrames: 50
-  SwingPositionSoftForce: {x: -.5, y: -.100000001, z: .300000012}
-  SwingRotationSoftForce: {x: 50, y: -25, z: 0}
-  ImpactTime: .109999999
-  ImpactPositionSpringRecoil: {x: .00999999978, y: .0299999993, z: -.0500000007}
-  ImpactPositionSpring2Recoil: {x: 0, y: 0, z: 0}
-  ImpactRotationSpringRecoil: {x: 0, y: 0, z: 0}
-  ImpactRotationSpring2Recoil: {x: 0, y: 0, z: 30}
-  DamageMethodName: Damage
-  Damage: 5
-  DamageRadius: .300000012
-  DamageRange: 2
-  DamageForce: 1000
-  AttackPickRandomState: 1
-  SparkFactor: .100000001
-  m_DustPrefab: {fileID: 100000, guid: cf533a9cba100fc4d87e639000b43f24, type: 2}
-  m_SparkPrefab: {fileID: 100000, guid: 5a80d400532a86a408fa834f600d82b6, type: 2}
-  m_DebrisPrefab: {fileID: 100000, guid: 01730ca4a63580a4d84f49eca2fb7062, type: 2}
-  SoundSwing:
-  - {fileID: 8300000, guid: 6e0770a2d68e00d418bf0bc750316198, type: 3}
-  SoundImpact:
-  - {fileID: 8300000, guid: c202d425ab762a24a98c31f61646e17e, type: 3}
-  - {fileID: 8300000, guid: 7ea988500e8affb4191461d097190aa7, type: 3}
-  - {fileID: 8300000, guid: d694463c742e9514d8f69e7bd3fe646f, type: 3}
-  - {fileID: 8300000, guid: f70a9befd975f6545b06bede42ffe595, type: 3}
-  SoundSwingPitch: {x: 1, y: 1.5}
-  SoundImpactPitch: {x: 1, y: 1.5}
 --- !u!114 &11400040
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1754,7 +779,7 @@ MonoBehaviour:
   RespawnSound: {fileID: 0}
   DeathEffect: {fileID: 0}
   helpbox: 95
-  AllowFallDamage: 1
+  AllowFallDamage: 0
   FallImpactThreshold: .189999998
   DeathOnFallImpactThreshold: 0
   FallImpactPitch: {x: 1, y: 1}
@@ -1774,11 +799,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ItemRecords:
-    itemList: 56
+    itemList: 87
     helpbox: 155
   m_ItemCaps:
     itemList: 219
-    helpbox: 111
+    helpbox: 122
   m_SpaceLimit:
     spaceLimit: 77
     helpbox: 166
@@ -1796,7 +821,13 @@ MonoBehaviour:
     Cap: 100
   - Type: {fileID: 11400000, guid: c11d93b063eaa9043b51fa3831599c63, type: 2}
     Cap: 100
-  m_UnitBankInstances: []
+  m_UnitBankInstances:
+  - Type: {fileID: 11400000, guid: 41df3cba2f49318419ca8654206cd410, type: 2}
+    ID: 0
+    UnitType: {fileID: 11400000, guid: c11d93b063eaa9043b51fa3831599c63, type: 2}
+    Count: 32
+    m_Capacity: 32
+    m_Inventory: {fileID: 11400046}
   m_InternalUnitBanks: []
   CapsEnabled: 1
   SpaceEnabled: 0
@@ -1817,37 +848,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dc13c48b5ea45f47abb1efd236a5812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: {fileID: 11400000, guid: 2fbc485ea2e99724eb6000259b3f0434, type: 2}
+  Type: {fileID: 11400000, guid: 41df3cba2f49318419ca8654206cd410, type: 2}
   ID: 0
-  weaponHelp: 254
---- !u!114 &11400050
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dc13c48b5ea45f47abb1efd236a5812, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Type: {fileID: 11400000, guid: 29896fc7c28d9004a810cf00f1ad97e1, type: 2}
-  ID: 0
-  weaponHelp: 210
---- !u!114 &11400052
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dc13c48b5ea45f47abb1efd236a5812, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Type: {fileID: 11400000, guid: 9c735e67aa6215240940ff57b7665829, type: 2}
-  ID: 0
-  weaponHelp: 210
+  weaponHelp: 243
 --- !u!114 &11400054
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1868,7 +871,7 @@ MonoBehaviour:
   SpawnOnAwake: 0
   SpawnSound: {fileID: 8300000, guid: c6ffb5ccbd00a114494143e33e747a05, type: 3}
   SpawnFXPrefabs: []
-  helpbox: 177
+  helpbox: 155
 --- !u!143 &14300000
 CharacterController:
   m_ObjectHideFlags: 1
