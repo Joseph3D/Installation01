@@ -19,7 +19,7 @@ namespace GameLogic
 
         public void Awake()
         {
-
+            InitializeInternals();
         }
 
         public void Start()

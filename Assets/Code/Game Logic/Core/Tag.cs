@@ -25,5 +25,6 @@ namespace GameLogic
         PointLight = 1 << 13,
         Weapon = 1 << 14,
         Node = 1 << 15,
+        AudioEmitter = 1 << 16,
     }
 }
