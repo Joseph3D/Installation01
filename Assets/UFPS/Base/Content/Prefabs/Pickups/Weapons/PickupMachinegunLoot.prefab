@@ -169,7 +169,7 @@ MonoBehaviour:
   SpawnOnAwake: 0
   SpawnSound: {fileID: 0}
   SpawnFXPrefabs: []
-  helpbox: 155
+  helpbox: 177
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
