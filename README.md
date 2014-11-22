@@ -1,5 +1,1 @@
-
-
--Character Controller
--Profiling Utilities
--Components that are easy to use by non-programmers in unity editor
+Installation 01 is an open source Halo FPS game being developed by longtime fans of the franchise. We are in full compliance with Microsoft's Fair Use policy. We strive to have both strong elements of the halo games that we know and love. Combined with features of our own to give it a more gritty and truthful atmosphere that properly reflects the horrors of the Human-Covenant war.
