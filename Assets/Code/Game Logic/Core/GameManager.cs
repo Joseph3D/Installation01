@@ -199,5 +199,20 @@ namespace GameLogic
                 }
             }
         }
+
+        public List<GameObject> GetAllEntitesTagged(Tag EntityTag)
+        {
+            List<GameObject> GameObjects = new List<GameObject>();
+            
+            for(int i = 0; i < GameEntityCache.Count; ++i)
+            {
+                if(GameEntityCache[i].Tag.Is(EntityTag))
+                {
+                    GameObjects.Add(GameEntityCache[i].Entity);
+                }
+            }
+
+            return GameObjects;
+        }
     }
 }
