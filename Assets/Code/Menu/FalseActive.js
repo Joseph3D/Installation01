@@ -1,0 +1,1 @@
+﻿gameObject.SetActive (false);
