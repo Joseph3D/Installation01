@@ -128,7 +128,7 @@ MonoBehaviour:
   AudioSources: []
   MotorAcceleration: .200000003
   MotorDamping: .200000003
-  MotorBackwardsSpeed: .200000003
+  MotorBackwardsSpeed: .699999988
   MotorAirSpeed: .0500000007
   MotorSlopeSpeedUp: 1
   MotorSlopeSpeedDown: 1
