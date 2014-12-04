@@ -65,12 +65,14 @@ namespace GameLogic
 
         void Awake()
         {
-            
+            InitializeInternals();
+
+            GameObject.DontDestroyOnLoad(this); // the game manager is persistant and needs to survive loading and unloading scenes
         }
         
         void Start()
         {
-            InitializeInternals();
+            
         }
 
         void Update()
