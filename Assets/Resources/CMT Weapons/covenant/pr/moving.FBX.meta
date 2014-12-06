@@ -1,0 +1,284 @@
+fileFormatVersion: 2
+guid: 789bd4a4343289f408812c63dd0fb655
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: '#flashlight'
+    100002: '#heat flare'
+    100004: '#heat flare1'
+    100006: '#primary trigger'
+    100008: '#primary trigger1'
+    100010: '#secondary trigger'
+    100012: '#vent'
+    100014: '#vent 1'
+    100016: '#vent 2'
+    100018: '#vent 3'
+    100020: '#vent 4'
+    100022: '#vent 5'
+    100024: '#vent 6'
+    100026: '#vent 7'
+    100028: __unnamed
+    100030: Arms
+    100032: Camera01
+    100034: elbow left
+    100036: elbow right
+    100038: frame battery
+    100040: frame bone24
+    100042: frame gun
+    100044: frame jaw_l
+    100046: frame jaw_u
+    100048: frame l forearm
+    100050: frame l index low
+    100052: frame l index mid
+    100054: frame l index tip
+    100056: frame l middle mid
+    100058: frame l middle tip
+    100060: frame l middlelow
+    100062: frame l pinky low
+    100064: frame l pinky mid
+    100066: frame l pinky tip
+    100068: frame l ring low
+    100070: frame l ring mid
+    100072: frame l ring tip
+    100074: frame l thumb low
+    100076: frame l thumb mid
+    100078: frame l thumb tip
+    100080: frame l upperarm
+    100082: frame l wriste
+    100084: frame r forearm
+    100086: frame r index low
+    100088: frame r index mid
+    100090: frame r index tip
+    100092: frame r middle low
+    100094: frame r middle mid
+    100096: frame r middle tip
+    100098: frame r pinky low
+    100100: frame r pinky mid
+    100102: frame r pinky tip
+    100104: frame r ring low
+    100106: frame r ring mid
+    100108: frame r ring tip
+    100110: frame r thumb low
+    100112: frame r thumb mid
+    100114: frame r thumb tip
+    100116: frame r upperarm
+    100118: frame r wriste
+    100120: frame rod_left
+    100122: frame rod_right
+    100124: frame wing_left
+    100126: frame wing_right
+    100128: IK Chain01
+    100130: IK Chain02
+    100132: left wrist constraint
+    100134: Left Wrist Controller
+    100136: Left Wrist IK Goal
+    100138: Left Wrist Orientation
+    100140: //RootNode
+    100142: right wrist constraint
+    100144: Right Wrist Controller
+    100146: Right Wrist IK Goal
+    100148: Right Wrist Orientation
+    400000: '#flashlight'
+    400002: '#heat flare'
+    400004: '#heat flare1'
+    400006: '#primary trigger'
+    400008: '#primary trigger1'
+    400010: '#secondary trigger'
+    400012: '#vent'
+    400014: '#vent 1'
+    400016: '#vent 2'
+    400018: '#vent 3'
+    400020: '#vent 4'
+    400022: '#vent 5'
+    400024: '#vent 6'
+    400026: '#vent 7'
+    400028: __unnamed
+    400030: Arms
+    400032: Camera01
+    400034: elbow left
+    400036: elbow right
+    400038: frame battery
+    400040: frame bone24
+    400042: frame gun
+    400044: frame jaw_l
+    400046: frame jaw_u
+    400048: frame l forearm
+    400050: frame l index low
+    400052: frame l index mid
+    400054: frame l index tip
+    400056: frame l middle mid
+    400058: frame l middle tip
+    400060: frame l middlelow
+    400062: frame l pinky low
+    400064: frame l pinky mid
+    400066: frame l pinky tip
+    400068: frame l ring low
+    400070: frame l ring mid
+    400072: frame l ring tip
+    400074: frame l thumb low
+    400076: frame l thumb mid
+    400078: frame l thumb tip
+    400080: frame l upperarm
+    400082: frame l wriste
+    400084: frame r forearm
+    400086: frame r index low
+    400088: frame r index mid
+    400090: frame r index tip
+    400092: frame r middle low
+    400094: frame r middle mid
+    400096: frame r middle tip
+    400098: frame r pinky low
+    400100: frame r pinky mid
+    400102: frame r pinky tip
+    400104: frame r ring low
+    400106: frame r ring mid
+    400108: frame r ring tip
+    400110: frame r thumb low
+    400112: frame r thumb mid
+    400114: frame r thumb tip
+    400116: frame r upperarm
+    400118: frame r wriste
+    400120: frame rod_left
+    400122: frame rod_right
+    400124: frame wing_left
+    400126: frame wing_right
+    400128: IK Chain01
+    400130: IK Chain02
+    400132: left wrist constraint
+    400134: Left Wrist Controller
+    400136: Left Wrist IK Goal
+    400138: Left Wrist Orientation
+    400140: //RootNode
+    400142: right wrist constraint
+    400144: Right Wrist Controller
+    400146: Right Wrist IK Goal
+    400148: Right Wrist Orientation
+    2300000: '#flashlight'
+    2300002: '#heat flare'
+    2300004: '#heat flare1'
+    2300006: '#primary trigger'
+    2300008: '#primary trigger1'
+    2300010: '#secondary trigger'
+    2300012: '#vent'
+    2300014: '#vent 1'
+    2300016: '#vent 2'
+    2300018: '#vent 3'
+    2300020: '#vent 4'
+    2300022: '#vent 5'
+    2300024: '#vent 6'
+    2300026: '#vent 7'
+    2300028: frame battery
+    2300030: frame bone24
+    2300032: frame gun
+    2300034: frame jaw_l
+    2300036: frame jaw_u
+    2300038: frame rod_left
+    2300040: frame rod_right
+    2300042: frame wing_left
+    2300044: frame wing_right
+    3300000: '#flashlight'
+    3300002: '#heat flare'
+    3300004: '#heat flare1'
+    3300006: '#primary trigger'
+    3300008: '#primary trigger1'
+    3300010: '#secondary trigger'
+    3300012: '#vent'
+    3300014: '#vent 1'
+    3300016: '#vent 2'
+    3300018: '#vent 3'
+    3300020: '#vent 4'
+    3300022: '#vent 5'
+    3300024: '#vent 6'
+    3300026: '#vent 7'
+    3300028: frame battery
+    3300030: frame bone24
+    3300032: frame gun
+    3300034: frame jaw_l
+    3300036: frame jaw_u
+    3300038: frame rod_left
+    3300040: frame rod_right
+    3300042: frame wing_left
+    3300044: frame wing_right
+    4300000: frame bone24
+    4300002: Arms
+    4300004: frame gun
+    4300006: '#vent'
+    4300008: '#vent'
+    4300010: '#vent'
+    4300012: '#vent'
+    4300014: '#vent'
+    4300016: '#vent'
+    4300018: '#vent'
+    4300020: '#vent'
+    4300022: '#secondary trigger'
+    4300024: '#primary trigger1'
+    4300026: '#primary trigger'
+    4300028: '#flashlight'
+    4300030: frame rod_right
+    4300032: frame wing_right
+    4300034: frame rod_left
+    4300036: frame wing_left
+    4300038: frame jaw_u
+    4300040: '#heat flare'
+    4300042: frame jaw_l
+    4300044: '#heat flare1'
+    4300046: frame battery
+    4300048: __unnamed
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: __unnamed
+    13700002: Arms
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

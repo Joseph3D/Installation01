@@ -1,0 +1,282 @@
+fileFormatVersion: 2
+guid: 6975772faeba510458878f3453ddbf0f
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: '#flashlight'
+    100002: '#mag'
+    100004: '#magslot'
+    100006: '#needles'
+    100008: '#primary trigger'
+    100010: __unnamed
+    100012: Arms
+    100014: Camera01
+    100016: elbow left
+    100018: elbow right
+    100020: frame ammo
+    100022: frame bone24
+    100024: frame gun
+    100026: frame l forearm
+    100028: frame l index low
+    100030: frame l index mid
+    100032: frame l index tip
+    100034: frame l middle mid
+    100036: frame l middle tip
+    100038: frame l middlelow
+    100040: frame l pinky low
+    100042: frame l pinky mid
+    100044: frame l pinky tip
+    100046: frame l ring low
+    100048: frame l ring mid
+    100050: frame l ring tip
+    100052: frame l thumb low
+    100054: frame l thumb mid
+    100056: frame l thumb tip
+    100058: frame l upperarm
+    100060: frame l wriste
+    100062: frame lid
+    100064: frame needle01
+    100066: frame needle02
+    100068: frame needle03
+    100070: frame needle04
+    100072: frame needle05
+    100074: frame needle06
+    100076: frame needle07
+    100078: frame needle08
+    100080: frame needle09
+    100082: frame needle10
+    100084: frame needle11
+    100086: frame needle12
+    100088: frame needle13
+    100090: frame needle14
+    100092: frame needle15
+    100094: frame needle16
+    100096: frame r forearm
+    100098: frame r index low
+    100100: frame r index mid
+    100102: frame r index tip
+    100104: frame r middle low
+    100106: frame r middle mid
+    100108: frame r middle tip
+    100110: frame r pinky low
+    100112: frame r pinky mid
+    100114: frame r pinky tip
+    100116: frame r ring low
+    100118: frame r ring mid
+    100120: frame r ring tip
+    100122: frame r thumb low
+    100124: frame r thumb mid
+    100126: frame r thumb tip
+    100128: frame r upperarm
+    100130: frame r wriste
+    100132: IK Chain01
+    100134: IK Chain02
+    100136: left wrist constraint
+    100138: //RootNode
+    100140: right wrist constraint
+    400000: '#flashlight'
+    400002: '#mag'
+    400004: '#magslot'
+    400006: '#needles'
+    400008: '#primary trigger'
+    400010: __unnamed
+    400012: Arms
+    400014: Camera01
+    400016: elbow left
+    400018: elbow right
+    400020: frame ammo
+    400022: frame bone24
+    400024: frame gun
+    400026: frame l forearm
+    400028: frame l index low
+    400030: frame l index mid
+    400032: frame l index tip
+    400034: frame l middle mid
+    400036: frame l middle tip
+    400038: frame l middlelow
+    400040: frame l pinky low
+    400042: frame l pinky mid
+    400044: frame l pinky tip
+    400046: frame l ring low
+    400048: frame l ring mid
+    400050: frame l ring tip
+    400052: frame l thumb low
+    400054: frame l thumb mid
+    400056: frame l thumb tip
+    400058: frame l upperarm
+    400060: frame l wriste
+    400062: frame lid
+    400064: frame needle01
+    400066: frame needle02
+    400068: frame needle03
+    400070: frame needle04
+    400072: frame needle05
+    400074: frame needle06
+    400076: frame needle07
+    400078: frame needle08
+    400080: frame needle09
+    400082: frame needle10
+    400084: frame needle11
+    400086: frame needle12
+    400088: frame needle13
+    400090: frame needle14
+    400092: frame needle15
+    400094: frame needle16
+    400096: frame r forearm
+    400098: frame r index low
+    400100: frame r index mid
+    400102: frame r index tip
+    400104: frame r middle low
+    400106: frame r middle mid
+    400108: frame r middle tip
+    400110: frame r pinky low
+    400112: frame r pinky mid
+    400114: frame r pinky tip
+    400116: frame r ring low
+    400118: frame r ring mid
+    400120: frame r ring tip
+    400122: frame r thumb low
+    400124: frame r thumb mid
+    400126: frame r thumb tip
+    400128: frame r upperarm
+    400130: frame r wriste
+    400132: IK Chain01
+    400134: IK Chain02
+    400136: left wrist constraint
+    400138: //RootNode
+    400140: right wrist constraint
+    2300000: '#flashlight'
+    2300002: '#mag'
+    2300004: '#magslot'
+    2300006: '#needles'
+    2300008: '#primary trigger'
+    2300010: frame ammo
+    2300012: frame bone24
+    2300014: frame gun
+    2300016: frame lid
+    2300018: frame needle01
+    2300020: frame needle02
+    2300022: frame needle03
+    2300024: frame needle04
+    2300026: frame needle05
+    2300028: frame needle06
+    2300030: frame needle07
+    2300032: frame needle08
+    2300034: frame needle09
+    2300036: frame needle10
+    2300038: frame needle11
+    2300040: frame needle12
+    2300042: frame needle13
+    2300044: frame needle14
+    2300046: frame needle15
+    2300048: frame needle16
+    3300000: '#flashlight'
+    3300002: '#mag'
+    3300004: '#magslot'
+    3300006: '#needles'
+    3300008: '#primary trigger'
+    3300010: frame ammo
+    3300012: frame bone24
+    3300014: frame gun
+    3300016: frame lid
+    3300018: frame needle01
+    3300020: frame needle02
+    3300022: frame needle03
+    3300024: frame needle04
+    3300026: frame needle05
+    3300028: frame needle06
+    3300030: frame needle07
+    3300032: frame needle08
+    3300034: frame needle09
+    3300036: frame needle10
+    3300038: frame needle11
+    3300040: frame needle12
+    3300042: frame needle13
+    3300044: frame needle14
+    3300046: frame needle15
+    3300048: frame needle16
+    4300000: frame bone24
+    4300002: Arms
+    4300004: frame gun
+    4300006: frame ammo
+    4300008: '#mag'
+    4300010: frame lid
+    4300012: frame needle01
+    4300014: frame needle02
+    4300016: frame needle03
+    4300018: frame needle04
+    4300020: frame needle05
+    4300022: frame needle06
+    4300024: frame needle07
+    4300026: frame needle08
+    4300028: frame needle09
+    4300030: frame needle10
+    4300032: frame needle11
+    4300034: frame needle12
+    4300036: frame needle13
+    4300038: frame needle14
+    4300040: frame needle15
+    4300042: frame needle16
+    4300044: '#flashlight'
+    4300046: '#magslot'
+    4300048: '#needles'
+    4300050: '#primary trigger'
+    4300052: __unnamed
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: __unnamed
+    13700002: Arms
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
