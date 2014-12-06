@@ -1,0 +1,40 @@
+Initialize engine version: 4.6.0b20 (a3ecf55f1347)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 9.0c [nvd3dum.dll 9.18.13.4052]
+    Renderer: NVIDIA GeForce GTX 660  
+    Vendor:   NVIDIA
+    VRAM:     1989 MB (via DXGI)
+    Caps:     Shader=30 DepthRT=1 NativeDepth=1 NativeShadow=1 DF16=0 INTZ=1 RAWZ=0 NULL=1 RESZ=0 SlowINTZ=0
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\Assembly-UnityScript.dll (this message is harmless)
+Loading C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\Assembly-UnityScript.dll into Unity Child Domain
+Platform assembly: C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\ProBuilderCore.dll (this message is harmless)
+Loading C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\ProBuilderCore.dll into Unity Child Domain
+Platform assembly: C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\ProBuilderMeshOps.dll (this message is harmless)
+Loading C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\ProBuilderMeshOps.dll into Unity Child Domain
+Platform assembly: C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\ProCore.dll (this message is harmless)
+Loading C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\ProCore.dll into Unity Child Domain
+Platform assembly: C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\SixBySeven.dll (this message is harmless)
+Loading C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\SixBySeven.dll into Unity Child Domain
+- Completed reload, in  0.050 seconds
+desktop: 1440x900 60Hz; virtual: 2720x1024 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+Platform assembly: C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\System.dll (this message is harmless)
+The referenced script on this Behaviour is missing!
+ 
+(Filename: C:/BuildAgent/work/d63dfc6385190b60/Runtime/Mono/MonoBehaviour.cpp Line: 1789)
+
+The referenced script on this Behaviour is missing!
+ 
+(Filename: C:/BuildAgent/work/d63dfc6385190b60/Runtime/Mono/MonoBehaviour.cpp Line: 1789)
+
+Platform assembly: C:\Users\Alexander\Documents\Installation01\Builds\v.0.0.4\v.0.0.4_Data\Managed\UnityScript.Lang.dll (this message is harmless)
