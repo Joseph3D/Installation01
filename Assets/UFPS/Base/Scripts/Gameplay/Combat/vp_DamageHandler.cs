@@ -27,7 +27,7 @@ public class vp_DamageHandler : MonoBehaviour
 													// TIP: could be fx, could also be rigidbody rubble
 	public float MinDeathDelay = 0.0f;				// random timespan in seconds to delay death. good for cool serial explosions
 	public float MaxDeathDelay = 0.0f;
-	public float m_CurrentHealth = 0.0f;			// current health of the object instance
+	public float CurrentHealth = 0.0f;			// current health of the object instance
 
 	protected AudioSource m_Audio = null;
 	public AudioClip DeathSound = null;				// sound to play upon death
@@ -72,7 +72,7 @@ public class vp_DamageHandler : MonoBehaviour
 		
 		m_Audio = audio;
 
-		m_CurrentHealth = MaxHealth;
+		CurrentHealth = MaxHealth;
 
 		// check for obsolete respawn-related parameters, create a vp_Respawner
 		// component (if necessary) and disable such values on this component
@@ -104,6 +104,10 @@ public class vp_DamageHandler : MonoBehaviour
 	/// </summary>
 	public virtual void Damage(float damage)
 	{
+		Damage(new vp_DamageInfo(damage, null));
+	}
+	public virtual void Damage(vp_DamageInfo projectileInfo)
+	{
 
 		if (!enabled)
 			return;
@@ -111,16 +115,26 @@ public class vp_DamageHandler : MonoBehaviour
 		if (!vp_Utility.IsActive(gameObject))
 			return;
 
-		if (m_CurrentHealth <= 0.0f)
+		if (CurrentHealth <= 0.0f)
 			return;
 
-		m_CurrentHealth = Mathf.Min(m_CurrentHealth - damage, MaxHealth);
+		CurrentHealth = Mathf.Min(CurrentHealth - projectileInfo.Damage, MaxHealth);
 
-		if (m_CurrentHealth <= 0.0f)
-			vp_Timer.In(UnityEngine.Random.Range(MinDeathDelay, MaxDeathDelay), delegate()
-			{
-				SendMessage("Die");		// picked up by vp_DamageHandlers and vp_Respawners
-			});
+		if (vp_Gameplay.isMaster)
+		{
+
+			// only do this in multiplayer
+			if (vp_Gameplay.isMultiplayer && (projectileInfo.Sender != null))
+				vp_GlobalEvent<Transform, Transform, float>.Send("Damage", transform.root, projectileInfo.Sender, projectileInfo.Damage, vp_GlobalEventMode.REQUIRE_LISTENER);
+
+			// do this in multiplayer and singleplayer
+			if (CurrentHealth <= 0.0f)
+				vp_Timer.In(UnityEngine.Random.Range(MinDeathDelay, MaxDeathDelay), delegate()
+				{
+					SendMessage("Die");		// picked up by vp_DamageHandlers and vp_Respawners
+				});
+
+		}
 
 
 		// TIP: if you want to do things like play a special impact
@@ -147,7 +161,7 @@ public class vp_DamageHandler : MonoBehaviour
 		}
 
 		RemoveBulletHoles();
-
+		
 		vp_Utility.Activate(gameObject, false);
 
 		foreach (GameObject o in DeathSpawnObjects)
@@ -164,8 +178,8 @@ public class vp_DamageHandler : MonoBehaviour
 	/// </summary>
 	protected virtual void Reset()
 	{
-		
-		m_CurrentHealth = MaxHealth;
+
+		CurrentHealth = MaxHealth;
 	
 	}
 	
@@ -175,7 +189,7 @@ public class vp_DamageHandler : MonoBehaviour
 	/// </summary>
 	protected virtual void RemoveBulletHoles()
 	{
-		
+
 		vp_HitscanBullet[] bullets = GetComponentsInChildren<vp_HitscanBullet>(true);
 		for(int i=0;i<bullets.Length; i++)
 			vp_Utility.Destroy(bullets[i].gameObject);
@@ -195,7 +209,7 @@ public class vp_DamageHandler : MonoBehaviour
 
 		if (damage > 0.0f)
 		{
-			if (m_CurrentHealth - damage <= 0.0f)
+			if (CurrentHealth - damage <= 0.0f)
 				MaxDeathDelay = MinDeathDelay = 0.0f;
 			Damage(damage);
 		}
@@ -307,7 +321,7 @@ public class vp_DamageHandler : MonoBehaviour
 				n.ImpactDamageMultiplier = p.ImpactDamageMultiplier;
 				n.ImpactDamageThreshold = p.ImpactDamageThreshold;
 				n.m_Audio = p.m_Audio;
-				n.m_CurrentHealth = p.m_CurrentHealth;
+				n.CurrentHealth = p.CurrentHealth;
 				n.m_StartPosition = p.m_StartPosition;
 				n.m_StartRotation = p.m_StartRotation;
 				n.MaxDeathDelay = p.MaxDeathDelay;

@@ -28,6 +28,17 @@ public class vp_PlayerDamageHandler : vp_DamageHandler
 		}
 	}
 
+	private vp_PlayerInventory m_Inventory = null;
+	protected vp_PlayerInventory Inventory
+	{
+		get
+		{
+			if (m_Inventory == null)
+				m_Inventory = transform.root.GetComponentInChildren<vp_PlayerInventory>();
+			return m_Inventory;
+		}
+	}
+
 	// falling damage
 	public bool AllowFallDamage = true;
 	public float FallImpactThreshold = .15f;
@@ -35,6 +46,38 @@ public class vp_PlayerDamageHandler : vp_DamageHandler
 	public Vector2 FallImpactPitch = new Vector2(1.0f, 1.5f);	// random pitch range for fall impact sounds
 	public List<AudioClip> FallImpactSounds = new List<AudioClip>();
 	protected float m_FallImpactMultiplier = 2;
+	protected bool m_InventoryWasEnabledAtStart = true;		// helper feature to facilitate developing with a temp-disabled inventory
+
+	protected List<Collider> m_Colliders = null;
+
+	protected List<Collider> Colliders
+	{
+		get
+		{
+			if (m_Colliders == null)
+			{
+				m_Colliders = new List<Collider>();
+				foreach (Collider c in GetComponentsInChildren<Collider>())
+				{
+					if (c.gameObject.layer == vp_Layer.PlayerDamageCollider)
+					{
+						m_Colliders.Add(c);
+					}
+				}
+			}
+			return m_Colliders;
+		}
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	void Start()
+	{
+		if (Inventory != null)
+			m_InventoryWasEnabledAtStart = Inventory.enabled;
+	}
 
 
 	/// <summary>
@@ -85,6 +128,14 @@ public class vp_PlayerDamageHandler : vp_DamageHandler
 				vp_Utility.Instantiate(o, transform.position, transform.rotation);
 		}
 
+		foreach (Collider c in Colliders)
+		{
+			c.enabled = false;
+		}
+
+		if ((Inventory != null) && Inventory.enabled)
+			Inventory.enabled = false;
+
 		Player.SetWeapon.Argument = 0;
 		Player.SetWeapon.Start();
 		Player.Dead.Start();
@@ -97,6 +148,14 @@ public class vp_PlayerDamageHandler : vp_DamageHandler
 		Player.Climb.Stop();
 		Player.Interact.Stop();
 
+		// if we're the master in multiplayer, send kill event to other players
+		if (vp_Gameplay.isMultiplayer && vp_Gameplay.isMaster)
+		{
+			//Debug.Log("sending kill event from master scene to vp_MasterClient");
+			vp_GlobalEvent<Transform>.Send("Kill", transform.root);
+			//vp_TargetEvent.Send(transform, "Die");
+		}
+
 	}
 
 
@@ -107,12 +166,20 @@ public class vp_PlayerDamageHandler : vp_DamageHandler
 	{
 
 		base.Reset();
-
+		
 		if (!Application.isPlaying)
 			return;
 
 		Player.Dead.Stop();
 		Player.Stop.Send();
+
+		foreach (Collider c in Colliders)
+		{
+			c.enabled = true;
+		}
+
+		if ((Inventory != null) && !Inventory.enabled)
+			Inventory.enabled = m_InventoryWasEnabledAtStart;
 
 		if (m_Audio != null)
 		{
@@ -124,17 +191,29 @@ public class vp_PlayerDamageHandler : vp_DamageHandler
 
 
 	/// <summary>
-	/// gets or sets the current player 
+	/// gets or sets the current health 
 	/// </summary>
 	protected virtual float OnValue_Health
 	{
 		get
 		{
-			return m_CurrentHealth;
+			return CurrentHealth;
 		}
 		set
 		{
-			m_CurrentHealth = Mathf.Min(value, MaxHealth);	// health is not allowed to go above max, but negative health is allowed (for gibbing)
+			CurrentHealth = Mathf.Min(value, MaxHealth);	// health is not allowed to go above max, but negative health is allowed (for gibbing)
+		}
+	}
+
+
+	/// <summary>
+	/// gets the player's max health 
+	/// </summary>
+	protected virtual float OnValue_MaxHealth
+	{
+		get
+		{
+			return MaxHealth;
 		}
 	}
 

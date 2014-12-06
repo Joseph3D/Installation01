@@ -17,6 +17,9 @@ public class vp_SimpleCrosshair : MonoBehaviour
 
 	// crosshair texture
 	public Texture m_ImageCrosshair = null;
+
+	public bool HideOnFirstPersonZoom = true;
+	public bool HideOnDeath = true;
 	
 	protected vp_FPPlayerEventHandler m_Player = null;
 	
@@ -61,16 +64,20 @@ public class vp_SimpleCrosshair : MonoBehaviour
 	void OnGUI()
 	{
 
-		if (m_ImageCrosshair != null
-			//&& !m_Player.Zoom.Active	// <-- uncomment this line to make crosshair disappear when aiming down sights
-			)
-		{
-			GUI.color = new Color(1, 1, 1, 0.8f);
-			GUI.DrawTexture(new Rect((Screen.width * 0.5f) - (m_ImageCrosshair.width * 0.5f),
-				(Screen.height * 0.5f) - (m_ImageCrosshair.height * 0.5f), m_ImageCrosshair.width,
-				m_ImageCrosshair.height), m_ImageCrosshair);
-			GUI.color = Color.white;
-		}
+		if (m_ImageCrosshair == null)
+			return;
+
+		if(HideOnFirstPersonZoom && m_Player.Zoom.Active && m_Player.IsFirstPerson.Get())
+			return;
+
+		if(HideOnDeath && m_Player.Dead.Active)
+			return;
+
+		GUI.color = new Color(1, 1, 1, 0.8f);
+		GUI.DrawTexture(new Rect((Screen.width * 0.5f) - (m_ImageCrosshair.width * 0.5f),
+			(Screen.height * 0.5f) - (m_ImageCrosshair.height * 0.5f), m_ImageCrosshair.width,
+			m_ImageCrosshair.height), m_ImageCrosshair);
+		GUI.color = Color.white;
 	
 	}
 	

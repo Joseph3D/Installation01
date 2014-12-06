@@ -55,6 +55,27 @@ public class vp_ItemPickup : MonoBehaviour
 		}
 	}
 
+
+	protected vp_ItemType m_ItemTypeObject = null;
+	public vp_ItemType ItemTypeObject
+	{
+		get
+		{
+#if UNITY_EDITOR
+			if (m_Item.Type == null)
+			{
+				Debug.LogWarning(string.Format(MissingItemTypeError, this), gameObject);
+				return null;
+			}
+			return m_Item.Type;
+#else
+			if (m_ItemTypeObject == null)
+				m_ItemTypeObject = m_Item.Type;
+			return m_ItemTypeObject;
+#endif
+		}
+	}
+
 	protected AudioSource m_Audio = null;
 	protected AudioSource Audio
 	{
@@ -78,10 +99,10 @@ public class vp_ItemPickup : MonoBehaviour
 
 		public vp_ItemType Type = null;
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 		[vp_HelpBox(typeof(ItemSection), UnityEditor.MessageType.None, typeof(vp_ItemPickup), null, true)]
 		public float helpbox;
-		#endif
+#endif
 
 	}
 	[SerializeField]
@@ -147,6 +168,31 @@ public class vp_ItemPickup : MonoBehaviour
 
 	static Dictionary<Collider, vp_Inventory> m_ColliderInventories = new Dictionary<Collider, vp_Inventory>();
 
+	// SNIPPET: if you have the UFPS & Photon Cloud Multiplayer Starter Kit,
+	// this code can be enabled to show debug-IDs floating above each pickup.
+	// NOTE: you have to also uncomment 'm_NameTag' in Update
+
+	/*
+	protected vp_NameTag m_NameTag = null;
+	public bool ShowID
+	{
+		set
+		{
+			if (value == true)
+			{
+				if (m_NameTag == null)
+				{
+					m_NameTag = gameObject.AddComponent<vp_NameTag>();
+					m_NameTag.Text = "";
+				}
+				m_NameTag.enabled = true;
+			}
+			else if(m_NameTag != null)
+				m_NameTag.enabled = false;
+		}
+	}
+	*/
+
 
 	/// <summary>
 	/// 
@@ -186,14 +232,21 @@ public class vp_ItemPickup : MonoBehaviour
 		// disable rigidbody collider once it has landed
 		if (!m_Depleted && (m_Rigidbody != null) && m_Rigidbody.IsSleeping() && !m_Rigidbody.isKinematic)
 		{
-			m_Rigidbody.isKinematic = true;
-			foreach (Collider c in GetComponents<Collider>())
+			vp_Timer.In(0.5f, delegate()	// allow some time for the pickup to touch down or it may pause floating
 			{
-				if (c.isTrigger)
-					continue;
-				c.enabled = false;
-			}
+				m_Rigidbody.isKinematic = true;
+				foreach (Collider c in GetComponents<Collider>())
+				{
+					if (c.isTrigger)
+						continue;
+					c.enabled = false;
+				}
+			});
 		}
+
+		// SNIPPET: see note about 'm_NameTag' above
+		//if ((m_NameTag != null) && m_NameTag.enabled && string.IsNullOrEmpty(m_NameTag.Text))
+		//	m_NameTag.Text = ID.ToString();
 
 	}
 	
@@ -220,6 +273,8 @@ public class vp_ItemPickup : MonoBehaviour
 		m_Depleted = false;
 		m_AlreadyFailed = false;
 
+		vp_GlobalEvent<vp_ItemPickup>.Send("NetworkRespawnPickup", this);	// will only have effect in multiplayer
+
 	}
 
 
@@ -232,6 +287,25 @@ public class vp_ItemPickup : MonoBehaviour
 		if (ItemType == null)
 			return;
 
+		if(!vp_Gameplay.isMaster)
+			return;
+
+		if (!collider.enabled)
+			return;
+
+		// TODO: check for collider being a player here? otherwise it will scan for inventory on all floors on spawn
+
+		TryGiveTo(col);
+
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public void TryGiveTo(Collider col)
+	{
+
 		// only do something if the trigger is still active
 		if (m_Depleted)
 			return;
@@ -243,34 +317,39 @@ public class vp_ItemPickup : MonoBehaviour
 			m_ColliderInventories.Add(col, inventory);
 		}
 
-
 		if (inventory == null)
 			return;
 
 		// see if the colliding object was a valid recipient
 		if ((m_Recipient.Tags.Count > 0) && !m_Recipient.Tags.Contains(col.gameObject.tag))
 			return;
-		
+
 		bool result = false;
 
 		int prevAmount = vp_TargetEventReturn<vp_ItemType, int>.SendUpwards(col, "GetItemCount", m_Item.Type);
 
 
 		if (ItemType == typeof(vp_ItemType))
-			result = vp_TargetEventReturn<vp_ItemType, int, bool>.SendUpwards(col, "TryGiveItem", m_Item.Type, ID);//((ID != 0) ? ID : vp_Utility.UniqueID));
+			result = vp_TargetEventReturn<vp_ItemType, int, bool>.SendUpwards(col, "TryGiveItem", m_Item.Type, ID);
 		else if (ItemType == typeof(vp_UnitBankType))
-			result = vp_TargetEventReturn<vp_UnitBankType, int, int, bool>.SendUpwards(col, "TryGiveUnitBank", (m_Item.Type as vp_UnitBankType), Amount, ID);//((ID != 0) ? ID : vp_Utility.UniqueID));
+			result = vp_TargetEventReturn<vp_UnitBankType, int, int, bool>.SendUpwards(col, "TryGiveUnitBank", (m_Item.Type as vp_UnitBankType), Amount, ID);
 		else if (ItemType == typeof(vp_UnitType))
-			result = vp_TargetEventReturn<vp_UnitType, int, bool>.SendUpwards(col, "TryGiveUnits", (m_Item.Type as vp_UnitType), Amount);//((ID != 0) ? ID : vp_Utility.UniqueID));
+			result = vp_TargetEventReturn<vp_UnitType, int, bool>.SendUpwards(col, "TryGiveUnits", (m_Item.Type as vp_UnitType), Amount);
+		else if (ItemType.BaseType == typeof(vp_ItemType))
+			result = vp_TargetEventReturn<vp_ItemType, int, bool>.SendUpwards(col, "TryGiveItem", m_Item.Type, ID);
+		else if (ItemType.BaseType == typeof(vp_UnitBankType))
+			result = vp_TargetEventReturn<vp_UnitBankType, int, int, bool>.SendUpwards(col, "TryGiveUnitBank", (m_Item.Type as vp_UnitBankType), Amount, ID);
+		else if (ItemType.BaseType == typeof(vp_UnitType))
+			result = vp_TargetEventReturn<vp_UnitType, int, bool>.SendUpwards(col, "TryGiveUnits", (m_Item.Type as vp_UnitType), Amount);
 
 		if (result == true)
 		{
 			m_PickedUpAmount = (vp_TargetEventReturn<vp_ItemType, int>.SendUpwards(col, "GetItemCount", m_Item.Type) - prevAmount);
-			OnSuccess();
+			OnSuccess(col.transform);
 		}
 		else
 		{
-			OnFail();
+			OnFail(col.transform);
 		}
 
 	}
@@ -291,26 +370,30 @@ public class vp_ItemPickup : MonoBehaviour
 	/// <summary>
 	/// 
 	/// </summary>
-	protected virtual void OnSuccess()
+	protected virtual void OnSuccess(Transform recipient)
 	{
 
 		m_Depleted = true;
 
 		if (m_Sound.PickupSound != null)
 		{
+
 			Audio.pitch = (m_Sound.PickupSoundSlomo ? Time.timeScale : 1.0f);
 			Audio.Play();
-			renderer.enabled = false;
 		}
+
+		renderer.enabled = false;
 
 		string msg = "";
 
-		if ((m_PickedUpAmount < 2) || (ItemType == typeof(vp_UnitBankType)))
+		if ((m_PickedUpAmount < 2) || (ItemType == typeof(vp_UnitBankType)) || (ItemType.BaseType == typeof(vp_UnitBankType)))
 			msg = string.Format(m_Messages.SuccessSingle, m_Item.Type.IndefiniteArticle, m_Item.Type.DisplayName, m_Item.Type.DisplayNameFull, m_Item.Type.Description, m_PickedUpAmount.ToString());
 		else
 			msg = string.Format(m_Messages.SuccessMultiple, m_Item.Type.IndefiniteArticle, m_Item.Type.DisplayName, m_Item.Type.DisplayNameFull, m_Item.Type.Description, m_PickedUpAmount.ToString());
 
-		vp_GlobalEvent<string>.Send("HUDText", msg);
+		vp_GlobalEvent<vp_ItemPickup, Transform>.Send("NetworkGivePickup", this, recipient);	// will only execute on the master in multiplayer
+
+		vp_GlobalEvent<Transform, string>.Send("HUDText", recipient, msg);
 
 	}
 
@@ -327,7 +410,7 @@ public class vp_ItemPickup : MonoBehaviour
 	/// <summary>
 	/// 
 	/// </summary>
-	protected virtual void OnFail()
+	protected virtual void OnFail(Transform recipient)
 	{
 
 		if (!m_AlreadyFailed && m_Sound.PickupFailSound != null)
@@ -339,12 +422,12 @@ public class vp_ItemPickup : MonoBehaviour
 
 		string msg = "";
 
-		if ((m_PickedUpAmount < 2) || (ItemType == typeof(vp_UnitBankType)))
+		if ((m_PickedUpAmount < 2) || (ItemType == typeof(vp_UnitBankType)) || (ItemType.BaseType == typeof(vp_UnitBankType)))
 			msg = string.Format(m_Messages.FailSingle, m_Item.Type.IndefiniteArticle, m_Item.Type.DisplayName, m_Item.Type.DisplayNameFull, m_Item.Type.Description, Amount.ToString());
 		else
 			msg = string.Format(m_Messages.FailMultiple, m_Item.Type.IndefiniteArticle, m_Item.Type.DisplayName, m_Item.Type.DisplayNameFull, m_Item.Type.Description, Amount.ToString());
 
-		vp_GlobalEvent<string>.Send("HUDText", msg);
+		vp_GlobalEvent<Transform, string>.Send("HUDText", recipient, msg);
 
 	}
 

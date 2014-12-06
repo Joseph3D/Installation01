@@ -3,11 +3,6 @@
 ///////////////////////////////////////////////////////////
 
 ComponentType vp_FPCamera
-MouseSensitivity 0.75 0.75
-MouseSmoothSteps 5
-MouseSmoothWeight 0.5
-MouseAcceleration False
-MouseAccelerationThreshold 0.4
 RenderingFieldOfView 25
 RenderingZoomDamping 3
 PositionSpringStiffness 0.01

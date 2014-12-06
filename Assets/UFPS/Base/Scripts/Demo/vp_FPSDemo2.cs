@@ -136,7 +136,6 @@ public class vp_FPSDemo2 : MonoBehaviour
 
 		m_Demo.Update();
 
-
 	}
 
 
@@ -155,7 +154,7 @@ public class vp_FPSDemo2 : MonoBehaviour
 			m_Demo.ButtonSelection = 0;
 			m_Demo.Camera.SnapSprings();
 			m_Demo.RefreshDefaultState();
-			m_Demo.Input.ForceCursor = true;
+			m_Demo.Input.MouseCursorForced = true;
 			m_Demo.Teleport(m_SlimePos, m_SlimeAngle);
 			m_Demo.WeaponHandler.SetWeapon(1);
 			m_ExamplesCurrentSel = -1;
@@ -189,7 +188,7 @@ public class vp_FPSDemo2 : MonoBehaviour
 			m_ForceTimer.Cancel();
 			m_Demo.Controller.Stop();
 			m_Demo.PlayerEventHandler.RefreshActivityStates();
-			m_Demo.Input.ForceCursor = true;
+			m_Demo.Input.MouseCursorForced = true;
 
 			// reset some values to default on the controller 
 			m_Demo.Controller.PhysicsSlopeSlidiness = 0.15f;
@@ -259,7 +258,7 @@ public class vp_FPSDemo2 : MonoBehaviour
 						m_Demo.LookDamping = 3;
 						m_Demo.Controller.PhysicsWallBounce = 0.0f;
 						GameObject.Instantiate(m_ExplosionFX, m_Demo.Controller.transform.position + new Vector3(3, 0, 0), Quaternion.identity);
-						m_Demo.PlayerEventHandler.BombShake.Send(0.3f);
+						m_Demo.PlayerEventHandler.CameraBombShake.Send(0.3f);
 						m_Demo.Controller.AddForce(Vector3.right * 3.0f);
 						if (m_Demo.WeaponHandler.CurrentWeapon != null)
 							m_Demo.WeaponHandler.CurrentWeapon.audio.PlayOneShot(m_ExplosionSound);
@@ -281,7 +280,7 @@ public class vp_FPSDemo2 : MonoBehaviour
 					vp_Timer.In(1, delegate()
 					{
 						GameObject.Instantiate(m_ExplosionFX, m_Demo.Controller.transform.position + new Vector3(-3, 0, 0), Quaternion.identity);
-						m_Demo.PlayerEventHandler.BombShake.Send(0.5f);
+						m_Demo.PlayerEventHandler.CameraBombShake.Send(0.5f);
 						m_Demo.Controller.AddForce(Vector3.forward * 0.55f);
 						if (m_Demo.WeaponHandler.CurrentWeapon != null)
 							m_Demo.WeaponHandler.CurrentWeapon.audio.PlayOneShot(m_ExplosionSound);
@@ -289,7 +288,7 @@ public class vp_FPSDemo2 : MonoBehaviour
 					m_Demo.Teleport(m_BlownAwayPos, m_BlownAwayAngle);
 					break;
 				case 3:
-					m_Demo.Input.ForceCursor = false;
+					m_Demo.Input.MouseCursorForced = false;
 					m_Demo.WeaponHandler.SetWeapon(2);
 					m_Demo.Teleport(m_ExplorePos, m_ExploreAngle);
 					m_Demo.Input.AllowGameplayInput = true;
@@ -382,7 +381,7 @@ public class vp_FPSDemo2 : MonoBehaviour
 			m_Demo.WeaponHandler.SetWeapon(0);
 			m_Demo.Input.MouseCursorZones[0] = new Rect((Screen.width * 0.5f) - 370, 40, 80, 80);
 			m_Demo.Input.MouseCursorZones[1] = new Rect((Screen.width * 0.5f) + 290, 40, 80, 80);
-			m_Demo.Input.ForceCursor = true;
+			m_Demo.Input.MouseCursorForced = true;
 		}
 
 		m_Demo.DrawBoxes("states & presets", "You may easily design custom movement STATES (like running, crouching or proning).\nWhen happy with your tweaks, save them to PRESET FILES, and the STATE MANAGER\nwill blend smoothly between them at runtime.", ImageLeftArrow, ImageRightArrow, delegate() { m_Demo.LoadLevel(0); });
@@ -404,7 +403,7 @@ public class vp_FPSDemo2 : MonoBehaviour
 			m_Demo.FirstFrame = false;
 			m_Demo.DrawCrosshair = false;
 			m_Demo.FreezePlayer(m_OutroPos, m_OutroAngle, true);
-			m_Demo.Input.ForceCursor = true;
+			m_Demo.Input.MouseCursorForced = true;
 			m_OutroStartTime = Time.time;
 			m_Demo.PlayerEventHandler.Platform.Set(null);
 		}

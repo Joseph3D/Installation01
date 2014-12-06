@@ -15,7 +15,6 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(vp_FPPlayerEventHandler))]
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(vp_FPInput))]
 
 public class vp_FPController : vp_Component
 {
@@ -51,6 +50,8 @@ public class vp_FPController : vp_Component
 	protected Vector3 m_FixedPosition = Vector3.zero;		// exact position. updates at a fixed interval and is used for gameplay
 	protected Vector3 m_SmoothPosition = Vector3.zero;		// smooth position. updates as often as possible and is only used for the camera
 	public Vector3 SmoothPosition { get { return m_SmoothPosition; } }	// a version of the controller position calculated in 'Update' to get smooth camera motion
+	public Vector3 Velocity { get { return m_CharacterController.velocity; } }
+	protected bool m_IsFirstPerson = true;
 
 	// collision
 	public bool Grounded { get { return m_Grounded; } }
@@ -81,7 +82,6 @@ public class vp_FPController : vp_Component
 	protected Vector3 m_MotorThrottle = Vector3.zero;
 	protected float m_MotorAirSpeedModifier = 1.0f;
 	protected float m_CurrentAntiBumpOffset = 0.0f;
-	protected Vector2 m_MoveVector = Vector2.zero;
 
 	// jump
 	public float MotorJumpForce = 0.18f;
@@ -124,6 +124,7 @@ public class vp_FPController : vp_Component
 	protected Vector3 CapsuleTop = Vector3.zero;
 	protected float m_SkinWidth = 0.08f;				// NOTE: this should be kept the same as the Unity CharacterController's
 														// 'Skin Width' parameter, which is unfortunately not exposed to script
+	public float SkinWidth	{ get { return m_SkinWidth; }}
 
 	// moving platforms
 	protected Transform m_Platform = null;						// current rigidbody or object in the 'MovableObject' layer that we are standing on
@@ -255,6 +256,9 @@ public class vp_FPController : vp_Component
 		// apply sliding in slopes
 		UpdateSliding();
 
+		// detect when player falls, slides or gets pushed out of control
+		UpdateOutOfControl();
+		
 		// update controller position based on current motor- & external forces
 		FixedMove();
 
@@ -304,12 +308,15 @@ public class vp_FPController : vp_Component
 		m_MotorAirSpeedModifier = (m_Grounded ? 1.0f : MotorAirSpeed);
 
 		// convert horizontal input to forces in the motor
-		m_MotorThrottle += m_MoveVector.y * (Transform.TransformDirection(
+		m_MotorThrottle +=
+			((Player.InputMoveVector.Get().y > 0) ? Player.InputMoveVector.Get().y : // if moving forward or sideways: use normal speed
+			(Player.InputMoveVector.Get().y * MotorBackwardsSpeed))		// if moving backwards: apply backwards-modifier
+			* (Transform.TransformDirection(
 			Vector3.forward *
 			(MotorAcceleration * 0.1f) *
 			m_MotorAirSpeedModifier) *
 			m_SlopeFactor);
-		m_MotorThrottle += m_MoveVector.x * (Transform.TransformDirection(
+		m_MotorThrottle += Player.InputMoveVector.Get().x * (Transform.TransformDirection(
 			Vector3.right *
 			(MotorAcceleration * 0.1f) *
 			m_MotorAirSpeedModifier) *
@@ -332,10 +339,10 @@ public class vp_FPController : vp_Component
 	{
 
 		// convert input to forces in the motor
-		m_MotorThrottle += m_MoveVector.y * (Transform.TransformDirection(
-			Transform.InverseTransformDirection(Player.Forward.Get()) *
+		m_MotorThrottle += Player.InputMoveVector.Get().y * (Transform.TransformDirection(
+			Transform.InverseTransformDirection(((vp_FPPlayerEventHandler)Player).CameraLookDirection.Get()) *
 			(MotorAcceleration * 0.1f)));
-		m_MotorThrottle += m_MoveVector.x * (Transform.TransformDirection(
+		m_MotorThrottle += Player.InputMoveVector.Get().x * (Transform.TransformDirection(
 			Vector3.right *
 			(MotorAcceleration * 0.1f)));
 
@@ -544,8 +551,26 @@ public class vp_FPController : vp_Component
 		if (wasSliding != m_Slide)
 			Player.SetState("Slide", m_Slide);
 
-		if (wasSlidingFast != m_SlideFast)
-			Player.SetState("SlideFast", m_SlideFast);
+	}
+
+
+	/// <summary>
+	/// this method starts an 'out of control' activity whenever the player
+	/// is pushed around by external forces or starts sliding very fast.
+	/// this is currently intended just for triggering animations on the
+	/// character body model, however it could also be used to prevent other
+	/// activities from starting when the player is out of control. example:
+	/// (in 'CanStart_Attack') if(Player.OutOfControl.Active) return false;
+	/// </summary>
+	void UpdateOutOfControl()
+	{
+
+		if ((m_ExternalForce.magnitude > 0.2f) ||		// TODO: make 0.2 a constant
+			(m_FallSpeed < -0.2f) ||	// TODO: make 0.2 a constant
+				(m_SlideFast == true))
+			Player.OutOfControl.Start();
+		else if (Player.OutOfControl.Active)
+				Player.OutOfControl.Stop();
 
 	}
 
@@ -591,7 +616,7 @@ public class vp_FPController : vp_Component
 		// while there is an active death event, block movement input
 		if (Player.Dead.Active)
 		{
-			m_MoveVector = Vector2.zero;
+			Player.InputMoveVector.Set(Vector2.zero);
 			return;
 		}
 
@@ -943,14 +968,16 @@ public class vp_FPController : vp_Component
 
 		Player.Move.Send(Vector3.zero);
 		m_MotorThrottle = Vector3.zero;
+		m_MotorJumpDone = true;
+		m_MotorJumpForceAcc = 0.0f;
 		m_ExternalForce = Vector3.zero;
 		StopSoftForce();
-		m_MoveVector = Vector2.zero;
+		Player.InputMoveVector.Set(Vector2.zero);
 		m_FallSpeed = 0.0f;
 		m_LastFallSpeed = 0.0f;
 		m_HighestFallSpeed = 0.0f;
 		m_SmoothPosition = Transform.position;
-
+		
 	}
 
 
@@ -1108,6 +1135,72 @@ public class vp_FPController : vp_Component
 
 
 	/// <summary>
+	/// returns the maximum speed of the controller's "Default" state
+	/// (default) or an optional state. the return value represents the
+	/// speed in meters per second that would build up if the controller
+	/// was	to move full throttle for 5 (default) seconds on an even
+	/// surface. NOTE: you may not want to simulate this every frame
+	/// </summary>
+	public float CalculateMaxSpeed(string stateName = "Default", float accelDuration = 5.0f)
+	{
+
+		// if we're getting a state other than "Default", first make sure
+		// the state exists
+		if (stateName != "Default")
+		{
+			bool foundState = false;
+			foreach (vp_State s in States)
+			{
+				if (s.Name == stateName)
+					foundState = true;
+			}
+
+			if (!foundState)
+			{
+				Debug.LogError("Error (" + this + ") Controller has no such state: '" + stateName + "'.");
+				return 0.0f;
+			}
+		}
+
+		// backup the current 'enabled' status of all the states
+		Dictionary<vp_State, bool> statesBackup = new Dictionary<vp_State, bool>();
+		foreach (vp_State s in States)
+		{
+			statesBackup.Add(s, s.Enabled);
+			s.Enabled = false;
+		}
+
+		// reset state manager so only the default state is active
+		StateManager.Reset();
+
+		// enable the user passed state (if any)
+		if (stateName != "Default")
+			SetState(stateName, true);
+
+		// ok, here's where the magic happens! simulate accelerating the
+		// controller in an arbitrary direction for 'accelDuration' seconds
+		float speed = 0.0f;
+		float seconds = 5.0f;
+		for (int v = 0; v < 60 * seconds; v++)
+		{
+			speed += (MotorAcceleration * 0.1f) * 60.0f;
+			speed /= (1.0f + MotorDamping);
+		}
+
+		// got the resulting speed, now clean up after ourselves
+		foreach (vp_State s in States)
+		{
+			bool enabled;
+			statesBackup.TryGetValue(s, out enabled);
+			s.Enabled = enabled;
+		}
+
+		return speed;
+
+	}
+
+
+	/// <summary>
 	/// adds a condition (a rule set) that must be met for the
 	/// event handler 'Jump' activity to successfully activate.
 	/// NOTE: other scripts may have added conditions to this
@@ -1157,7 +1250,7 @@ public class vp_FPController : vp_Component
 
 
 	/// <summary>
-	/// this callback is triggered right after the activity in question
+	/// this callback is triggered right after the 'Jump' activity
 	/// has been approved for activation
 	/// </summary>
 	protected virtual void OnStart_Jump()
@@ -1179,8 +1272,7 @@ public class vp_FPController : vp_Component
 
 
 	/// <summary>
-	/// this callback is triggered when the activity in question
-	/// deactivates
+	/// this callback is triggered when the 'Jump' activity deactivates
 	/// </summary>
 	protected virtual void OnStop_Jump()
 	{
@@ -1227,6 +1319,10 @@ public class vp_FPController : vp_Component
 	protected virtual void OnStart_Crouch()
 	{
 
+		// force-stop the run activity
+
+		Player.Run.Stop();
+
 		// skip modifying collider size if free flying without ground contact
 		if (MotorFreeFly && !Grounded)
 			return;
@@ -1239,8 +1335,7 @@ public class vp_FPController : vp_Component
 
 
 	/// <summary>
-	/// this callback is triggered when the activity in question
-	/// deactivates
+	/// this callback is triggered when the 'Crouch' activity deactivates
 	/// </summary>
 	protected virtual void OnStop_Crouch()
 	{
@@ -1277,20 +1372,6 @@ public class vp_FPController : vp_Component
 	{
 		get { return Transform.position; }
 		set { SetPosition(value); }
-	}
-
-
-	/// <summary>
-	/// returns the current horizontal and vertical input vector
-	/// </summary>
-	protected virtual Vector2 OnValue_InputMoveVector
-	{
-		get { return m_MoveVector; }
-#if UNITY_IPHONE || UNITY_ANDROID
-		set { m_MoveVector = value.sqrMagnitude > 1 ? value.normalized.y < 0 ? value.normalized * MotorBackwardsSpeed : value.normalized : value.y < 0 ? value * MotorBackwardsSpeed : value; }
-#else
-		set { m_MoveVector = value.y < 0 ? value.normalized * MotorBackwardsSpeed : value.normalized; }
-#endif
 	}
 
 
@@ -1344,7 +1425,8 @@ public class vp_FPController : vp_Component
 	/// </summary>
 	protected virtual void OnMessage_Move(Vector3 direction)
 	{
-		CharacterController.Move(direction);
+		if (CharacterController.enabled)
+			CharacterController.Move(direction);
 	}
 
 
@@ -1431,9 +1513,32 @@ public class vp_FPController : vp_Component
 	}
 
 
+	/// <summary>
+	/// 
+	/// </summary>
+	protected virtual bool OnValue_IsFirstPerson
+	{
+
+		get
+		{
+			return m_IsFirstPerson;
+		}
+		set
+		{
+			m_IsFirstPerson = value;
+		}
+
+	}
 
 
 
+	/// <summary>
+	/// TEMP: (test)
+	/// </summary>
+	protected virtual void OnStop_Dead()
+	{
+		Player.OutOfControl.Stop();
+	}
 
 
 }

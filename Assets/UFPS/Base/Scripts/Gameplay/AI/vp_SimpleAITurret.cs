@@ -20,6 +20,7 @@ public class vp_SimpleAITurret : MonoBehaviour
 	public float ViewRange = 10.0f;
 	public float AimSpeed = 50.0f;
 	public float WakeInterval = 2.0f;
+	public float FireAngle = 10.0f;
 
 	protected vp_Shooter m_Shooter = null;
 	protected Transform m_Transform = null;
@@ -27,11 +28,10 @@ public class vp_SimpleAITurret : MonoBehaviour
 	protected vp_Timer.Handle m_Timer = new vp_Timer.Handle();
 
 
-
 	/// <summary>
 	/// 
 	/// </summary>
-	void Start()
+	protected virtual void Start()
 	{
 		m_Shooter = GetComponent<vp_Shooter>();
 		m_Transform = transform;
@@ -41,7 +41,7 @@ public class vp_SimpleAITurret : MonoBehaviour
 	/// <summary>
 	/// 
 	/// </summary>
-	void Update()
+	protected virtual void Update()
 	{
 
 		// turn on and off with 'UpdateInterval'
@@ -66,7 +66,7 @@ public class vp_SimpleAITurret : MonoBehaviour
 	/// scans the area for the local player and returns its
 	/// transform if present, and if we have line-of-sight
 	/// </summary>
-	Transform ScanForLocalPlayer()
+	protected virtual Transform ScanForLocalPlayer()
 	{
 
 		Collider[] colliders = Physics.OverlapSphere(m_Transform.position, ViewRange, (1 << vp_Layer.LocalPlayer));
@@ -95,7 +95,7 @@ public class vp_SimpleAITurret : MonoBehaviour
 	/// <summary>
 	/// smoothly aims at target while firing the shooter
 	/// </summary>
-	void AttackTarget()
+	protected virtual void AttackTarget()
 	{
 
 		// smoothly aim at target
@@ -104,7 +104,8 @@ public class vp_SimpleAITurret : MonoBehaviour
 		m_Transform.rotation = Quaternion.RotateTowards(m_Transform.rotation, targetRotation, Time.deltaTime * AimSpeed);
 
 		// fire the shooter
-		m_Shooter.TryFire();
+		if(Mathf.Abs(vp_3DUtility.LookAtAngleHorizontal(m_Transform.position, m_Transform.forward, m_Target.position)) < FireAngle)
+			m_Shooter.TryFire();
 
 	}
 

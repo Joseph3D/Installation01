@@ -5,8 +5,12 @@
 //	https://twitter.com/VisionPunk
 //	http://www.visionpunk.com
 //
-//	description:	a version of vp_Inventory that's aware of the FPPlayerEventHandler
+//	description:	a version of vp_Inventory that's aware of the PlayerEventHandler
 //					and uses its events
+//
+//					IMPORTANT: this class has been renamed to 'vp_PlayerInventory'.
+//					this script has been retained for stability only. please replace
+//					any components of this type with the new 'vp_PlayerInventory'.
 //
 ///////////////////////////////////////////////////////////////////////////////// 
 
@@ -16,25 +20,25 @@ using System.Collections.Generic;
 
 public class vp_FPInventory : vp_Inventory
 {
-
-	private vp_FPPlayerEventHandler m_Player = null;	// should never be referenced directly
-	protected vp_FPPlayerEventHandler Player	// lazy initialization of the event handler field
+	
+	private vp_PlayerEventHandler m_Player = null;	// should never be referenced directly
+	protected vp_PlayerEventHandler Player	// lazy initialization of the event handler field
 	{
 		get
 		{
 			if (m_Player == null)
-				m_Player = transform.GetComponent<vp_FPPlayerEventHandler>();
+				m_Player = transform.GetComponent<vp_PlayerEventHandler>();
 			return m_Player;
 		}
 	}
 
-	private vp_FPWeaponHandler m_WeaponHandler = null;	// should never be referenced directly
-	protected vp_FPWeaponHandler WeaponHandler	// lazy initialization of the weapon handler field
+	private vp_WeaponHandler m_WeaponHandler = null;	// should never be referenced directly
+	protected vp_WeaponHandler WeaponHandler	// lazy initialization of the weapon handler field
 	{
 		get
 		{
 			if (m_WeaponHandler == null)
-				m_WeaponHandler = transform.GetComponent<vp_FPWeaponHandler>();
+				m_WeaponHandler = transform.GetComponent<vp_WeaponHandler>();
 			return m_WeaponHandler;
 		}
 	}
@@ -42,7 +46,7 @@ public class vp_FPInventory : vp_Inventory
 
 	protected Dictionary<int, vp_ItemIdentifier> m_WeaponIdentifiers = new Dictionary<int, vp_ItemIdentifier>();
 	protected vp_ItemIdentifier m_WeaponIdentifierResult;
-	protected string m_MissingHandlerError = "Error (vp_FPInventory) this component must be on the same transform as a vp_FPPlayerEventHandler + vp_FPWeaponHandler.";
+	protected string m_MissingHandlerError = "Error (vp_FPInventory) this component must be on the same transform as a vp_PlayerEventHandler + vp_WeaponHandler.";
 
 	public vp_ItemIdentifier CurrentWeaponIdentifier
 	{
@@ -64,7 +68,7 @@ public class vp_FPInventory : vp_Inventory
 	[SerializeField]
 	protected MiscSection m_Misc;
 
-	
+
 	/// <summary>
 	/// 
 	/// </summary>
@@ -78,10 +82,10 @@ public class vp_FPInventory : vp_Inventory
 			if ((index < 1) || index > (WeaponHandler.Weapons.Count))
 				return null;
 
-			if (WeaponHandler.Weapons[index-1] == null)
+			if (WeaponHandler.Weapons[index - 1] == null)
 				return null;
 
-			m_WeaponIdentifierResult = WeaponHandler.Weapons[index-1].GetComponent<vp_ItemIdentifier>();
+			m_WeaponIdentifierResult = WeaponHandler.Weapons[index - 1].GetComponent<vp_ItemIdentifier>();
 
 			if (m_WeaponIdentifierResult == null)
 				return null;
@@ -102,6 +106,9 @@ public class vp_FPInventory : vp_Inventory
 	/// </summary>
 	protected override void Awake()
 	{
+
+		Debug.LogWarning("Warning (" + this + ") The 'vp_FPInventory' class is obsolete. Please replace this component with a 'vp_PlayerInventory' component.");
+
 		base.Awake();
 
 
@@ -142,40 +149,44 @@ public class vp_FPInventory : vp_Inventory
 		// unregister this monobehaviour from the player event handler
 		if (Player != null)
 			Player.Unregister(this);
-		
+
 	}
 
-	
+
 	/// <summary>
 	/// 
 	/// </summary>
 	protected virtual bool MissingIdentifierError(int weaponIndex = 0)
 	{
-		//Debug.Log("count: " + WeaponHandler.Weapons.Count + ", index: " + weaponIndex);
 
 		if (!Application.isPlaying)
 			return false;
 
-		string weaponName = "";
-		if ((weaponIndex > 0) &&
-			(WeaponHandler != null) &&
-			(WeaponHandler.Weapons.Count > weaponIndex - 1))
-		{
-			weaponName = "'" + WeaponHandler.Weapons[weaponIndex - 1].name + "' ";
-		}
-		Debug.LogWarning(string.Format("Warning: ({0}{1}) Weapon gameobject " + weaponName + "lacks a properly set up vp_ItemIdentifier component!", vp_Utility.GetErrorLocation(1, true), ((weaponIndex == 0) ? "" : "(" + weaponIndex.ToString() + ")")));
+		if (weaponIndex < 1)
+			return false;
+
+		if (WeaponHandler == null)
+			return false;
+
+		if (!(WeaponHandler.Weapons.Count > weaponIndex - 1))
+			return false;
+
+		Debug.LogWarning(string.Format("Warning: Weapon gameobject '" + WeaponHandler.Weapons[weaponIndex - 1].name + "' lacks a properly set up vp_ItemIdentifier component!"));
+
 		return false;
+
 	}
 
-	
+
 	/// <summary>
 	/// 
 	/// </summary>
 	protected override void DoAddItem(vp_ItemType type, int id)
 	{
+
 		bool hadItBefore = HaveItem(type, id);
 		base.DoAddItem(type, id);
-		if(!hadItBefore)
+		if (!hadItBefore)
 			TryWield(GetItem(type, id));
 	}
 
@@ -191,12 +202,13 @@ public class vp_FPInventory : vp_Inventory
 
 	}
 
-	
+
 	/// <summary>
 	/// 
 	/// </summary>
 	protected override void DoAddUnitBank(vp_UnitBankType unitBankType, int id, int unitsLoaded)
 	{
+
 		bool hadItBefore = HaveItem(unitBankType, id);
 		base.DoAddUnitBank(unitBankType, id, unitsLoaded);
 		if (!hadItBefore)
@@ -283,7 +295,7 @@ public class vp_FPInventory : vp_Inventory
 
 
 	/// <summary>
-	/// wields the vp_FPWeapon mapped to 'item' (if any)
+	/// wields the vp_Weapon mapped to 'item' (if any)
 	/// </summary>
 	protected virtual void TryWield(vp_ItemInstance item)
 	{
@@ -296,7 +308,7 @@ public class vp_FPInventory : vp_Inventory
 
 		int index;
 		vp_ItemIdentifier identifier;
-		for (index = 1; index < WeaponHandler.Weapons.Count+1; index++)
+		for (index = 1; index < WeaponHandler.Weapons.Count + 1; index++)
 		{
 
 			identifier = GetWeaponIdentifier(index);
@@ -319,12 +331,12 @@ public class vp_FPInventory : vp_Inventory
 
 		return;
 
-		found:
+	found:
 
 		Player.SetWeapon.TryStart(index);
 
 	}
-	
+
 
 	/// <summary>
 	/// if 'item' is a currently wielded weapon, unwields it
@@ -350,8 +362,9 @@ public class vp_FPInventory : vp_Inventory
 		if ((CurrentWeaponIdentifier.ID != 0) && (item.ID != CurrentWeaponIdentifier.ID))
 			return;
 
-		Player.SetWeapon.TryStart(0);
-		vp_Timer.In(0.35f, delegate() { Player.SetNextWeapon.Try(); });
+		Player.SetWeapon.Start(0);
+		if (!Player.Dead.Active)
+			vp_Timer.In(0.35f, delegate() { Player.SetNextWeapon.Try(); });
 
 		vp_Timer.In(1.0f, UnwieldMissingWeapon);
 
@@ -385,7 +398,7 @@ public class vp_FPInventory : vp_Inventory
 		vp_ItemIdentifier weapon = GetWeaponIdentifier(index);
 		if (weapon == null)
 		{
-			if((index < 1) || index > (WeaponHandler.Weapons.Count))
+			if ((index < 1) || index > (WeaponHandler.Weapons.Count))
 				return false;
 			return MissingIdentifierError(index);
 		}
@@ -522,7 +535,7 @@ public class vp_FPInventory : vp_Inventory
 	protected virtual int OnMessage_GetItemCount(string itemTypeObjectName)
 	{
 
-		vp_ItemInstance item = GetItem(name);
+		vp_ItemInstance item = GetItem(itemTypeObjectName);
 		if (item == null)
 			return 0;
 
@@ -583,6 +596,28 @@ public class vp_FPInventory : vp_Inventory
 
 		return TryRemoveItems(type, amount);
 
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	Texture2D OnValue_CurrentAmmoIcon
+	{
+		get
+		{
+			if (CurrentWeaponInstance == null)
+				return null;
+			if (CurrentWeaponInstance.Type == null)
+				return null;
+
+			vp_UnitBankType u = CurrentWeaponInstance.Type as vp_UnitBankType;
+			if (u == null)
+				return null;
+			if (u.Unit == null)
+				return null;
+			return u.Unit.Icon;
+		}
 	}
 
 

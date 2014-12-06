@@ -16,12 +16,12 @@ using System.Collections.Generic;
 public static class vp_PresetEditorGUIUtility
 {
 
+	public static vp_Component RunTimeStateButtonTarget = null;
+
 	private static Color m_ColorGrayYellow = new Color32(180, 201, 228, 255);
 	private static Color m_ColorTransparentWhite = new Color(1, 1, 1, 0.5f);
-
 	private static vp_State m_ShowBlockListFor = null;
-
-	static Dictionary<string, List<string>> m_BlockListBackups;
+	private static Dictionary<string, List<string>> m_BlockListBackups;
 
 
 	/// <summary>
@@ -191,6 +191,8 @@ public static class vp_PresetEditorGUIUtility
 	public static bool StateFoldout(bool foldout, vp_Component component, List<vp_State> stateList, vp_ComponentPersister persister = null)
 	{
 
+		RunTimeStateButtonTarget = null;
+
 		bool before = foldout;
 		foldout = EditorGUILayout.Foldout(foldout,
 			(foldout && !Application.isPlaying) ? "State             Preset" : "States"
@@ -202,7 +204,7 @@ public static class vp_PresetEditorGUIUtility
 			component.RefreshDefaultState();
 
 			if (!Application.isPlaying)
-				UpdateOldStateTypeNames(stateList);
+				UpdateOldStateTypeNames(component);
 
 		}
 
@@ -277,17 +279,27 @@ public static class vp_PresetEditorGUIUtility
 
 
 	/// <summary>
-	/// this is a utility function for cleaning out state type names created
-	/// on v1.3.3, updating internally to the 1.4.x type names. it will
-	/// likely be removed in an upcoming version
+	/// this is a utility function for forcing state type names to
+	/// that of the component. these names may potentially contain
+	/// out-of-date type names serialized on earlier versions of UFPS,
+	/// or may be a result of copying fields from one type to a related
+	/// but different type
 	/// </summary>
-	private static void UpdateOldStateTypeNames(List<vp_State> stateList)
+	public static void UpdateOldStateTypeNames(vp_Component component)
 	{
 
-		for (int v = 0; v < stateList.Count; v++)
-		{
-			vp_State s = stateList[v];
+		System.Type componentType = component.Type;
 
+		// update state type names created on v1.3.3, to the 1.4.x type names
+		for (int v = 0; v < component.States.Count; v++)
+		{
+			vp_State s = component.States[v];
+
+			// force states to have the type names of the component 
+			if (s.TypeName != componentType.Name)
+				s.TypeName = componentType.Name;
+
+			// TODO: remove ?
 			if (s.TypeName == "vp_FPSController" ||
 				s.TypeName == "vp_FPSCamera" ||
 				s.TypeName == "vp_FPSSHooter" ||
@@ -296,6 +308,7 @@ public static class vp_PresetEditorGUIUtility
 				s.TypeName = s.TypeName.Replace("vp_FPS", "vp_FP");
 				Debug.Log("Corrected " + s.Name + " state type name to:" + s.TypeName + ".");
 			}
+
 
 		}
 
@@ -316,6 +329,9 @@ public static class vp_PresetEditorGUIUtility
 		if (componentName.Contains("vp_"))
 			componentName = componentName.Substring(3);
 
+		if (blocker.StatesToBlock == null)
+			blocker.StatesToBlock = new List<int>();
+
 		EditorGUILayout.HelpBox("'" + blocker.Name + "' blocks " + ((blocker.StatesToBlock.Count > 0) ? blocker.StatesToBlock.Count.ToString() : "no") + " state" + ((blocker.StatesToBlock.Count == 1) ? "" : "s") + " on this " + componentName + ".", MessageType.None);
 
 		GUILayout.BeginVertical();
@@ -330,6 +346,9 @@ public static class vp_PresetEditorGUIUtility
 				continue;
 
 			int i = component.States.IndexOf(blockee);
+
+			if (component.States[i].StatesToBlock == null)
+				component.States[i].StatesToBlock = new List<int>();
 
 			if (component.States[i].StatesToBlock.Contains(component.States.IndexOf(blocker)))
 				GUI.enabled = false;
@@ -406,6 +425,7 @@ public static class vp_PresetEditorGUIUtility
 			GUILayout.BeginHorizontal();
 			if (GUILayout.Button(state.Name, vp_EditorGUIUtility.CenteredBoxStyle, GUILayout.MinWidth(90), GUILayout.MaxWidth(90)))
 			{
+				RunTimeStateButtonTarget = component;
 				vp_Component[] compos = component.gameObject.GetComponentsInChildren<vp_Component>();
 				foreach (vp_Component c in compos)
 				{
@@ -418,12 +438,15 @@ public static class vp_PresetEditorGUIUtility
 		}
 		else
 		{
+			
+
 			GUILayout.Space(20);
 			GUILayout.Label((stateList.Count - stateList.IndexOf(state) - 1).ToString() + ":", vp_EditorGUIUtility.RightAlignedPathStyle, GUILayout.MinWidth(20), GUILayout.MaxWidth(20));
 			if (GUILayout.Button(state.Name,
 				((!state.Blocked) ? vp_EditorGUIUtility.CenteredBoxStyleBold : vp_EditorGUIUtility.CenteredStyleBold)
 				, GUILayout.MinWidth(90), GUILayout.MaxWidth(90)))
 			{
+				RunTimeStateButtonTarget = component;
 				vp_Component[] compos = component.gameObject.GetComponentsInChildren<vp_Component>();
 				foreach (vp_Component c in compos)
 				{
@@ -470,8 +493,13 @@ public static class vp_PresetEditorGUIUtility
 			{
 				if (!component.States.Contains(m_ShowBlockListFor))
 					m_ShowBlockListFor = null;
-				else if (m_ShowBlockListFor.StatesToBlock.Contains(component.States.IndexOf(state)))
-					GUI.color = m_ColorGrayYellow;
+				else
+				{
+					if (m_ShowBlockListFor.StatesToBlock == null)
+						m_ShowBlockListFor.StatesToBlock = new List<int>();
+					if (m_ShowBlockListFor.StatesToBlock.Contains(component.States.IndexOf(state)))
+						GUI.color = m_ColorGrayYellow;
+				}
 			}
 			state.Name = EditorGUILayout.TextField(state.Name, GUILayout.MinWidth(90), GUILayout.MaxWidth(90));
 			GUI.color = Color.white;
@@ -550,11 +578,11 @@ public static class vp_PresetEditorGUIUtility
 
 			GUI.enabled = true;
 
-			if (state.StatesToBlock != null)
-			{
-				if ((state.StatesToBlock.Count > 0) && ((m_ShowBlockListFor == null) || (!component.States.Contains(m_ShowBlockListFor)) || m_ShowBlockListFor == state))
-					GUI.color = m_ColorGrayYellow;
-			}
+			if (state.StatesToBlock == null)
+				state.StatesToBlock = new List<int>();
+
+			if ((state.StatesToBlock.Count > 0) && ((m_ShowBlockListFor == null) || (!component.States.Contains(m_ShowBlockListFor)) || m_ShowBlockListFor == state))
+				GUI.color = m_ColorGrayYellow;
 
 			GUI.enabled = (component.States.Count > 2);
 			if (GUILayout.Button("B", vp_EditorGUIUtility.SmallButtonStyle, GUILayout.MinWidth(15), GUILayout.MaxWidth(15), GUILayout.MinHeight(15)))
@@ -605,6 +633,10 @@ public static class vp_PresetEditorGUIUtility
 		foreach (vp_State blocker in component.States)
 		{
 			List<string> blockees = new List<string>();
+
+			if (blocker.StatesToBlock == null)
+				blocker.StatesToBlock = new List<int>();
+
 			foreach (int i in blocker.StatesToBlock)
 			{
 				string blockee = GetStateName(component, i);
@@ -718,6 +750,9 @@ public static class vp_PresetEditorGUIUtility
 					state.TextAsset = orig;
 					return;
 				}
+				//else
+				//	Debug.Log(state.TypeName);
+
 			}
 		}
 

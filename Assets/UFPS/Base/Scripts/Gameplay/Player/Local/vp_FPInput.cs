@@ -8,26 +8,37 @@
 //	description:	a script to collect all mouse and keyboard input for first person
 //					controls in one place
 //
-//					NOTE: in v1.4, a lot of mouse logic is actually still in the
-//					camera class. it will be moved in a future release
-//
 /////////////////////////////////////////////////////////////////////////////////
 
 using UnityEngine;
 using System.Collections.Generic;
 
-public class vp_FPInput : MonoBehaviour
+public class vp_FPInput : vp_Component
 {
 
-	public vp_FPPlayerEventHandler Player = null;
+	// mouse look
+	public Vector2 MouseLookSensitivity = new Vector2(5.0f, 5.0f);
+	public int MouseLookSmoothSteps = 10;				// allowed range: 1-20
+	public float MouseLookSmoothWeight = 0.5f;			// allowed range: 0.0f - 1.0f
+	public bool MouseLookAcceleration = false;
+	public float MouseLookAccelerationThreshold = 0.4f;
+	public bool MouseLookInvert = false;
+	protected Vector2 m_MouseLookSmoothMove = Vector2.zero;		// distance moved since last frame (smoothed and accelerated)
+	protected Vector2 m_MouseLookRawMove = Vector2.zero;		// distance moved since last frame (raw unity input)
+	protected List<Vector2> m_MouseLookSmoothBuffer = new List<Vector2>();
+	protected int m_LastMouseLookFrame = -1;
+	protected Vector2 m_CurrentMouseLook = Vector2.zero;
 
-	// components
-	protected vp_FPCamera m_FPCamera = null;
-
-	// mouse
-	public Rect[] MouseCursorZones = null;			// screen regions where mouse cursor remains visible when clicking. may be set up in the Inspector
-	public bool ForceCursor = false;				// when true, mouse cursor is enabled all over the screen and firing is disabled
+	// mouse cursor
+	public Rect[] MouseCursorZones = null;			// screen regions where mouse arrow remains visible when clicking. may be set up in the Inspector
+	// NOTE: these do not currently get saved to presets (!)
+	public bool MouseCursorForced = false;			// when true, the mouse arrow is enabled all over the screen and firing is disabled
+	public bool MouseCursorBlocksMouseLook = true;	// if true, mouselook will be disabled while the mouse arrow is visible
+	public Vector2 MousePos { get { return m_MousePos; } }
 	protected Vector2 m_MousePos = Vector2.zero;	// current mouse position in GUI coordinates (Y flipped)
+
+	// move vector
+	protected Vector2 m_MoveVector = Vector2.zero;
 
 	// misc
 	protected bool m_AllowGameplayInput = true;
@@ -37,34 +48,55 @@ public class vp_FPInput : MonoBehaviour
 		set	{	m_AllowGameplayInput = value;	}
 	}
 
+	protected vp_FPPlayerEventHandler m_FPPlayer = null;
+	public vp_FPPlayerEventHandler FPPlayer
+	{
+		get
+		{
+			if (m_FPPlayer == null)
+				m_FPPlayer = transform.root.GetComponentInChildren<vp_FPPlayerEventHandler>();
+			return m_FPPlayer;
+		}
+	}
 
-	//////////////////////////////////////////////////////////
-	// mouse input properties
-	// NOTE: the source variables of these properties currently
-	// reside in vp_FPCamera. they will likely be moved to this
-	// class in an upcoming release
-	//////////////////////////////////////////////////////////
 
-	public Vector2 MousePos { get { return m_MousePos; } }
-	public Vector2 MouseSensitivity { get { return m_FPCamera.MouseSensitivity; } set { m_FPCamera.MouseSensitivity = value; } }
-	public int MouseSmoothSteps { get { return m_FPCamera.MouseSmoothSteps; } set { m_FPCamera.MouseSmoothSteps = (int)Mathf.Clamp(value, 1.0f, 10.0f); } }
-	public float MouseSmoothWeight { get { return m_FPCamera.MouseSmoothWeight; } set { m_FPCamera.MouseSmoothWeight = Mathf.Clamp01(value); } }
-	public bool MouseAcceleration { get { return m_FPCamera.MouseAcceleration; } set { m_FPCamera.MouseAcceleration = value; } }
-	public float MouseAccelerationThreshold { get { return m_FPCamera.MouseAccelerationThreshold; } set { m_FPCamera.MouseAccelerationThreshold = value; } }
-	
+	/// <summary>
+	/// registers this component with the event handler (if any)
+	/// </summary>
+	protected override void OnEnable()
+	{
 
+		if (FPPlayer != null)
+			FPPlayer.Register(this);
+
+	}
+
+
+	/// <summary>
+	/// unregisters this component from the event handler (if any)
+	/// </summary>
+	protected override void OnDisable()
+	{
+
+		if (FPPlayer != null)
+			FPPlayer.Unregister(this);
+
+	}
+
+		
 	/// <summary>
 	/// 
 	/// </summary>
-	protected virtual void Update()
+	protected override void Update()
 	{
 
-		// handle input for GUI
+		// manage input for GUI
 		UpdateCursorLock();
 
+		// toggle pausing and abort if paused
 		UpdatePause();
 		
-		if(Player.Pause.Get() == true)
+		if(FPPlayer.Pause.Get() == true)
 			return;
 
 		// --- NOTE: everything below this line will be disabled on pause! ---
@@ -75,31 +107,33 @@ public class vp_FPInput : MonoBehaviour
 		// interaction
 		InputInteract();
 
-		// handle input for moving
+		// manage input for moving
 		InputMove();
 		InputRun();
 		InputJump();
 		InputCrouch();
 
-		// handle input for weapons
+		// manage input for weapons
 		InputAttack();
-		InputZoom();
 		InputReload();
 		InputSetWeapon();
+
+		// manage camera related input
+		InputCamera();
 
 	}
 	
 
 	/// <summary>
-	/// Handles interaction with the game world
+	/// handles interaction with the game world
 	/// </summary>
 	protected virtual void InputInteract()
 	{
 
 		if(vp_Input.GetButtonDown("Interact"))
-			Player.Interact.TryStart();
+			FPPlayer.Interact.TryStart();
 		else
-			Player.Interact.TryStop();
+			FPPlayer.Interact.TryStop();
 
 	}
 
@@ -110,14 +144,14 @@ public class vp_FPInput : MonoBehaviour
 	protected virtual void InputMove()
 	{
 
-		// NOTES: you may also use 'GetAxis', but that will add smoothing
+		// NOTE: you could also use 'GetAxis', but that would add smoothing
 		// to the input from both Ultimate FPS and from Unity, and might
 		// require some tweaking in order not to feel laggy
 
-		Player.InputMoveVector.Set(new Vector2(vp_Input.GetAxisRaw("Horizontal"), vp_Input.GetAxisRaw("Vertical")));
+		FPPlayer.InputMoveVector.Set(new Vector2(vp_Input.GetAxisRaw("Horizontal"), vp_Input.GetAxisRaw("Vertical")));
 
 	}
-
+	
 
 	/// <summary>
 	/// tell the player to enable or disable the 'Run' state.
@@ -130,9 +164,9 @@ public class vp_FPInput : MonoBehaviour
 	{
 
 		if (vp_Input.GetButton("Run"))
-			Player.Run.TryStart();
+			FPPlayer.Run.TryStart();
 		else
-			Player.Run.TryStop();
+			FPPlayer.Run.TryStop();
 
 	}
 
@@ -152,9 +186,9 @@ public class vp_FPInput : MonoBehaviour
 		// for 'CanStart_Jump'
 
 		if (vp_Input.GetButton("Jump"))
-			Player.Jump.TryStart();
+			FPPlayer.Jump.TryStart();
 		else
-			Player.Jump.Stop();
+			FPPlayer.Jump.Stop();
 
 	}
 
@@ -177,9 +211,9 @@ public class vp_FPInput : MonoBehaviour
 		// height every frame will make trigger detection break!
 
 		if (vp_Input.GetButton("Crouch"))
-			Player.Crouch.TryStart();
+			FPPlayer.Crouch.TryStart();
 		else
-			Player.Crouch.TryStop();
+			FPPlayer.Crouch.TryStop();
 
 		// TIP: to find out what determines if 'Crouch.TryStop'
 		// succeeds and where it is hooked up, search the project
@@ -189,23 +223,28 @@ public class vp_FPInput : MonoBehaviour
 
 
 	/// <summary>
-	/// zoom in using the zoom modifier key(s)
+	/// camera related input
 	/// </summary>
-	protected virtual void InputZoom()
+	protected virtual void InputCamera()
 	{
 
+		// zoom / ADS
 		if (vp_Input.GetButton("Zoom"))
-			Player.Zoom.TryStart();
+			FPPlayer.Zoom.TryStart();
 		else
-			Player.Zoom.TryStop();
+			FPPlayer.Zoom.TryStop();
+
+		// toggle 3rd person mode
+		if (vp_Input.GetButtonDown("Toggle3rdPerson"))
+			FPPlayer.CameraToggle3rdPerson.Send();
 
 	}
 
 
 	/// <summary>
 	/// broadcasts a message to any listening components telling
-	/// them to go into 'attack' mode. vp_FPShooter uses this to
-	/// repeatedly fire the current weapon while the fire button
+	/// them to go into 'attack' mode. vp_FPWeaponShooter uses this
+	/// to repeatedly fire the current weapon while the fire button
 	/// is being pressed, but it could also be used by, for example,
 	/// an animation script to make the player model loop an 'attack
 	/// stance' animation.
@@ -223,9 +262,9 @@ public class vp_FPInput : MonoBehaviour
 			return;
 
 		if (vp_Input.GetButton("Attack"))
-			Player.Attack.TryStart();
+			FPPlayer.Attack.TryStart();
 		else
-			Player.Attack.TryStop();
+			FPPlayer.Attack.TryStop();
 
 	}
 
@@ -239,7 +278,7 @@ public class vp_FPInput : MonoBehaviour
 	{
 
 		if (vp_Input.GetButtonDown("Reload"))
-			Player.Reload.TryStart();
+			FPPlayer.Reload.TryStart();
 		
 	}
 
@@ -254,28 +293,28 @@ public class vp_FPInput : MonoBehaviour
 		// --- cycle to the next or previous weapon ---
 
 		if (vp_Input.GetButtonDown("SetPrevWeapon"))
-			Player.SetPrevWeapon.Try();
+			FPPlayer.SetPrevWeapon.Try();
 
 		if (vp_Input.GetButtonDown("SetNextWeapon"))
-			Player.SetNextWeapon.Try();
+			FPPlayer.SetNextWeapon.Try();
 		
 		// --- switch to weapon 1-10 by direct button press ---
 
 		//if (vp_Input.GetButton("SetWeapon1"))	// (etc.) suggested input axes
-		if (Input.GetKeyDown(KeyCode.Alpha1)) Player.SetWeapon.TryStart(1);
-		if (Input.GetKeyDown(KeyCode.Alpha2)) Player.SetWeapon.TryStart(2);
-		if (Input.GetKeyDown(KeyCode.Alpha3)) Player.SetWeapon.TryStart(3);
-		if (Input.GetKeyDown(KeyCode.Alpha4)) Player.SetWeapon.TryStart(4);
-		if (Input.GetKeyDown(KeyCode.Alpha5)) Player.SetWeapon.TryStart(5);
-		if (Input.GetKeyDown(KeyCode.Alpha6)) Player.SetWeapon.TryStart(6);
-		if (Input.GetKeyDown(KeyCode.Alpha7)) Player.SetWeapon.TryStart(7);
-		if (Input.GetKeyDown(KeyCode.Alpha8)) Player.SetWeapon.TryStart(8);
-		if (Input.GetKeyDown(KeyCode.Alpha9)) Player.SetWeapon.TryStart(9);
-		if (Input.GetKeyDown(KeyCode.Alpha0)) Player.SetWeapon.TryStart(10);
+		if (Input.GetKeyDown(KeyCode.Alpha1)) FPPlayer.SetWeapon.TryStart(1);
+		if (Input.GetKeyDown(KeyCode.Alpha2)) FPPlayer.SetWeapon.TryStart(2);
+		if (Input.GetKeyDown(KeyCode.Alpha3)) FPPlayer.SetWeapon.TryStart(3);
+		if (Input.GetKeyDown(KeyCode.Alpha4)) FPPlayer.SetWeapon.TryStart(4);
+		if (Input.GetKeyDown(KeyCode.Alpha5)) FPPlayer.SetWeapon.TryStart(5);
+		if (Input.GetKeyDown(KeyCode.Alpha6)) FPPlayer.SetWeapon.TryStart(6);
+		if (Input.GetKeyDown(KeyCode.Alpha7)) FPPlayer.SetWeapon.TryStart(7);
+		if (Input.GetKeyDown(KeyCode.Alpha8)) FPPlayer.SetWeapon.TryStart(8);
+		if (Input.GetKeyDown(KeyCode.Alpha9)) FPPlayer.SetWeapon.TryStart(9);
+		if (Input.GetKeyDown(KeyCode.Alpha0)) FPPlayer.SetWeapon.TryStart(10);
 
 		// --- unwield current weapon by direct button press ---
 
-		if (vp_Input.GetButtonDown("ClearWeapon")) Player.SetWeapon.TryStart(0);
+		if (vp_Input.GetButtonDown("ClearWeapon")) FPPlayer.SetWeapon.TryStart(0);
 
 	}
 
@@ -287,7 +326,7 @@ public class vp_FPInput : MonoBehaviour
 	{
 
 		if(vp_Input.GetButtonDown("Pause"))
-			Player.Pause.Set(!Player.Pause.Get());
+			FPPlayer.Pause.Set(!FPPlayer.Pause.Get());
 
 	}
 
@@ -313,7 +352,7 @@ public class vp_FPInput : MonoBehaviour
 
 		// if 'ForceCursor' is active, the cursor will always be visible
 		// across the whole screen and firing will be disabled
-		if (ForceCursor)
+		if (MouseCursorForced)
 		{
 			Screen.lockCursor = false;
 			return;
@@ -348,55 +387,138 @@ public class vp_FPInput : MonoBehaviour
 	DontLock:
 
 		// if user presses 'ENTER', toggle mouse cursor on / off
-		if (vp_Input.GetButtonUp("Accept1") || vp_Input.GetButtonUp("Accept2"))
+		if (vp_Input.GetButtonUp("Accept1")
+			|| vp_Input.GetButtonUp("Accept2")
+			|| vp_Input.GetButtonUp("Menu"))
 			Screen.lockCursor = !Screen.lockCursor;
 
 	}
 
-
-	/// <summary>
-	/// 
-	/// </summary>
-	protected virtual void Awake()
-	{
-
-		Player = (vp_FPPlayerEventHandler)transform.root.GetComponentInChildren(typeof(vp_FPPlayerEventHandler));
-
-		m_FPCamera = GetComponentInChildren<vp_FPCamera>();
-
-	}
-
-
-	/// <summary>
-	/// registers this component with the event handler (if any)
-	/// </summary>
-	protected virtual void OnEnable()
-	{
-
-		if (Player != null)
-			Player.Register(this);
-
-	}
-
-
-	/// <summary>
-	/// unregisters this component from the event handler (if any)
-	/// </summary>
-	protected virtual void OnDisable()
-	{
-
-
-		if (Player != null)
-			Player.Unregister(this);
-
-	}
 	
-	
+	/// <summary>
+	/// mouselook implementation with smooth filtering and acceleration
+	/// </summary>
+	protected virtual Vector2 GetMouseLook()
+	{
+
+		// don't allow mouselook if we are using the mouse cursor
+		if (MouseCursorBlocksMouseLook && !Screen.lockCursor)
+			return Vector2.zero;
+
+		// only recalculate mouselook once per frame or smoothing will break
+		if (m_LastMouseLookFrame == Time.frameCount)
+			return m_CurrentMouseLook;
+
+		m_LastMouseLookFrame = Time.frameCount;
+
+		// --- fetch mouse input ---
+
+		m_MouseLookSmoothMove.x = vp_Input.GetAxisRaw("Mouse X") * Time.timeScale;
+		m_MouseLookSmoothMove.y = vp_Input.GetAxisRaw("Mouse Y") * Time.timeScale;
+
+		// --- mouse smoothing ---
+
+		// make sure the defined smoothing vars are within range
+		MouseLookSmoothSteps = Mathf.Clamp(MouseLookSmoothSteps, 1, 20);
+		MouseLookSmoothWeight = Mathf.Clamp01(MouseLookSmoothWeight);
+
+		// keep mousebuffer at a maximum of (MouseSmoothSteps + 1) values
+		while (m_MouseLookSmoothBuffer.Count > MouseLookSmoothSteps)
+			m_MouseLookSmoothBuffer.RemoveAt(0);
+
+		// add current input to mouse input buffer
+		m_MouseLookSmoothBuffer.Add(m_MouseLookSmoothMove);
+
+		// calculate mouse smoothing
+		float weight = 1;
+		Vector2 average = Vector2.zero;
+		float averageTotal = 0.0f;
+		for (int i = m_MouseLookSmoothBuffer.Count - 1; i > 0; i--)
+		{
+			average += m_MouseLookSmoothBuffer[i] * weight;
+			averageTotal += (1.0f * weight);
+			weight *= (MouseLookSmoothWeight / Delta);
+		}
+
+		// store the averaged input value
+		averageTotal = Mathf.Max(1, averageTotal);
+		m_CurrentMouseLook = vp_MathUtility.NaNSafeVector2(average / averageTotal);
+
+		// --- mouse acceleration ---
+
+		float mouseAcceleration = 0.0f;
+
+		float accX = Mathf.Abs(m_CurrentMouseLook.x);
+		float accY = Mathf.Abs(m_CurrentMouseLook.y);
+
+		if (MouseLookAcceleration)
+		{
+			mouseAcceleration = Mathf.Sqrt((accX * accX) + (accY * accY)) / Delta;
+			mouseAcceleration = (mouseAcceleration <= MouseLookAccelerationThreshold) ? 0.0f : mouseAcceleration;
+		}
+
+		m_CurrentMouseLook.x *= (MouseLookSensitivity.x + mouseAcceleration);
+		m_CurrentMouseLook.y *= (MouseLookSensitivity.y + mouseAcceleration);
+
+		m_CurrentMouseLook.y = (MouseLookInvert ? m_CurrentMouseLook.y : -m_CurrentMouseLook.y);
+
+		return m_CurrentMouseLook;
+
+	}
+
+
+	/// <summary>
+	/// returns the difference in raw (un-smoothed) mouse input
+	/// since last frame
+	/// </summary>
+	protected virtual Vector2 GetMouseLookRaw()
+	{
+
+		// don't allow mouselook if we are using the mouse cursor
+		if (MouseCursorBlocksMouseLook && !Screen.lockCursor)
+			return Vector2.zero;
+
+		m_MouseLookRawMove.x = vp_Input.GetAxisRaw("Mouse X");
+		m_MouseLookRawMove.y = vp_Input.GetAxisRaw("Mouse Y");
+
+		return m_MouseLookRawMove;
+
+	}
+
+
+	/// <summary>
+	/// returns the current horizontal and vertical input vector
+	/// </summary>
+	protected virtual Vector2 OnValue_InputMoveVector
+	{
+		get	{	return m_MoveVector;	}
+#if UNITY_IPHONE || UNITY_ANDROID
+		set	{	m_MoveVector = ((value.sqrMagnitude > 1) ? value.normalized : value);	}
+#else
+		set	{	m_MoveVector = ((value != Vector2.zero) ? value.normalized : value);	}
+#endif
+	}
+
+
+	/// <summary>
+	/// move vector for climbing. this event callback always returns
+	/// a value (unlike 'InputMoveVector' which gets disabled during
+	/// climbing)
+	/// </summary>
+	protected virtual float OnValue_InputClimbVector
+	{
+		get
+		{
+			return vp_Input.GetAxisRaw("Vertical");
+		}
+	}
+
+		
 	/// <summary>
 	/// allows or prevents first person gameplay input. NOTE:
 	/// gui (menu) input is still allowed
 	/// </summary>
-	protected virtual bool OnValue_AllowGameplayInput
+	protected virtual bool OnValue_InputAllowGameplay
 	{
 		get	{	return m_AllowGameplayInput;	}
 		set	{	m_AllowGameplayInput = value;	}
@@ -405,12 +527,64 @@ public class vp_FPInput : MonoBehaviour
 
 	/// <summary>
 	/// pauses the game by setting timescale to zero, or unpauses
-	/// it by resuming the timescale that was active upon pause
+	/// it by resuming the timescale that was active upon pause.
+	/// NOTE: will not work in multiplayer
 	/// </summary>
 	protected virtual bool OnValue_Pause
 	{
 		get { return vp_TimeUtility.Paused; }
-		set { vp_TimeUtility.Paused = value; }
+		set { vp_TimeUtility.Paused = (vp_Gameplay.isMultiplayer ?  false : value); }
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	protected virtual bool OnMessage_InputGetButton(string button)
+	{
+		return vp_Input.GetButton(button);
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	protected virtual bool OnMessage_InputGetButtonUp(string button)
+	{
+		return vp_Input.GetButtonUp(button);
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	protected virtual bool OnMessage_InputGetButtonDown(string button)
+	{
+		return vp_Input.GetButtonDown(button);
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	protected virtual Vector2 OnValue_InputSmoothLook
+	{
+		get
+		{
+			return GetMouseLook();
+		}
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	protected virtual Vector2 OnValue_InputRawLook
+	{
+		get
+		{
+			return GetMouseLookRaw();
+		}
 	}
 
 

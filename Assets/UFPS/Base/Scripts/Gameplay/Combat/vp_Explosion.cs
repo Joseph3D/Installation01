@@ -108,16 +108,16 @@ public class vp_Explosion : MonoBehaviour
 																							m_Transform.position).normalized *
 																							Force * 0.001f * distanceModifier);
 
-					//// shake things that listen to the 'BombShake' message (e.g. cameras)
-					vp_TargetEvent<float>.Send(hit.transform.root, "BombShake", (distanceModifier * CameraShake));
+					//// shake things that listen to the 'CameraBombShake' message (e.g. cameras)
+					vp_TargetEvent<float>.Send(hit.transform.root, "CameraBombShake", (distanceModifier * CameraShake));
 
 				}
 
 				// damage the object, if applicable
 				if (hit.gameObject.layer != vp_Layer.Debris)
 				{
-					
-					hit.gameObject.BroadcastMessage(DamageMessageName, distanceModifier * Damage,
+
+					hit.gameObject.BroadcastMessage(DamageMessageName, new vp_DamageInfo(distanceModifier * Damage, transform),
 																SendMessageOptions.DontRequireReceiver);	// TODO: use targetevent
 
 				}

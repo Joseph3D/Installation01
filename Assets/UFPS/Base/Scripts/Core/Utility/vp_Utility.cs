@@ -213,7 +213,7 @@ public static class vp_Utility
 		{ typeof(UnityEngine.Vector4), "Vector4" }
 
 	};
-	
+
 
 	/// <summary>
 	/// Activates or deactivates a gameobject for any Unity version.
@@ -277,6 +277,7 @@ public static class vp_Utility
 
 	}
 	
+
 	/// <summary>
 	/// Returns a list of the specified child components
 	/// </summary>
@@ -286,6 +287,30 @@ public static class vp_Utility
 		return t.GetComponentsInChildren<T>().ToList();
 
 	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public static bool IsDescendant(Transform descendant, Transform potentialAncestor)
+	{
+
+		if (descendant == null)
+			return false;
+
+		if (potentialAncestor == null)
+			return false;
+
+		if (descendant.parent == descendant)
+			return false;
+
+		if (descendant.parent == potentialAncestor)
+			return true;
+
+		return IsDescendant(descendant.parent, potentialAncestor);
+
+	}
+
 
 
 	/// <summary>
@@ -308,7 +333,69 @@ public static class vp_Utility
 
 	}
 
-	
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public static Transform GetTransformByNameInChildren(Transform trans, string name, bool includeInactive = false, bool subString = false)
+	{
+
+		name = name.ToLower();
+
+		foreach (Transform t in trans)
+		{
+			if(!subString)
+			{
+				if ((t.name.ToLower() == name) && ((includeInactive) || t.gameObject.activeInHierarchy))
+				return t;
+			}
+			else
+			{
+				if ((t.name.ToLower().Contains(name)) && ((includeInactive) || t.gameObject.activeInHierarchy))
+				return t;
+			}
+
+			Transform ct = GetTransformByNameInChildren(t, name, includeInactive, subString);
+			if (ct != null)
+				return ct;
+		}
+
+		return null;
+
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public static Transform GetTransformByNameInAncestors(Transform trans, string name, bool includeInactive = false, bool subString = false)
+	{
+
+		if (trans.parent == null)
+			return null;
+
+		name = name.ToLower();
+
+		if(!subString)
+		{
+			if ((trans.parent.name.ToLower() == name) && ((includeInactive) || trans.gameObject.activeInHierarchy))
+				return trans.parent;
+		}
+		else
+		{
+			if ((trans.parent.name.ToLower().Contains(name)) && ((includeInactive) || trans.gameObject.activeInHierarchy))
+				return trans.parent;
+		}
+
+		Transform ct = GetTransformByNameInAncestors(trans.parent, name, includeInactive, subString);
+		if (ct != null)
+			return ct;
+
+		return null;
+
+	}
+
+
 	/// <summary>
 	/// Replacement for Object.Instantiate in order to utilize pooling
 	/// </summary>
@@ -394,6 +481,31 @@ public static class vp_Utility
 	public static void ClearUniqueIDs()
 	{
 		m_UniqueIDs.Clear();
+	}
+
+
+	/// <summary>
+	/// generates an integer value based on a world position. this can
+	/// be used to establish the same object IDs across clients without
+	/// a lot of manual object ID assignment.
+	/// NOTES:
+	/// 1) this method should be run in Awake, before any object has
+	/// had a chance to alter its start position
+	/// 2) the blatant assumption here is that as long as every object
+	/// using this method exists at a unique world coordinate on Awake
+	/// - and this coordinate is the same on all clients - the IDs
+	/// generated will be unique and deterministic. there may be some
+	/// edge cases where the same IDs are generated but they should be
+	/// very rare
+	/// </summary>
+	public static int PositionToID(Vector3 position)
+	{
+
+		return (int)Mathf.Abs(
+			  (position.x * 10000)
+			+ (position.y * 1000)
+			+ (position.z * 100));
+
 	}
 
 

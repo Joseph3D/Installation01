@@ -47,6 +47,7 @@ public class vp_Bob : MonoBehaviour
 	/// </summary>
 	protected virtual void OnEnable()
 	{
+
 		m_Transform.position = m_InitialPosition;
 		if (RandomizeBobOffset)
 			BobOffset = Random.value;

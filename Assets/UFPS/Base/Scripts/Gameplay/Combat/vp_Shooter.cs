@@ -14,7 +14,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using UnityEngine;
-
+using System.Collections.Generic;
 
 [RequireComponent(typeof(AudioSource))]
 
@@ -23,7 +23,17 @@ public class vp_Shooter : vp_Component
 
 	protected CharacterController m_CharacterController = null;
 
-	protected Transform m_OperatorTransform = null;		// the object that is operating this shooter. typically a vp_FPCamera or an enemy
+	public GameObject m_ProjectileSpawnPoint = null;
+	public GameObject ProjectileSpawnPoint
+	{
+		get
+		{
+			return m_ProjectileSpawnPoint;
+		}
+	}
+
+	
+	protected GameObject m_ProjectileDefaultSpawnpoint = null;
 
 	// projectile
 	public GameObject ProjectilePrefab = null;			// prefab with a mesh and projectile script
@@ -41,7 +51,9 @@ public class vp_Shooter : vp_Component
 	public GameObject MuzzleFlashPrefab = null;			// muzzleflash prefab, typically with a mesh and vp_MuzzleFlash script
 	public float MuzzleFlashDelay = 0.0f;				// delay between fire button pressed and muzzleflash appearing
 	protected GameObject m_MuzzleFlash = null;			// the instantiated muzzle flash. one per weapon that's always there
-	
+
+	public Transform m_MuzzleFlashSpawnPoint = null;	// NEW: this gets populated by any child object with the name 'Muzzle', and will completely override 'MuzzleFlashPosition'
+
 	// shell casing
 	public GameObject ShellPrefab = null;				// shell prefab with a mesh and (typically) a vp_Shell script
 	public float ShellScale = 1.0f;						// scale of ejected shell casings
@@ -51,12 +63,48 @@ public class vp_Shooter : vp_Component
 	public float ShellEjectDelay = 0.0f;				// time to wait before ejecting shell after firing (for shotguns, grenade launchers etc.)
 	public float ShellEjectSpin = 0.0f;					// amount of angular rotation of the shell upon spawn
 
+	public Transform m_ShellEjectSpawnPoint = null;		// NEW: this gets populated by any child object with the name 'Shell', and will completely override 'ShellEjectPosition' and 'ShellEjectDirection'
+
 	// sound
 	public AudioClip SoundFire = null;							// sound to play upon firing
 	public float SoundFireDelay = 0.0f;							// delay between fire button pressed and fire sound played
 	public Vector2 SoundFirePitch = new Vector2(1.0f, 1.0f);	// random pitch range for firing sound
 
-	public GameObject MuzzleFlash { get { return m_MuzzleFlash; } }
+	public GameObject MuzzleFlash
+	{
+		get
+		{
+
+			// instantiate muzzleflash
+			if ((m_MuzzleFlash == null) && (MuzzleFlashPrefab != null) && (ProjectileSpawnPoint != null))
+			{
+				m_MuzzleFlash = (GameObject)vp_Utility.Instantiate(MuzzleFlashPrefab,
+																ProjectileSpawnPoint.transform.position,
+																ProjectileSpawnPoint.transform.rotation);
+				m_MuzzleFlash.name = transform.name + "MuzzleFlash";
+				m_MuzzleFlash.transform.parent = ProjectileSpawnPoint.transform;
+			}
+			return m_MuzzleFlash;
+		}
+	}
+
+
+	public delegate void NetworkFunc();
+	public NetworkFunc m_SendFireEventToNetworkFunc = null;	// null in singleplayer & remote players, set if local & multiplayer
+	
+	public delegate Vector3 FirePositionFunc();
+	public FirePositionFunc GetFirePosition = null;
+	public delegate Quaternion FireRotationFunc();
+	public FireRotationFunc GetFireRotation = null;
+	public delegate int FireSeedFunc();
+	public FireSeedFunc GetFireSeed = null;
+
+	// work variables for the current shot being fired
+	protected Vector3 m_CurrentFirePosition = Vector3.zero;				// spawn position
+	protected Quaternion m_CurrentFireRotation = Quaternion.identity;	// spawn rotation
+	protected int m_CurrentFireSeed;									// unique number used to generate a random spread for every projectile
+
+	public Vector3 FirePosition = Vector3.zero;
 
 
 	/// <summary>
@@ -69,9 +117,17 @@ public class vp_Shooter : vp_Component
 		
 		base.Awake();
 
-		m_OperatorTransform = Transform;	// may be changed by derived classes
+		if (m_ProjectileSpawnPoint == null)
+			m_ProjectileSpawnPoint = gameObject;	// NOTE: may also be set by derived classes
 
-		m_CharacterController = m_OperatorTransform.root.GetComponentInChildren<CharacterController>();
+		m_ProjectileDefaultSpawnpoint = m_ProjectileSpawnPoint;
+
+		// if firing delegates haven't been set by a derived or external class yet, set them now
+		if (GetFirePosition == null)	GetFirePosition = delegate()	{	return FirePosition; };
+		if (GetFireRotation == null)	GetFireRotation = delegate()	{	return m_ProjectileSpawnPoint.transform.rotation;	};
+		if (GetFireSeed == null)		GetFireSeed = delegate()		{	return Random.Range(0, 100);	};
+
+		m_CharacterController = m_ProjectileSpawnPoint.transform.root.GetComponentInChildren<CharacterController>();
 
 		// reset the next allowed fire time
 		m_NextAllowedFireTime = Time.time;
@@ -92,15 +148,7 @@ public class vp_Shooter : vp_Component
 
 		base.Start();
 
-		// instantiate muzzleflash
-		if (MuzzleFlashPrefab != null)
-		{
-			m_MuzzleFlash = (GameObject)vp_Utility.Instantiate(MuzzleFlashPrefab,
-															m_OperatorTransform.position,
-															m_OperatorTransform.rotation);
-			m_MuzzleFlash.name = transform.name + "MuzzleFlash";
-			m_MuzzleFlash.transform.parent = m_OperatorTransform;
-		}
+
 
 		// audio defaults
 		Audio.playOnAwake = false;
@@ -115,8 +163,43 @@ public class vp_Shooter : vp_Component
 
 
 	/// <summary>
+	/// 
+	/// </summary>
+	protected override void LateUpdate()
+	{
+
+		// save a 'FirePosition' to ensure a stable firing position. in depth:
+		// the position of ProjectileSpawnPoint must not be fetched at arbitrary
+		// points in the update cycle (during which the body system manipulates
+		// the position of the camera). using a snapshot of the position during
+		// the entire update loop will ensure that having e.g. a camera as a
+		// projectile spawnpoint won't return 'unstable' positions 
+		FirePosition = m_ProjectileSpawnPoint.transform.position; 
+
+	}
+
+
+	/// <summary>
 	/// calls the fire method if the firing rate of this shooter
 	/// allows it. override this method to add further rules
+	/// </summary>
+	public virtual bool CanFire()
+	{
+
+		// return if we can't fire yet
+		if (Time.time < m_NextAllowedFireTime)
+			return false;
+
+		return true;
+
+	}
+	
+
+	/// <summary>
+	/// calls the fire method if the firing rate of this shooter
+	/// allows it. override this method to add further rules.
+	/// NOTE: the vp_WeaponShooter does not use this method. it
+	/// fires via the player event handler's 'Fire' vp_Attempt.
 	/// </summary>
 	public virtual void TryFire()
 	{
@@ -126,6 +209,8 @@ public class vp_Shooter : vp_Component
 			return;
 
 		Fire();
+
+		return;
 
 	}
 
@@ -139,7 +224,7 @@ public class vp_Shooter : vp_Component
 	protected virtual void Fire()
 	{
 				
-		// regulate firing and reload rate
+		// update firing rate
 		m_NextAllowedFireTime = Time.time + ProjectileFiringRate;
 
 		 //play fire sound
@@ -152,7 +237,7 @@ public class vp_Shooter : vp_Component
 		if (ProjectileSpawnDelay == 0.0f)
 			SpawnProjectiles();
 		else
-			vp_Timer.In(ProjectileSpawnDelay, SpawnProjectiles);
+			vp_Timer.In(ProjectileSpawnDelay, delegate() { SpawnProjectiles(); });
 
 		// spawn shell casing
 		if (ShellEjectDelay == 0.0f)
@@ -198,22 +283,55 @@ public class vp_Shooter : vp_Component
 	protected virtual void SpawnProjectiles()
 	{
 
+		if (ProjectilePrefab == null)
+			return;
+
+		// will only trigger on local player in multiplayer
+		if (m_SendFireEventToNetworkFunc != null)
+			m_SendFireEventToNetworkFunc.Invoke();
+
+		m_CurrentFirePosition = GetFirePosition();
+		m_CurrentFireRotation = GetFireRotation();
+		m_CurrentFireSeed = GetFireSeed();
+
+		// when firing a single projectile per discharge (pistols, machineguns)
+		// this loop will only run once. if firing several projectiles per
+		// round (shotguns) the loop will iterate several times. the fire seed
+		// is the same for every iteration, but is multiplied with the number
+		// of iterations to get a unique, deterministic seed for each projectile.
 		for (int v = 0; v < ProjectileCount; v++)
 		{
-			if (ProjectilePrefab != null)
-			{
-				GameObject p = null;
-				p = (GameObject)vp_Utility.Instantiate(ProjectilePrefab, m_OperatorTransform.position, m_OperatorTransform.rotation);
-				p.transform.localScale = new Vector3(ProjectileScale, ProjectileScale, ProjectileScale);	// preset defined scale
+		
+			GameObject p = null;
+			p = (GameObject)vp_Utility.Instantiate(ProjectilePrefab, m_CurrentFirePosition, m_CurrentFireRotation);
 
-				// apply conical spread as defined in preset
-				p.transform.Rotate(0, 0, Random.Range(0, 360));									// first, rotate up to 360 degrees around z for circular spread
-				p.transform.Rotate(0, Random.Range(-ProjectileSpread, ProjectileSpread), 0);		// then rotate around y with user defined deviation
-			}
+			// TIP: uncomment this to debug-draw bullet paths and points of impact
+			//DrawProjectileDebugInfo(v);
+
+			p.SendMessage("SetSender", Transform, SendMessageOptions.DontRequireReceiver);	// TODO: optimize
+			p.transform.localScale = new Vector3(ProjectileScale, ProjectileScale, ProjectileScale);	// preset defined scale
+
+			SetSpread(m_CurrentFireSeed * (v + 1), p.transform);
+
 		}
-	
+			
 	}
 
+
+	/// <summary>
+	/// applies conical twist to the target transform according
+	/// to a certain seed and this shooter's 'ProjectileSpread'
+	/// </summary>
+	public void SetSpread(int seed, Transform target)
+	{
+
+		Random.seed = seed;
+		//vp_MasterClient.DebugMsg = "Firing shot from '" + photonView.viewID + "' with seed: " + Random.seed + ".";
+		target.Rotate(0, 0, Random.Range(0, 360));									// first, rotate up to 360 degrees around z for circular spread
+		target.Rotate(0, Random.Range(-ProjectileSpread, ProjectileSpread), 0);		// then rotate around y with user defined deviation
+		
+	}
+	
 
 	/// <summary>
 	/// sends a message to the muzzle flash object telling it
@@ -222,15 +340,18 @@ public class vp_Shooter : vp_Component
 	protected virtual void ShowMuzzleFlash()
 	{
 
-		if (m_MuzzleFlash == null)
+		if (MuzzleFlash == null)
 			return;
+		
+		if (m_MuzzleFlashSpawnPoint != null && ProjectileSpawnPoint != null)
+		{
+			MuzzleFlash.transform.position = m_MuzzleFlashSpawnPoint.transform.position;
+			MuzzleFlash.transform.rotation = ProjectileSpawnPoint.transform.rotation;
+		}
 
-		m_MuzzleFlash.SendMessage("Shoot", SendMessageOptions.DontRequireReceiver);
-
+		MuzzleFlash.SendMessage("Shoot", SendMessageOptions.DontRequireReceiver);
+		
 	}
-
-
-
 
 
 	/// <summary>
@@ -244,23 +365,30 @@ public class vp_Shooter : vp_Component
 
 		// spawn the shell
 		GameObject s = null;
+
 		s = (GameObject)vp_Utility.Instantiate(ShellPrefab,
-										m_OperatorTransform.position + m_OperatorTransform.TransformDirection(ShellEjectPosition),
-										m_OperatorTransform.rotation);
+			((m_ShellEjectSpawnPoint == null)
+			? FirePosition + m_ProjectileSpawnPoint.transform.TransformDirection(ShellEjectPosition)	// we have no shell eject object: use old logic
+			: m_ShellEjectSpawnPoint.transform.position)												// we have a shell eject object: use new logic
+			, m_ProjectileSpawnPoint.transform.rotation);
+
 		s.transform.localScale = new Vector3(ShellScale, ShellScale, ShellScale);
 		vp_Layer.Set(s.gameObject, vp_Layer.Debris);
 
 		// send it flying
-		if (s.rigidbody)
+		if (s.rigidbody)	// TODO: rigidbody should be cached
 		{
+			
+			Vector3 force = ((m_ShellEjectSpawnPoint == null) ?
+			transform.TransformDirection(ShellEjectDirection).normalized * ShellEjectVelocity	// we have a shell eject object: use new logic
+			: m_ShellEjectSpawnPoint.transform.forward.normalized * ShellEjectVelocity);		// we have no shell eject object: use old logic
 
-			Vector3 force = (transform.TransformDirection(ShellEjectDirection) * ShellEjectVelocity);
 			s.rigidbody.AddForce(force, ForceMode.Impulse);
 			
 		}
 
 		// make the shell inherit the current speed of the controller (if any)
-		if (m_CharacterController)
+		if (m_CharacterController)	// TODO: should use a velocity calculated from operator transform
 		{
 
 			Vector3 velocityForce = (m_CharacterController.velocity);
@@ -312,16 +440,69 @@ public class vp_Shooter : vp_Component
 	{
 
 		// update muzzle flash position, scale and fadespeed from preset
-		if (m_MuzzleFlash != null)
+		if (MuzzleFlash != null)
 		{
-			m_MuzzleFlash.transform.localPosition = MuzzleFlashPosition;
-			m_MuzzleFlash.transform.localScale = MuzzleFlashScale;
-			m_MuzzleFlash.SendMessage("SetFadeSpeed", MuzzleFlashFadeSpeed, SendMessageOptions.DontRequireReceiver);
+
+			if (m_MuzzleFlashSpawnPoint == null)
+			{
+				if (ProjectileSpawnPoint == m_ProjectileDefaultSpawnpoint)
+					m_MuzzleFlashSpawnPoint = vp_Utility.GetTransformByNameInChildren(ProjectileSpawnPoint.transform, "muzzle");
+				else
+					m_MuzzleFlashSpawnPoint = vp_Utility.GetTransformByNameInChildren(Transform, "muzzle");
+			}
+
+			if (m_MuzzleFlashSpawnPoint != null)
+			{
+				if (ProjectileSpawnPoint == m_ProjectileDefaultSpawnpoint)
+				{
+					// 3RD PERSON
+					//m_MuzzleFlash.transform.parent = transform.root;	// SNIPPET: use this instead to prevent muzzleflash from being affected by recoil
+					m_MuzzleFlash.transform.parent = ProjectileSpawnPoint.transform.parent.parent.parent;	// TODO: ouch, not very nice
+				}
+				else
+				{
+					// 1ST PERSON
+					m_MuzzleFlash.transform.parent = ProjectileSpawnPoint.transform;
+				}
+			}
+			else
+			{
+				m_MuzzleFlash.transform.parent = ProjectileSpawnPoint.transform;
+				MuzzleFlash.transform.localPosition = MuzzleFlashPosition;
+				MuzzleFlash.transform.rotation = ProjectileSpawnPoint.transform.rotation;
+			}
+
+			MuzzleFlash.transform.localScale = MuzzleFlashScale;
+			MuzzleFlash.SendMessage("SetFadeSpeed", MuzzleFlashFadeSpeed, SendMessageOptions.DontRequireReceiver);
+			
+		}
+
+		if (ShellPrefab != null)
+		{
+			if ((m_ShellEjectSpawnPoint == null) && (ProjectileSpawnPoint != null))
+			{
+				if (ProjectileSpawnPoint == m_ProjectileDefaultSpawnpoint)
+				{
+					// 3RD PERSON
+					m_ShellEjectSpawnPoint = vp_Utility.GetTransformByNameInChildren(ProjectileSpawnPoint.transform, "shell");
+
+				}
+				else
+				{
+					// 1ST PERSON
+					m_ShellEjectSpawnPoint = vp_Utility.GetTransformByNameInChildren(Transform, "shell");
+				}
+
+			}
+
 		}
 
 	}
 
-	
+
+
+
+
 	/// <summary>
 	/// performs special logic for activating a shooter properly
 	/// </summary>
@@ -330,8 +511,8 @@ public class vp_Shooter : vp_Component
 
 		base.Activate();
 
-		if (m_MuzzleFlash != null)
-			vp_Utility.Activate(m_MuzzleFlash);
+		if (MuzzleFlash != null)
+			vp_Utility.Activate(MuzzleFlash);
 
 	}
 
@@ -344,11 +525,40 @@ public class vp_Shooter : vp_Component
 
 		base.Deactivate();
 
-		if (m_MuzzleFlash != null)
-			vp_Utility.Activate(m_MuzzleFlash, false);
+		if (MuzzleFlash != null)
+			vp_Utility.Activate(MuzzleFlash, false);
 
 	}
-	
+
+
+	/// <summary>
+	/// draws bullet path debug lines and points of impact. 'index' is the
+	/// zero-based index of the projectile as part of a single discharge.
+	/// (for example: pellet #3 in a shotgun salvo of 7 pellets)
+	/// </summary>
+	protected void DrawProjectileDebugInfo(int projectileIndex)
+	{
+
+		GameObject debugArrow = vp_3DUtility.DebugPointer();
+		debugArrow.transform.rotation = GetFireRotation();
+		debugArrow.transform.position = GetFirePosition();
+		//Debug.Log("seed: (" + m_CurrentFireSeed + ") * index (" + (projectileIndex + 1) + ") = " + (m_CurrentFireSeed * (projectileIndex + 1)));
+		GameObject debugBall = vp_3DUtility.DebugBall();
+
+		RaycastHit hit;
+		if (Physics.Linecast(
+			debugArrow.transform.position,
+			(debugArrow.transform.position + (debugArrow.transform.forward * 1000)),		// max aim range: 1000 meters
+			out hit,
+			vp_Layer.Mask.ExternalBlockers) && !hit.collider.isTrigger &&	// only aim at non-local player solids
+			(Root.InverseTransformPoint(hit.point).z > 0.0f)	// don't aim at stuff between camera & local player
+			)
+		{
+			debugBall.transform.position = hit.point;
+		}
+
+	}
+
 
 }
 

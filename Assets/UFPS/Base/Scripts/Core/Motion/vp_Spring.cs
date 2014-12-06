@@ -14,17 +14,18 @@ using UnityEngine;
 public class vp_Spring
 {
 
-	// a spring can operate on either of three transform fields:
-	// position, rotation or scale, either absolutely or additively
 	protected UpdateMode Mode = UpdateMode.Position;
 	public enum UpdateMode
 	{
 		Position,
-		PositionAdditive,
+		PositionAdditiveLocal,	// adds position in relation to parent transform
+		PositionAdditiveGlobal,	// adds position in relation to world
+		PositionAdditiveSelf,	// adds position in relation to own transform
 		Rotation,
-		RotationAdditive,
+		RotationAdditiveLocal,	// rotates in relation to parent transform
+		RotationAdditiveGlobal,	// rotates in relation to world
 		Scale,
-		ScaleAdditive
+		ScaleAdditiveLocal
 	}
 
 	protected bool m_AutoUpdate = true;
@@ -64,11 +65,15 @@ public class vp_Spring
 	public float MinVelocity = 0.0000001f;
 	public Vector3 MaxState = new Vector3(10000, 10000, 10000);
 	public Vector3 MinState = new Vector3(-10000, -10000, -10000);
-	
+
 	// transform & property
 	protected Transform m_Transform = null;
 	public Transform Transform
 	{
+		get
+		{
+			return m_Transform;
+		}
 		set
 		{
 			m_Transform = value;
@@ -141,9 +146,12 @@ public class vp_Spring
 	// from the existing spring)
 	///////////////////////////////////////////////////////////
 
-	void PositionAdditive() { m_Transform.localPosition += State; }
-	void RotationAdditive()	{	m_Transform.localEulerAngles += State;	}
-	void ScaleAdditive()	{	m_Transform.localScale += State;	}
+	void PositionAdditiveLocal()	{	m_Transform.localPosition += State; }
+	void PositionAdditiveGlobal()	{	m_Transform.position += State; }
+	void PositionAdditiveSelf()		{	m_Transform.Translate(State, m_Transform); }
+	void RotationAdditiveLocal()	{	m_Transform.localEulerAngles += State; }
+	void RotationAdditiveGlobal()	{	m_Transform.eulerAngles += State; }
+	void ScaleAdditiveLocal()		{	m_Transform.localScale += State; }
 
 
 	///////////////////////////////////////////////////////////
@@ -165,12 +173,15 @@ public class vp_Spring
 
 		switch (Mode)
 		{
-			case UpdateMode.Position:			State = m_Transform.localPosition;		if (m_AutoUpdate) m_UpdateFunc = Position;			break;
-			case UpdateMode.Rotation:			State = m_Transform.localEulerAngles;	if (m_AutoUpdate) m_UpdateFunc = Rotation;			break;
-			case UpdateMode.Scale:				State = m_Transform.localScale;			if (m_AutoUpdate) m_UpdateFunc = Scale;				break;
-			case UpdateMode.PositionAdditive:	State = m_Transform.localPosition;		if (m_AutoUpdate) m_UpdateFunc = PositionAdditive;	break;
-			case UpdateMode.RotationAdditive:	State = m_Transform.localEulerAngles;	if (m_AutoUpdate) m_UpdateFunc = RotationAdditive;	break;
-			case UpdateMode.ScaleAdditive:		State = m_Transform.localScale;			if (m_AutoUpdate) m_UpdateFunc = ScaleAdditive;		break;
+			case UpdateMode.Position:				State = m_Transform.localPosition;		if (m_AutoUpdate) m_UpdateFunc = Position;			break;
+			case UpdateMode.Rotation:				State = m_Transform.localEulerAngles;	if (m_AutoUpdate) m_UpdateFunc = Rotation;			break;
+			case UpdateMode.Scale:					State = m_Transform.localScale;			if (m_AutoUpdate) m_UpdateFunc = Scale;				break;
+			case UpdateMode.PositionAdditiveLocal:	State = m_Transform.localPosition;		if (m_AutoUpdate) m_UpdateFunc = PositionAdditiveLocal; break;
+			case UpdateMode.PositionAdditiveGlobal:	State = m_Transform.position;			if (m_AutoUpdate) m_UpdateFunc = PositionAdditiveGlobal; break;
+			case UpdateMode.RotationAdditiveLocal:	State = m_Transform.localEulerAngles;	if (m_AutoUpdate) m_UpdateFunc = RotationAdditiveLocal; break;
+			case UpdateMode.RotationAdditiveGlobal:	State = m_Transform.eulerAngles;		if (m_AutoUpdate) m_UpdateFunc = RotationAdditiveGlobal; break;
+			case UpdateMode.PositionAdditiveSelf:	State = m_Transform.position;			if (m_AutoUpdate) m_UpdateFunc = PositionAdditiveSelf; break;
+			case UpdateMode.ScaleAdditiveLocal:		State = m_Transform.localScale;			if (m_AutoUpdate) m_UpdateFunc = ScaleAdditiveLocal; break;
 		}
 
 		RestState = State;

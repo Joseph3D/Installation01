@@ -386,7 +386,15 @@ public class vp_Inventory : MonoBehaviour
 	/// </summary>
 	protected virtual void DoRemoveItem(vp_ItemInstance item)
 	{
-		ItemInstances.RemoveAt(ItemInstances.IndexOf(item));
+
+		if (item as vp_UnitBankInstance != null)
+		{
+			DoRemoveUnitBank(item as vp_UnitBankInstance);
+			return;
+		}
+		
+		ItemInstances.Remove(item);
+
 		m_FirstItemsDirty = true;
 
 		if (SpaceEnabled)
@@ -817,7 +825,7 @@ public class vp_Inventory : MonoBehaviour
 		}
 
 		//Debug.Log("trying to fetch an instance of the target item type");
-		if (!m_FirstItemsOfType.TryGetValue(itemType, out m_GetFirstItemInstanceResult))
+		if ((itemType == null) || !m_FirstItemsOfType.TryGetValue(itemType, out m_GetFirstItemInstanceResult))
 		{
 			//Debug.Log("no match: returning null");
 			return null;
@@ -1370,6 +1378,12 @@ public class vp_Inventory : MonoBehaviour
 			else if (m_StartItems[v].Type.GetType() == typeof(vp_UnitBankType))
 				TryGiveUnitBank((m_StartItems[v].Type as vp_UnitBankType), m_StartItems[v].Amount, m_StartItems[v].ID);
 			else if (m_StartItems[v].Type.GetType() == typeof(vp_UnitType))
+				TryGiveUnits((m_StartItems[v].Type as vp_UnitType), m_StartItems[v].Amount);
+			else if (m_StartItems[v].Type.GetType().BaseType == typeof(vp_ItemType))
+				TryGiveItem(m_StartItems[v].Type, m_StartItems[v].ID);
+			else if (m_StartItems[v].Type.GetType().BaseType == typeof(vp_UnitBankType))
+				TryGiveUnitBank((m_StartItems[v].Type as vp_UnitBankType), m_StartItems[v].Amount, m_StartItems[v].ID);
+			else if (m_StartItems[v].Type.GetType().BaseType == typeof(vp_UnitType))
 				TryGiveUnits((m_StartItems[v].Type as vp_UnitType), m_StartItems[v].Amount);
 		}
 

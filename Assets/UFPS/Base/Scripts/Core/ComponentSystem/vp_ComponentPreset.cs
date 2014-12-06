@@ -38,7 +38,7 @@ public sealed class vp_ComponentPreset
 	}
 
 	private Type m_ComponentType = null;				// the type of the monobehaviour being loaded or saved
-	public Type ComponentType { get { return m_ComponentType; } }
+	public Type ComponentType { get { return m_ComponentType; } set { m_ComponentType = value; } }
 	private List<Field> m_Fields = new List<Field>();	// a list of all the component's parameters and their data
 
 	// this class holds information about one parameter of the
@@ -260,7 +260,7 @@ public sealed class vp_ComponentPreset
 
 		m_Fields.Clear();
 
-		foreach (FieldInfo f in component.GetType().GetFields())
+		foreach (FieldInfo f in m_ComponentType.GetFields())
 		{
 			if (f.IsPublic)
 			{
@@ -291,7 +291,7 @@ public sealed class vp_ComponentPreset
 
 		preset.m_ComponentType = component.GetType();
 
-		foreach (FieldInfo f in component.GetType().GetFields())
+		foreach (FieldInfo f in preset.m_ComponentType.GetFields())
 		{
 			if (f.IsPublic)
 			{
@@ -312,6 +312,43 @@ public sealed class vp_ComponentPreset
 
 	}
 
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	public int TryMakeCompatibleWithComponent(vp_Component component)
+	{
+
+		m_ComponentType = component.GetType();
+
+
+		List<FieldInfo> availableFields = new List<FieldInfo>(m_ComponentType.GetFields());
+
+		for (int v = m_Fields.Count - 1; v > -1; v--)
+		{
+			foreach (FieldInfo field in availableFields)
+			{
+
+				// TEMP: special case since these values are not relevant in 3rd person
+				if (field.Name.Contains("PositionOffset") ||
+				field.Name.Contains("RotationOffset"))
+					goto kill;
+
+				if (m_Fields[v].FieldHandle == field.FieldHandle)
+					goto keep;
+			}
+
+			kill:
+
+			m_Fields.Remove(m_Fields[v]);
+
+			keep:{ }
+		}
+
+		return m_Fields.Count;
+
+	}
+	
 
 	/// <summary>
 	/// reads the text file at 'fullPath' and fills the preset
@@ -384,7 +421,7 @@ public sealed class vp_ComponentPreset
 	/// static overload: creates and loads a preset and sets all
 	/// the values on 'component'
 	/// </summary>
-	public static bool Load(Component component, string fullPath)
+	public static bool Load(vp_Component component, string fullPath)
 	{
 
 		vp_ComponentPreset preset = new vp_ComponentPreset();
@@ -422,7 +459,7 @@ public sealed class vp_ComponentPreset
 	/// static overload: creates and loads a preset and sets all
 	/// the values on 'component', then returns the preset
 	/// </summary>
-	public static vp_ComponentPreset LoadFromResources(Component component, string resourcePath)
+	public static vp_ComponentPreset LoadFromResources(vp_Component component, string resourcePath)
 	{
 
 		vp_ComponentPreset preset = new vp_ComponentPreset();
@@ -470,7 +507,7 @@ public sealed class vp_ComponentPreset
 	/// static overload: creates and loads a preset and sets all
 	/// the values on 'component', then returns the preset
 	/// </summary>
-	public static vp_ComponentPreset LoadFromTextAsset(Component component, TextAsset file)
+	public static vp_ComponentPreset LoadFromTextAsset(vp_Component component, TextAsset file)
 	{
 
 		vp_ComponentPreset preset = new vp_ComponentPreset();
@@ -643,8 +680,30 @@ public sealed class vp_ComponentPreset
 		// return if the field did not exist in the component
 		if (fieldInfo == null)
 		{
-			if(tokens[0] != "ComponentType")
-				PresetError("'" + m_Type.Name + "' has no such field: '" + tokens[0] + "'");
+			if (tokens[0] != "ComponentType")
+			{
+				string[] newClass = FindMovedParameter(m_Type.Name, tokens[0]);
+				if ((newClass != null) && (newClass.Length == 2))
+				{
+
+					// same class, new parameter name
+					if (((newClass[0] == null) || (!string.IsNullOrEmpty(newClass[0]) && newClass[0] == m_Type.Name))
+						&& (!string.IsNullOrEmpty(newClass[1])) && (newClass[1] != tokens[0]))
+						PresetWarning("The parameter '" + tokens[0] + "'" + " has been renamed to '" + newClass[1] + "'. Please update your presets.");
+					// new class, same parameter name
+					else if (((newClass[0] != null) && (newClass[0] != m_Type.Name))
+						&& (string.IsNullOrEmpty(newClass[1]) || (newClass[1] == tokens[0])))
+						PresetWarning("The parameter '" + tokens[0] + "'" + " has been moved to the '" + newClass[0] + "' component. Please update your presets.");
+					// new class, new parameter name
+					else if(((newClass[0] != null) && (newClass[0] != m_Type.Name))
+						&& (!string.IsNullOrEmpty(newClass[1])) && (newClass[1] != tokens[0]))
+						PresetWarning("The parameter '" + tokens[0] + "'" + " has been moved to the '" + newClass[0] + "' component and renamed to '" + newClass[1] + "'. Please update your presets.");
+					else	// parameter is no longer supported in this class
+						PresetWarning("'" + m_Type.Name + "' no longer supports the parameter: '" + tokens[0] + "'. Please update your presets.");
+				}
+				else		// unknown field in this class
+					PresetError("'" + m_Type.Name + "' has no such field: '" + tokens[0] + "'");
+			}
 			// return, but allow further parsing
 			return true;
 		}
@@ -658,12 +717,47 @@ public sealed class vp_ComponentPreset
 
 	}
 
+
+	/// <summary>
+	/// finds the new name and / or destination of a preset parameter that
+	/// may have been renamed, moved to a new class or both. destinations
+	/// are hard coded and retrieved from the 'MovedParameters' dictionary.
+	/// this is intended for construction of meaningful warning messages in
+	/// case of heavy refactoring of vp_Components, rather than crashes
+	/// </summary>
+	string []FindMovedParameter(string type, string field)
+	{
+
+		string []s;
+		if(!MovedParameters.TryGetValue(type + "." + field, out s))
+			return null;
+
+		return s;
+
+	}
+
+	Dictionary<string, string[]> MovedParameters = new Dictionary<string, string[]>()
+		{
+			// the key must consist of the old class and parameter name delimitied by "."
+			// the value must be a string array with two strings: new class and new name
+			//	- if both array indices are set it means the param has been renamed and moved to a new class
+			//	- if first array index is null it means the param has been renamed but resides in the same class
+			//	- if second array index is null it means the param has been moved to a new class but has the same name
+			//	- if both array indices are null it means the param is no longer supported
+			{ "vp_FPCamera.MouseAcceleration", new string [] {"vp_FPInput", "MouseLookAcceleration"} },
+			{ "vp_FPCamera.MouseSensitivity", new string [] {"vp_FPInput", "MouseLookSensitivity"} },
+			{ "vp_FPCamera.MouseSmoothSteps", new string [] {"vp_FPInput", "MouseLookSmoothSteps"} },
+			{ "vp_FPCamera.MouseSmoothWeight", new string [] {"vp_FPInput", "MouseLookSmoothWeight"} },
+			{ "vp_FPCamera.MouseAccelerationThreshold", new string [] {"vp_FPInput", "MouseLookAccelerationThreshold"} },
+			{ "vp_FPInput.ForceCursor", new string [] {"vp_FPInput", "MouseCursorForced"} },
+		};
+
 	
 	/// <summary>
 	/// this method applies a preset onto the passed component,
 	/// returning true on success 
 	/// </summary>
-	public static bool Apply(Component component, vp_ComponentPreset preset)
+	public static bool Apply(vp_Component component, vp_ComponentPreset preset)
 	{
 
 		if (preset == null)
@@ -683,13 +777,13 @@ public sealed class vp_ComponentPreset
 			Error("Component was null when attempting to apply preset in '" + vp_Utility.GetErrorLocation() + "'");
 			return false;
 		}
-
-		if (component.GetType() != preset.m_ComponentType)
+		
+		if (component.Type != preset.m_ComponentType)
 		{
 			string type = "a '" + preset.m_ComponentType + "' preset";
 			if (preset.m_ComponentType == null)
 				type = "an unknown preset type";
-			Error("Tried to apply " + type + " to a '" + component.GetType().ToString() + "' component in '" + vp_Utility.GetErrorLocation() + "'");
+			Error("Applied " + type + " to a '" + component.Type.ToString() + "' component in '" + vp_Utility.GetErrorLocation() + "'");
 			return false;
 		}
 
@@ -697,7 +791,7 @@ public sealed class vp_ComponentPreset
 		// onto the component
 		foreach (Field f in preset.m_Fields)
 		{
-			foreach (FieldInfo destField in component.GetType().GetFields())
+			foreach (FieldInfo destField in component.Fields)
 			{
 				if (destField.FieldHandle == f.FieldHandle)
 					destField.SetValue(component, f.Args);
@@ -1113,9 +1207,27 @@ public sealed class vp_ComponentPreset
 	/// </summary>
 	private static void PresetError(string message)
 	{
+
 		if (!LogErrors)
 			return;
+
 		UnityEngine.Debug.LogError("Preset Error: " + m_FullPath + " (at " + m_LineNumber + ") " + message);
+
+	}
+
+
+	/// <summary>
+	/// logs a preset warning to the console. called during the
+	/// phase when a text file is read into memory as a preset
+	/// </summary>
+	private static void PresetWarning(string message)
+	{
+
+		if (!LogErrors)
+			return;
+
+		UnityEngine.Debug.LogWarning("Preset Warning: " + m_FullPath + " (at " + m_LineNumber + ") " + message);
+
 	}
 
 

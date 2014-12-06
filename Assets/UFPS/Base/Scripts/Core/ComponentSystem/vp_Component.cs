@@ -22,7 +22,17 @@ public class vp_Component : MonoBehaviour
 
 	public bool Persist = false;
 	protected vp_StateManager m_StateManager = null;
-	public vp_EventHandler EventHandler = null;
+
+	protected vp_EventHandler m_EventHandler = null;
+	public vp_EventHandler EventHandler
+	{
+		get
+		{
+			if (m_EventHandler == null)
+				m_EventHandler = (vp_EventHandler)Transform.root.GetComponentInChildren(typeof(vp_EventHandler));
+			return m_EventHandler;
+		}
+	}
 
 	// NOTE: made non-serialized to prevent serialization depth error on Unity 4.5
 	[System.NonSerialized]
@@ -37,11 +47,34 @@ public class vp_Component : MonoBehaviour
 	protected Collider m_Collider = null;
 
 	public List<vp_State> States = new List<vp_State>();				// list of state presets for this vp_Component
-	public List<vp_Component> Children = new List<vp_Component>();		// list of child vp_Components
+	public List<vp_Component> Children = new List<vp_Component>();		// list of  child vp_Components
 	public List<vp_Component> Siblings = new List<vp_Component>();		// list of vp_Components sharing the same gameobject
-	public List<vp_Component> Family = new List<vp_Component>();		// list of vp_Components sharing the same hierarchy
+	public List<vp_Component> Family = new List<vp_Component>();		// list of vp_Components sharing the same root object
 	public List<Renderer> Renderers = new List<Renderer>();				// list of Renderers in this and all child vp_Components
 	public List<AudioSource> AudioSources = new List<AudioSource>();	// list of AudioSources in this and all child vp_Components
+
+	protected Type m_Type = null;
+	protected System.Reflection.FieldInfo[] m_Fields = null;
+
+	public Type Type
+	{
+		get
+		{
+			if (m_Type == null)
+				m_Type = GetType();
+			return m_Type;
+		}
+	}
+
+	public System.Reflection.FieldInfo[] Fields
+	{
+		get
+		{
+			if (m_Fields == null)
+				m_Fields = Type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+			return m_Fields;
+		}
+	}
 
 	protected vp_Timer.Handle m_DeactivationTimer = new vp_Timer.Handle();
 
@@ -56,7 +89,15 @@ public class vp_Component : MonoBehaviour
 	public vp_State InitialState { get { return m_InitialState; } }
 #endif
 
-	public vp_StateManager StateManager { get { return m_StateManager; } }
+	public vp_StateManager StateManager
+	{
+		get
+		{
+			if(m_StateManager == null)
+				m_StateManager = new vp_StateManager(this, States);
+			return m_StateManager;
+		}
+	}
 	public vp_State DefaultState { get { return m_DefaultState; } }
 
 	// an alternative delta time measurement where 'delta 1' corresponds
@@ -126,9 +167,11 @@ public class vp_Component : MonoBehaviour
 
 		get
 		{
+
 			// NOTE: only returns status of first found renderer in order to
 			// be very lightweight
 			return (Renderers.Count > 0) ? Renderers[0].enabled : false;
+
 		}
 
 		set
@@ -155,15 +198,12 @@ public class vp_Component : MonoBehaviour
 	protected virtual void Awake()
 	{
 
-		EventHandler = (vp_EventHandler)Transform.root.GetComponentInChildren(typeof(vp_EventHandler));
-
 		CacheChildren();
 		CacheSiblings();
 		CacheFamily();
 		CacheRenderers();
 		CacheAudioSources();
 
-		m_StateManager = new vp_StateManager(this, States);
 		StateManager.SetState("Default", enabled);
 
 	}
@@ -205,8 +245,10 @@ public class vp_Component : MonoBehaviour
 	/// </summary>
 	protected virtual void OnEnable()
 	{
+
 		if (EventHandler != null)
 			EventHandler.Register(this);
+
 	}
 
 
@@ -215,8 +257,10 @@ public class vp_Component : MonoBehaviour
 	/// </summary>
 	protected virtual void OnDisable()
 	{
+
 		if (EventHandler != null)
 			EventHandler.Unregister(this);
+
 	}
 
 
@@ -262,7 +306,7 @@ public class vp_Component : MonoBehaviour
 	public void SetState(string state, bool enabled = true, bool recursive = false, bool includeDisabled = false)
 	{
 
-		m_StateManager.SetState(state, enabled);
+		StateManager.SetState(state, enabled);
 
 		// scan the underlying hierarchy for vp_Components and
 		// set 'state' on every object found
@@ -300,6 +344,9 @@ public class vp_Component : MonoBehaviour
 			{
 				s.Activate();
 			}
+
+			VerifyRenderers();
+
 		}
 		else
 		{
@@ -313,6 +360,7 @@ public class vp_Component : MonoBehaviour
 
 		}
 
+
 	}
 
 
@@ -324,7 +372,7 @@ public class vp_Component : MonoBehaviour
 	public void ResetState()
 	{
 
-		m_StateManager.Reset();
+		StateManager.Reset();
 		Refresh();
 
 	}
@@ -337,7 +385,7 @@ public class vp_Component : MonoBehaviour
 	public bool StateEnabled(string stateName)
 	{
 
-		return m_StateManager.IsEnabled(stateName);
+		return StateManager.IsEnabled(stateName);
 
 	}
 
@@ -354,7 +402,7 @@ public class vp_Component : MonoBehaviour
 		if (States.Count == 0)
 		{
 			// there are no states, so create default state
-			defaultState = new vp_State(GetType().Name, "Default", null);
+			defaultState = new vp_State(Type.Name, "Default", null);
 			States.Add(defaultState);
 		}
 		else
@@ -372,7 +420,7 @@ public class vp_Component : MonoBehaviour
 			if (defaultState == null)
 			{
 				// there are states, but no default state so create it
-				defaultState = new vp_State(GetType().Name, "Default", null);
+				defaultState = new vp_State(Type.Name, "Default", null);
 				States.Add(defaultState);
 			}
 		}
@@ -400,7 +448,7 @@ public class vp_Component : MonoBehaviour
 	{
 
 		m_InitialState = null;
-		m_InitialState = new vp_State(GetType().Name, "Internal_Initial", null);
+		m_InitialState = new vp_State(Type.Name, "Internal_Initial", null);
 		m_InitialState.Preset = new vp_ComponentPreset();
 		m_InitialState.Preset.InitFromComponent(this);
 
@@ -497,7 +545,7 @@ public class vp_Component : MonoBehaviour
 
 
 	/// <summary>
-	/// inits the 'Renderers' list will all Renderers existing
+	/// inits the 'Renderers' list with all Renderers existing
 	/// in this plus all child vp_Components
 	/// </summary>
 	public void CacheRenderers()
@@ -509,6 +557,25 @@ public class vp_Component : MonoBehaviour
 			Renderers.Add(r);
 		}
 
+	}
+
+
+	/// <summary>
+	/// makes sure that the main cached renderer still resides within
+	/// the same hierarchy as this component. if not, re-caches all
+	/// </summary>
+	protected void VerifyRenderers()
+	{
+
+		if (Renderers.Count == 0)
+			return;
+
+		if ((Renderers[0] == null) || !vp_Utility.IsDescendant(Renderers[0].transform, Transform))
+		{
+			Renderers.Clear();
+			CacheRenderers();
+		}
+	
 	}
 
 
@@ -526,7 +593,7 @@ public class vp_Component : MonoBehaviour
 		}
 
 	}
-	
+
 
 	/// <summary>
 	/// activates the gameobject containing this vp_Component.

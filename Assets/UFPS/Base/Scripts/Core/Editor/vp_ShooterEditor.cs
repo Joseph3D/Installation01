@@ -105,14 +105,16 @@ public class vp_ShooterEditor : Editor
 		// preset
 		m_PresetFoldout = vp_PresetEditorGUIUtility.PresetFoldout(m_PresetFoldout, m_Component);
 
-		// update
-		if (GUI.changed)
+		// update default state and persist in order not to loose inspector tweaks
+		// due to state switches during runtime - UNLESS a runtime state button has
+		// been pressed (in which case user wants to toggle states as opposed to
+		// reset / alter them)
+		if (GUI.changed &&
+			(!vp_PresetEditorGUIUtility.RunTimeStateButtonTarget == m_Component))
 		{
 
 			EditorUtility.SetDirty(target);
 
-			// update the default state in order not to loose inspector tweaks
-			// due to state switches during runtime
 			if (Application.isPlaying)
 				m_Component.RefreshDefaultState();
 

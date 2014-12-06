@@ -9,6 +9,7 @@ RenderingClippingPlanes 0.01 10
 PositionOffset 0.0268791 -0.640942 3.139271
 PositionSpringStiffness 0.01
 PositionSpringDamping 0.2820513
+PositionSpring2Damping 0.9
 PositionKneeling 0.1
 PositionFallRetract 1
 PositionPivotSpringStiffness 0
@@ -18,6 +19,7 @@ PositionPivot 0 -0.9 3.407589
 RotationOffset 10.3574 0 45
 RotationSpringStiffness 0.01
 RotationSpringDamping 0.4551282
+RotationSpring2Damping 0.9
 RotationLookSway 2 1 2
 RotationStrafeSway 1 0 0
 RotationFallSway 1 0 0

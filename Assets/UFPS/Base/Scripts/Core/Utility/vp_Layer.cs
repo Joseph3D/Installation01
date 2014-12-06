@@ -27,6 +27,8 @@ public sealed class vp_Layer
 	public const int Water = 4;
 
 	// standard layers
+	public const int Ragdoll = 22;
+	public const int PlayerDamageCollider = 23;
 	public const int IgnoreBullets = 24;
 	public const int Enemy = 25;
 	public const int Pickup = 26;
@@ -46,8 +48,8 @@ public sealed class vp_Layer
 
 		// layer mask for raycasting away from the local player, ignoring the player itself
 		// and all non-solid objects. (used for player physics)
-		public const int ExternalBlockers = ~((1 << LocalPlayer) | (1 << Debris) | 
-										(1 << IgnoreRaycast) |(1 << Trigger) | (1 << Water));
+		public const int ExternalBlockers = ~((1 << LocalPlayer) | (1 << Debris) |
+										(1 << IgnoreRaycast) | (1 << Trigger) | (1 << PlayerDamageCollider) | (1 << Ragdoll) | (1 << Water));
 
 		// layer mask for detecting solid, moving objects. (used for spawn radius checking)
 		public const int PhysicsBlockers = (1 << vp_Layer.LocalPlayer) | (1 << vp_Layer.MovableObject);
@@ -55,7 +57,7 @@ public sealed class vp_Layer
 		// layer mask for filtering out small and walk-thru objects. (used for explosions)
 		public const int IgnoreWalkThru = ~((1 << Debris) | (1 << IgnoreRaycast) | (1 << Trigger) |
 											 (1 << Water) | (1 << Pickup));
-
+		 
 	}
 
 
@@ -66,6 +68,7 @@ public sealed class vp_Layer
 	{
 		Physics.IgnoreLayerCollision(LocalPlayer, Debris);		// player should never collide with small debris
 		Physics.IgnoreLayerCollision(Debris, Debris);			// gun shells should not collide against each other
+		Physics.IgnoreLayerCollision(Ragdoll, PlayerDamageCollider);
 	}
 	private vp_Layer(){}
 

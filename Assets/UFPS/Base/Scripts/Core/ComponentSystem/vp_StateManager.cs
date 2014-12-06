@@ -22,7 +22,10 @@ public class vp_StateManager
 {
 
 	private vp_Component m_Component = null;			// component to manipulate
+
+	[System.NonSerialized]	// NOTE: made non-serialized to prevent serialization depth error on Unity 4.5
 	private List<vp_State> m_States = null;				// list sent from the component at startup. IMPORTANT: must not be altered at runtime
+
 	private Dictionary<string, int> m_StateIds = null;	// dictionary of state list-indices, for fast lookup
 
 	private static string m_AppNotPlayingMessage = "Error: StateManager can only be accessed while application is playing.";

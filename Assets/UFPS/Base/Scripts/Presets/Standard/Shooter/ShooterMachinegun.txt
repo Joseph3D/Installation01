@@ -3,7 +3,7 @@
 ///////////////////////////////////////////////////////////
 
 ComponentType vp_FPWeaponShooter
-MotionPositionRecoil 0 0 -0.075
+MotionPositionRecoil 0 0 -0.025
 MotionRotationRecoil -0.5 0 5
 MotionRotationRecoilDeadZone 1
 MotionPositionReset 0.5

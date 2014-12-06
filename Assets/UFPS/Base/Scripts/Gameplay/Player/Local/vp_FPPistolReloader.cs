@@ -27,7 +27,7 @@ public class vp_FPPistolReloader : vp_FPWeaponReloader
 		
 
 	/// <summary>
-	/// this callback is triggered right after the activity in question
+	/// this callback is triggered right after the 'Reload activity
 	/// has been approved for activation. it reloads the current
 	/// weapon and performs a hardcoded spring-and-timer based
 	/// pistol reload animation on it

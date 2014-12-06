@@ -153,7 +153,7 @@ public class vp_Input : MonoBehaviour
 	
 	
 	/// <summary>
-	/// Setups the defaults input buttons and axises
+	/// Setups the defaults input buttons and axes
 	/// </summary>
 	public virtual void SetupDefaults( string type = "" )
 	{
@@ -217,7 +217,7 @@ public class vp_Input : MonoBehaviour
 		}
 	
 	}
-	
+
 	
 	/// <summary>
 	/// Adds an axis with a positive and negative key
@@ -303,7 +303,7 @@ public class vp_Input : MonoBehaviour
 	/// <summary>
 	/// handles keyboard, mouse and joystick input while a button is held
 	/// </summary>
-	public static bool GetButton( string button )
+	public static bool GetButton(string button)
 	{
 	
 		return Instance.DoGetButton( button );
@@ -329,7 +329,7 @@ public class vp_Input : MonoBehaviour
 	/// <summary>
 	/// handles keyboard, mouse and joystick input for a button down event
 	/// </summary>
-	public static bool GetButtonDown( string button )
+	public static bool GetButtonDown(string button)
 	{
 	
 		return Instance.DoGetButtonDown( button );
@@ -355,7 +355,7 @@ public class vp_Input : MonoBehaviour
 	/// <summary>
 	/// handles keyboard, mouse and joystick input when a button is released
 	/// </summary>
-	public static bool GetButtonUp( string button )
+	public static bool GetButtonUp(string button)
 	{
 	
 		return Instance.DoGetButtonUp( button );
@@ -379,10 +379,9 @@ public class vp_Input : MonoBehaviour
 	
 	
 	/// <summary>
-	/// handles keyboard, mouse and joystick input
-	/// for axises
+	/// handles keyboard, mouse and joystick input for axes
 	/// </summary>
-	public static float GetAxisRaw( string axis )
+	public static float GetAxisRaw(string axis)
 	{
 	
 		return Instance.DoGetAxisRaw( axis );
@@ -391,8 +390,7 @@ public class vp_Input : MonoBehaviour
 	
 	
 	/// <summary>
-	/// handles keyboard, mouse and joystick input
-	/// for axises
+	/// handles keyboard, mouse and joystick input for axes
 	/// </summary>
 	public virtual float DoGetAxisRaw( string axis )
 	{
@@ -437,6 +435,27 @@ public class vp_Input : MonoBehaviour
 			Instance.ButtonValues[vp_Input.Instance.ButtonKeys.IndexOf(button)] = keyCode;
 		
 		Instance.Buttons[button] = keyCode;
+
+	}
+
+
+	/// <summary>
+	/// Changes an input axis. If save == true the axis will be saved
+	/// for next runtime
+	/// </summary>
+	public static void ChangeAxis(string n, KeyCode pk = KeyCode.None, KeyCode nk = KeyCode.None, bool save = false)
+	{
+
+		if (!Instance.AxisKeys.Contains(n))
+		{
+			Debug.LogWarning("The Axis \"" + n + "\" Doesn't Exist");
+			return;
+		}
+
+		if (save)
+			Instance.AxisValues[vp_Input.Instance.AxisKeys.IndexOf(n)] = new vp_InputAxis { Positive = pk, Negative = nk };
+
+		Instance.Axis[n] = new vp_InputAxis { Positive = pk, Negative = nk };
 
 	}
 	

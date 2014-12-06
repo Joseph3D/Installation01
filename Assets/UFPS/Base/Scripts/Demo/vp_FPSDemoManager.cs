@@ -17,9 +17,9 @@ public class vp_FPSDemoManager : vp_DemoManager
 	public GameObject Player = null;
 	public vp_FPController Controller = null;
 	public vp_FPCamera Camera = null;
-	public vp_FPWeaponHandler WeaponHandler = null;
+	public vp_WeaponHandler WeaponHandler = null;
 	public vp_FPInput Input = null;
-	public vp_Earthquake Earthquake = null;
+	public vp_FPEarthquake Earthquake = null;
 
 	public vp_FPPlayerEventHandler PlayerEventHandler = null;
 
@@ -73,10 +73,10 @@ public class vp_FPSDemoManager : vp_DemoManager
 
 		Controller = Player.GetComponent<vp_FPController>();
 		Camera = Player.GetComponentInChildren<vp_FPCamera>();
-		WeaponHandler = Player.GetComponentInChildren<vp_FPWeaponHandler>();
+		WeaponHandler = Player.GetComponentInChildren<vp_WeaponHandler>();
 		PlayerEventHandler = (vp_FPPlayerEventHandler)Player.GetComponentInChildren(typeof(vp_FPPlayerEventHandler));
 		Input = Player.GetComponent<vp_FPInput>();
-		Earthquake = (vp_Earthquake)Component.FindObjectOfType(typeof(vp_Earthquake));
+		Earthquake = (vp_FPEarthquake)Component.FindObjectOfType(typeof(vp_FPEarthquake));
 
 		// on small screen resolutions the editor preview screenshot
 		// panel is minimized by default, otherwise expanded
@@ -142,7 +142,10 @@ public class vp_FPSDemoManager : vp_DemoManager
 		Controller.Stop();
 
 		if (freezeCamera)
+		{
 			Camera.SetState("Freeze", true);
+			Input.SetState("Freeze", true);
+		}
 
 	}
 
@@ -164,6 +167,8 @@ public class vp_FPSDemoManager : vp_DemoManager
 
 		Controller.SetState("Freeze", false);
 		Camera.SetState("Freeze", false);
+		Input.SetState("Freeze", false);
+		Input.Refresh();
 
 	}
 
@@ -176,10 +181,10 @@ public class vp_FPSDemoManager : vp_DemoManager
 
 		Input.AllowGameplayInput = false;
 
-		Camera.MouseSensitivity = Vector2.zero;
+		Input.MouseLookSensitivity = Vector2.zero;
 
 		if (WeaponHandler.CurrentWeapon != null)
-			WeaponHandler.CurrentWeapon.RotationLookSway = Vector2.zero;
+			((vp_FPWeapon)WeaponHandler.CurrentWeapon).RotationLookSway = Vector2.zero;
 
 	}
 
@@ -202,9 +207,9 @@ public class vp_FPSDemoManager : vp_DemoManager
 
 		if (!smoothFade)
 		{
-			WeaponHandler.CurrentWeapon.SnapSprings();
-			WeaponHandler.CurrentWeapon.SnapPivot();
-			WeaponHandler.CurrentWeapon.SnapZoom();
+			((vp_FPWeapon)WeaponHandler.CurrentWeapon).SnapSprings();
+			((vp_FPWeapon)WeaponHandler.CurrentWeapon).SnapPivot();
+			((vp_FPWeapon)WeaponHandler.CurrentWeapon).SnapZoom();
 		}
 
 		WeaponHandler.CurrentWeapon.Refresh();
@@ -236,6 +241,8 @@ public class vp_FPSDemoManager : vp_DemoManager
 			if (CurrentShooter != null)
 				CurrentShooter.RefreshDefaultState();
 		}
+		if (Input != null)
+			Input.RefreshDefaultState();
 
 	}
 
@@ -257,6 +264,8 @@ public class vp_FPSDemoManager : vp_DemoManager
 			if (CurrentShooter != null)
 				CurrentShooter.ResetState();
 		}
+		if (Input != null)
+			Input.ResetState();
 
 	}
 
@@ -272,12 +281,12 @@ public class vp_FPSDemoManager : vp_DemoManager
 		PlayerEventHandler.RefreshActivityStates();
 		WeaponHandler.SetWeapon(0);
 
-		PlayerEventHandler.Earthquake.Stop();
+		PlayerEventHandler.CameraEarthQuake.Stop();
 		Camera.BobStepCallback = null;
 		Camera.SnapSprings();
 		if (WeaponHandler.CurrentWeapon != null)
 		{
-			WeaponHandler.CurrentWeapon.SetPivotVisible(false);
+			((vp_FPWeapon)WeaponHandler.CurrentWeapon).SetPivotVisible(false);
 			WeaponHandler.CurrentWeapon.SnapSprings();
 			vp_Layer.Set(WeaponHandler.CurrentWeapon.gameObject, vp_Layer.Weapon, true);
 

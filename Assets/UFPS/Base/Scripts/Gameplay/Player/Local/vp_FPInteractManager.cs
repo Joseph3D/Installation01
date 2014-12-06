@@ -16,8 +16,9 @@ using System.Collections.Generic;
 
 public class vp_FPInteractManager : MonoBehaviour
 {
-	
+
 	public float InteractDistance = 2; // sets the distance for interaction from the player
+	public float InteractDistance3rdPerson = 3; // sets the distance for interaction from the player in 3rd person
 	public float MaxInteractDistance = 25; 	// sets the max distance any interaction can occur. If any interactables interactDistance
 											// is higher than this, TryInteract() will not fire.
 	public float CrosshairTimeoutTimer{ get; set; } // allows the current interactable to set a timeout before the crosshair can change again
@@ -32,7 +33,7 @@ public class vp_FPInteractManager : MonoBehaviour
 	protected vp_Timer.Handle m_ShowTextTimer = new vp_Timer.Handle(); // to delay interactables text from showing
 	protected bool m_CanInteract = false;
 	
-	
+
 	/// <summary>
 	/// 
 	/// </summary>
@@ -242,7 +243,7 @@ public class vp_FPInteractManager : MonoBehaviour
 				return false;
 			
 			// checks our distance, either from this instance's interactDistance, or if it's overridden on the interactable itself. If the hit is within range, carry on
-			if(interactable.InteractDistance == 0 && hit.distance >= InteractDistance)
+			if(interactable.InteractDistance == 0 && hit.distance >= (m_Player.IsFirstPerson.Get() ? InteractDistance : InteractDistance3rdPerson))
 				return false;
 			
 			// make sure the interact distance isn't higher than the interactables
