@@ -1,0 +1,237 @@
+fileFormatVersion: 2
+guid: 9d391ce2358901d4986a9f2a4afc68dd
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: '#flashlight'
+    100002: '#primary trigger'
+    100004: __unnamed
+    100006: Arms
+    100008: Camera01
+    100010: elbow left
+    100012: elbow right
+    100014: frame barrel
+    100016: frame bone24
+    100018: frame grenade
+    100020: frame grenade01
+    100022: frame grenade02
+    100024: frame grenade03
+    100026: frame grenade04
+    100028: frame grenade05
+    100030: frame grip
+    100032: frame gun
+    100034: frame l forearm
+    100036: frame l index low
+    100038: frame l index mid
+    100040: frame l index tip
+    100042: frame l middle mid
+    100044: frame l middle tip
+    100046: frame l middlelow
+    100048: frame l pinky low
+    100050: frame l pinky mid
+    100052: frame l pinky tip
+    100054: frame l ring low
+    100056: frame l ring mid
+    100058: frame l ring tip
+    100060: frame l thumb low
+    100062: frame l thumb mid
+    100064: frame l thumb tip
+    100066: frame l upperarm
+    100068: frame l wriste
+    100070: frame loader
+    100072: frame loader-top
+    100074: frame r forearm
+    100076: frame r index low
+    100078: frame r index mid
+    100080: frame r index tip
+    100082: frame r middle low
+    100084: frame r middle mid
+    100086: frame r middle tip
+    100088: frame r pinky low
+    100090: frame r pinky mid
+    100092: frame r pinky tip
+    100094: frame r ring low
+    100096: frame r ring mid
+    100098: frame r ring tip
+    100100: frame r thumb low
+    100102: frame r thumb mid
+    100104: frame r thumb tip
+    100106: frame r upperarm
+    100108: frame r wriste
+    100110: frame spinner
+    100112: frame spinner2
+    100114: IK Chain01
+    100116: IK Chain02
+    100118: left wrist constraint
+    100120: right wrist constraint
+    100122: //RootNode
+    400000: '#flashlight'
+    400002: '#primary trigger'
+    400004: __unnamed
+    400006: Arms
+    400008: Camera01
+    400010: elbow left
+    400012: elbow right
+    400014: frame barrel
+    400016: frame bone24
+    400018: frame grenade
+    400020: frame grenade01
+    400022: frame grenade02
+    400024: frame grenade03
+    400026: frame grenade04
+    400028: frame grenade05
+    400030: frame grip
+    400032: frame gun
+    400034: frame l forearm
+    400036: frame l index low
+    400038: frame l index mid
+    400040: frame l index tip
+    400042: frame l middle mid
+    400044: frame l middle tip
+    400046: frame l middlelow
+    400048: frame l pinky low
+    400050: frame l pinky mid
+    400052: frame l pinky tip
+    400054: frame l ring low
+    400056: frame l ring mid
+    400058: frame l ring tip
+    400060: frame l thumb low
+    400062: frame l thumb mid
+    400064: frame l thumb tip
+    400066: frame l upperarm
+    400068: frame l wriste
+    400070: frame loader
+    400072: frame loader-top
+    400074: frame r forearm
+    400076: frame r index low
+    400078: frame r index mid
+    400080: frame r index tip
+    400082: frame r middle low
+    400084: frame r middle mid
+    400086: frame r middle tip
+    400088: frame r pinky low
+    400090: frame r pinky mid
+    400092: frame r pinky tip
+    400094: frame r ring low
+    400096: frame r ring mid
+    400098: frame r ring tip
+    400100: frame r thumb low
+    400102: frame r thumb mid
+    400104: frame r thumb tip
+    400106: frame r upperarm
+    400108: frame r wriste
+    400110: frame spinner
+    400112: frame spinner2
+    400114: IK Chain01
+    400116: IK Chain02
+    400118: left wrist constraint
+    400120: right wrist constraint
+    400122: //RootNode
+    2300000: '#flashlight'
+    2300002: '#primary trigger'
+    2300004: frame barrel
+    2300006: frame bone24
+    2300008: frame grenade
+    2300010: frame grenade01
+    2300012: frame grenade02
+    2300014: frame grenade03
+    2300016: frame grenade04
+    2300018: frame grenade05
+    2300020: frame grip
+    2300022: frame gun
+    2300024: frame loader
+    2300026: frame loader-top
+    2300028: frame spinner
+    2300030: frame spinner2
+    3300000: '#flashlight'
+    3300002: '#primary trigger'
+    3300004: frame barrel
+    3300006: frame bone24
+    3300008: frame grenade
+    3300010: frame grenade01
+    3300012: frame grenade02
+    3300014: frame grenade03
+    3300016: frame grenade04
+    3300018: frame grenade05
+    3300020: frame grip
+    3300022: frame gun
+    3300024: frame loader
+    3300026: frame loader-top
+    3300028: frame spinner
+    3300030: frame spinner2
+    4300000: frame bone24
+    4300002: Arms
+    4300004: frame gun
+    4300006: frame spinner
+    4300008: frame barrel
+    4300010: '#primary trigger'
+    4300012: frame grenade
+    4300014: frame grenade01
+    4300016: frame grenade02
+    4300018: frame grenade03
+    4300020: frame grenade04
+    4300022: frame grenade05
+    4300024: frame loader
+    4300026: frame grip
+    4300028: frame loader-top
+    4300030: frame spinner2
+    4300032: '#flashlight'
+    4300034: __unnamed
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: __unnamed
+    13700002: Arms
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

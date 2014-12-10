@@ -29,13 +29,32 @@ public class vp_PlayerEventHandler : vp_StateEventHandler
 	//  3) to find the methods that LISTEN to an event, search the project
 	// for its name preceded by '_' (_Reload)
 
-	// basic properties
+	// player type
+	public vp_Value<bool> IsFirstPerson;	// always returns true if this a local player in 1st person mode, false if 3rd person mode or multiplayer remote player or AI
+	public vp_Value<bool> IsLocal;			// returns true if a vp_FPCamera is present on this player
+	public vp_Value<bool> IsAI;				// should return true if this player is controlled by an AI script
+
+	// health
 	public vp_Value<float> Health;
+	public vp_Value<float> MaxHealth;
+
+	// position and rotation
 	public vp_Value<Vector3> Position;
-	public vp_Value<Vector2> Rotation;
-	public vp_Value<Vector3> Forward;
+	public vp_Value<Vector2> Rotation;		// world XY (pitch, yaw) rotation of head
+	public vp_Value<float> BodyYaw;			// world Y (yaw) rotation of lower body
+
+	// headlook
+	public vp_Value<Vector3> LookPoint;
+	public vp_Value<Vector3> HeadLookDirection;		// head forward vector. NOTE: this will be different from 'CameraLookDirection' in 3rd person
+	public vp_Value<Vector3> AimDirection;			// direction between weapon and lookpoint. NOTE: this is different from direction between head and lookpoint
+
+	// motor
 	public vp_Value<Vector3> MotorThrottle;
 	public vp_Value<bool> MotorJumpDone;
+
+	// input
+	public vp_Value<Vector2> InputMoveVector;
+	public vp_Value<float> InputClimbVector;
 
 	// activities
 	public vp_Activity Dead;
@@ -48,9 +67,37 @@ public class vp_PlayerEventHandler : vp_StateEventHandler
 	public vp_Activity Climb;
 	public vp_Activity Interact;
 	public vp_Activity<int> SetWeapon;
+	public vp_Activity OutOfControl;
+
+	// weapon object events
+	public vp_Message<int> Wield;
+	public vp_Message Unwield;
+	public vp_Attempt Fire;
+	public vp_Message DryFire;
+
+	// weapon handler events
+	public vp_Attempt SetPrevWeapon;
+	public vp_Attempt SetNextWeapon;
+	public vp_Attempt<string> SetWeaponByName;
+	[Obsolete("Please use the 'CurrentWeaponIndex' vp_Value instead.")]
+	public vp_Value<int> CurrentWeaponID;	// renamed to avoid confusion with vp_ItemType.ID
+	public vp_Value<int> CurrentWeaponIndex;
+	public vp_Value<string> CurrentWeaponName;
+	public vp_Value<bool> CurrentWeaponWielded;
+	public vp_Attempt AutoReload;
+	public vp_Value<float> CurrentWeaponReloadDuration;
 
 	// inventory
 	public vp_Message<string, int> GetItemCount;
+	public vp_Attempt RefillCurrentWeapon;
+	public vp_Value<int> CurrentWeaponAmmoCount;
+	public vp_Value<int> CurrentWeaponMaxAmmoCount;
+	public vp_Value<int> CurrentWeaponClipCount;
+	public vp_Value<int> CurrentWeaponType;
+	public vp_Value<int> CurrentWeaponGrip;
+	public vp_Attempt<object> AddItem;
+	public vp_Attempt<object> RemoveItem;
+	public vp_Attempt DepleteAmmo;
 
 	// physics
 	public vp_Message<Vector3> Move;
@@ -93,6 +140,7 @@ public class vp_PlayerEventHandler : vp_StateEventHandler
 		BindStateToActivity(Reload);
 		BindStateToActivity(Dead);
 		BindStateToActivity(Climb);
+		BindStateToActivity(OutOfControl);
 		BindStateToActivityOnStart(Attack);	// <--
 		// in this default setup the 'Attack' activity will enable
 		// - but not disable - the component attack states when toggled.

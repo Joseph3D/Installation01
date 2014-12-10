@@ -87,12 +87,18 @@ public class vp_ItemTypeDrawer : vp_ItemDrawer
 				return;
 			}
 
-			// in the inventory, unit banks and unit have some extra bells and whistles
+			// in the inventory, unit banks and units have some extra bells and whistles
 			if (prop.objectReferenceValue.GetType() == typeof(vp_ItemType))
 				DrawItem(pos, prop);
 			else if (prop.objectReferenceValue.GetType() == typeof(vp_UnitBankType))
 				DrawUnitBank(pos, prop);
 			else if (prop.objectReferenceValue.GetType() == typeof(vp_UnitType))
+				DrawInternalUnitBank(pos, prop);
+			else if (prop.objectReferenceValue.GetType().BaseType == typeof(vp_ItemType))
+				DrawItem(pos, prop);
+			else if (prop.objectReferenceValue.GetType().BaseType == typeof(vp_UnitBankType))
+				DrawUnitBank(pos, prop);
+			else if (prop.objectReferenceValue.GetType().BaseType == typeof(vp_UnitType))
 				DrawInternalUnitBank(pos, prop);
 
 		}
@@ -181,12 +187,14 @@ public class vp_ItemTypeDrawer : vp_ItemDrawer
 	{
 		vp_PropertyDrawerUtility.AddObjectBoxBG(pos, pos.width - 50);
 
-		int NOVALUE = -1;
+		//int NOVALUE = -1;		// uncomment to hide ID field
 		pos.width -= 22;
 		pos.x += 6;
 		pos.y += 2;
 		vp_ItemType item = (vp_ItemType)prop.objectReferenceValue;
 		string name = item.ToString();
+
+		//if(prop.serializedObject.targetObject.GetType() == typeof(vp_ItemPickup))		// this can be done to identify the type of host component
 
 		if (vp_PropertyDrawerUtility.ItemCard(pos,
 			((item == null) ? null : item.Icon),
@@ -195,8 +203,8 @@ public class vp_ItemTypeDrawer : vp_ItemDrawer
 			ref vp_ItemAmountDrawer.ItemAmountValue,
 			"Units",
 			null,
-			ref NOVALUE,
-			"",
+			ref vp_ItemIDDrawer.ItemIDValue,	// set to 'NOVALUE' to hide ID field
+			"ID",								// set to "" to hide ID field
 			null,
 			delegate()
 			{

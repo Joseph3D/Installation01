@@ -35,6 +35,7 @@ public class vp_FPWeaponEditor : Editor
 	public static bool m_WeaponIdleFoldout;
 	public static bool m_WeaponSoundFoldout;
 	public static bool m_WeaponAnimationFoldout;
+	public static bool m_LookDownFoldout;
 	public static bool m_StateFoldout;
 	public static bool m_PresetFoldout = true;
 
@@ -78,27 +79,6 @@ public class vp_FPWeaponEditor : Editor
 	public override void OnInspectorGUI()
 	{
 
-		GUI.color = Color.white;
-
-		string objectInfo = m_Component.gameObject.name;
-
-		if (vp_Utility.IsActive(m_Component.gameObject))
-			GUI.enabled = true;
-		else
-		{
-			GUI.enabled = false;
-			objectInfo += " (INACTIVE)";
-		}
-
-		GUILayout.Label(objectInfo);
-		vp_EditorGUIUtility.Separator();
-
-		if (!vp_Utility.IsActive(m_Component.gameObject))
-		{
-			GUI.enabled = true;
-			return;
-		}
-
 		if (Application.isPlaying || m_Component.DefaultState.TextAsset == null)
 		{
 
@@ -111,6 +91,7 @@ public class vp_FPWeaponEditor : Editor
 			DoStepFoldout();
 			DoSoundFoldout();
 			DoAnimationFoldout();
+			DoLookDownFoldout();
 
 		}
 		else
@@ -122,14 +103,16 @@ public class vp_FPWeaponEditor : Editor
 		// preset foldout
 		m_PresetFoldout = vp_PresetEditorGUIUtility.PresetFoldout(m_PresetFoldout, m_Component);
 
-		// update
-		if (GUI.changed)
+		// update default state and persist in order not to loose inspector tweaks
+		// due to state switches during runtime - UNLESS a runtime state button has
+		// been pressed (in which case user wants to toggle states as opposed to
+		// reset / alter them)
+		if (GUI.changed &&
+			(!vp_PresetEditorGUIUtility.RunTimeStateButtonTarget == m_Component))
 		{
 
 			EditorUtility.SetDirty(target);
 
-			// update the default state in order not to loose inspector tweaks
-			// due to state switches during runtime
 			if (Application.isPlaying)
 				m_Component.RefreshDefaultState();
 
@@ -155,11 +138,13 @@ public class vp_FPWeaponEditor : Editor
 
 			// weapon model
 			GameObject model = m_Component.WeaponPrefab;
-			m_Component.WeaponPrefab = (GameObject)EditorGUILayout.ObjectField("Weapon Prefab", m_Component.WeaponPrefab, typeof(GameObject), false);
+			m_Component.WeaponPrefab = (GameObject)EditorGUILayout.ObjectField("1st Person Weapon (Prefab)", m_Component.WeaponPrefab, typeof(GameObject), false);
 			if (Application.isPlaying && model != m_Component.WeaponPrefab)
 			{
 				m_Component.InstantiateWeaponModel();
 			}
+
+			m_Component.Weapon3rdPersonModel = (GameObject)EditorGUILayout.ObjectField("3rd Person Weapon (GameObject)", m_Component.Weapon3rdPersonModel, typeof(GameObject), true);
 
 			if (m_Component.WeaponPrefab == null)
 			{
@@ -248,6 +233,7 @@ public class vp_FPWeaponEditor : Editor
 			m_Component.PositionSpringDamping = EditorGUILayout.Slider("Spring Damping", m_Component.PositionSpringDamping, 0, 1);
 			m_Component.PositionSpring2Stiffness = EditorGUILayout.Slider("Spring2 Stiffn.", m_Component.PositionSpring2Stiffness, 0, 1);
 			m_Component.PositionSpring2Damping = EditorGUILayout.Slider("Spring2 Damp.", m_Component.PositionSpring2Damping, 0, 1);
+
 			GUI.enabled = false;
 			GUILayout.Label("Spring2 is intended for recoil. See the docs for usage.", vp_EditorGUIUtility.NoteStyle);
 			GUI.enabled = true;
@@ -467,6 +453,8 @@ public class vp_FPWeaponEditor : Editor
 		m_WeaponAnimationFoldout = EditorGUILayout.Foldout(m_WeaponAnimationFoldout, "Animation");
 		if (m_WeaponAnimationFoldout)
 		{
+
+
 			m_Component.AnimationWield = (AnimationClip)EditorGUILayout.ObjectField("Wield", m_Component.AnimationWield, typeof(AnimationClip), false);
 			m_Component.AnimationUnWield = (AnimationClip)EditorGUILayout.ObjectField("Unwield", m_Component.AnimationUnWield, typeof(AnimationClip), false);
 			vp_EditorGUIUtility.ObjectList("Ambient", m_Component.AnimationAmbient, typeof(AnimationClip));
@@ -482,11 +470,55 @@ public class vp_FPWeaponEditor : Editor
 				GUI.enabled = true;
 			}
 
+			m_Component.AnimationGrip = (int)((vp_Weapon.Grip)EditorGUILayout.EnumPopup("Grip", (vp_Weapon.Grip)m_Component.AnimationGrip));
+			m_Component.AnimationType = (int)((vp_Weapon.Type)EditorGUILayout.EnumPopup("Type", (vp_Weapon.Type)m_Component.AnimationType));
+
+			GUI.enabled = false;
+			GUILayout.Label("Should the character use one-handed or two-handed firearm\nor melee animations for this weapon in 3rd person?", vp_EditorGUIUtility.NoteStyle);
+			GUI.enabled = true;
+
 			vp_EditorGUIUtility.Separator();
+
 		}
 
 	}
 
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public virtual void DoLookDownFoldout()
+	{
+
+		m_LookDownFoldout = EditorGUILayout.Foldout(m_LookDownFoldout, "LookDown");
+		if (m_LookDownFoldout)
+		{
+
+			m_Component.LookDownActive = EditorGUILayout.Toggle("Adjust for lookdown", m_Component.LookDownActive);
+			if (!m_Component.LookDownActive)
+				GUI.enabled = false;
+
+			m_Component.LookDownYawLimit = EditorGUILayout.Slider("Angle Limit", m_Component.LookDownYawLimit, 0, 90);
+			GUILayout.Space(16);
+
+			m_Component.LookDownPositionOffsetMiddle = EditorGUILayout.Vector3Field("Position (Middle)", m_Component.LookDownPositionOffsetMiddle);
+			m_Component.LookDownPositionOffsetLeft = EditorGUILayout.Vector3Field("Position (Left)", m_Component.LookDownPositionOffsetLeft);
+			m_Component.LookDownPositionOffsetRight = EditorGUILayout.Vector3Field("Position (Right)", m_Component.LookDownPositionOffsetRight);
+			m_Component.LookDownPositionSpringPower = EditorGUILayout.Slider("Pos. Spring Power", m_Component.LookDownPositionSpringPower, 0, 1);
+			GUILayout.Space(16);
+
+			m_Component.LookDownRotationOffsetMiddle = EditorGUILayout.Vector3Field("Rotation (Middle)", m_Component.LookDownRotationOffsetMiddle);
+			m_Component.LookDownRotationOffsetLeft = EditorGUILayout.Vector3Field("Rotation (Left)", m_Component.LookDownRotationOffsetLeft);
+			m_Component.LookDownRotationOffsetRight = EditorGUILayout.Vector3Field("Rotation (Right)", m_Component.LookDownRotationOffsetRight);
+			m_Component.LookDownRotationSpringPower = EditorGUILayout.Slider("Rot. Spring Power", m_Component.LookDownRotationSpringPower, 0, 1);
+
+			GUI.enabled = true;
+
+			vp_EditorGUIUtility.Separator();
+
+		}
+
+	}
 
 }
 

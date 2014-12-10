@@ -49,7 +49,7 @@ public abstract class vp_Interactable : MonoBehaviour
 	protected Transform m_Transform = null; // Caches this GameObject's transform
 	protected vp_FPController m_Controller = null; // Can be used to cache the players vp_FPController
 	protected vp_FPCamera m_Camera = null; // Can be used to cache the players vp_FPCamera
-	protected vp_FPWeaponHandler m_WeaponHandler = null; // Can be used to cache the players vp_FPWeaponHandler for acccess to weapon GameObjects
+	protected vp_WeaponHandler m_WeaponHandler = null; // Can be used to cache the players vp_WeaponHandler for acccess to weapon GameObjects
 	protected vp_FPPlayerEventHandler m_Player = null; // Need this to access the above and the player. This should be sent in the TryInteract method
 	
 	

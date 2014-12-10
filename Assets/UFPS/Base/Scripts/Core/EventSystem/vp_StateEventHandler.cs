@@ -29,12 +29,17 @@ public abstract class vp_StateEventHandler : vp_EventHandler
 
 		base.Awake();
 
-		// fetch all vp_Components that exist at root level in the
-		// same hierarchy as the event handler. these will be used to
-		// block states recursively (down the hierarchy)
-		foreach (vp_Component c in transform.root.GetComponents<vp_Component>())
+		// fetch all vp_Components that top their own hierarchy in the same
+		// hierarchy as the event handler. these will be used to block states
+		// recursively (down the hierarchy)
+		foreach (vp_Component c in transform.root.GetComponentsInChildren<vp_Component>(true))
 		{
-			m_StateTargets.Add(c);
+			if (c.Parent == null
+				|| (c.Parent.GetComponent<vp_Component>() == null)
+				)
+			{
+				m_StateTargets.Add(c);
+			}
 		}
 
 	}
@@ -112,7 +117,8 @@ public abstract class vp_StateEventHandler : vp_EventHandler
 
 		foreach (vp_Event a in m_HandlerEvents.Values)
 		{
-			if ((a is vp_Activity) || (a.GetType().BaseType == typeof(vp_Activity)))
+
+			if ((a is vp_Activity) || (a.GetType().BaseType == typeof(vp_Activity)))	// TODO: optimize
 			{
 				foreach (vp_Component c in m_StateTargets)
 				{

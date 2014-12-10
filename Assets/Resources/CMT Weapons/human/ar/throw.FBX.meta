@@ -1,0 +1,425 @@
+fileFormatVersion: 2
+guid: 698433b6a465f2f47a1f351ef167c259
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: '#flashlight'
+    100002: '#left hand cyborg'
+    100004: '#left hand marine'
+    100006: '#primary ejection'
+    100008: '#primary trigger'
+    100010: '#smoke'
+    100012: __unnamed
+    100014: Arms
+    100016: Camera01
+    100018: elbow left
+    100020: elbow right
+    100022: frame bone24
+    100024: frame display blue
+    100026: frame display empty
+    100028: frame display red
+    100030: frame display yellow
+    100032: frame gun
+    100034: frame l forearm
+    100036: frame l index low
+    100038: frame l index mid
+    100040: frame l index tip
+    100042: frame l middle mid
+    100044: frame l middle tip
+    100046: frame l middlelow
+    100048: frame l pinky low
+    100050: frame l pinky mid
+    100052: frame l pinky tip
+    100054: frame l ring low
+    100056: frame l ring mid
+    100058: frame l ring tip
+    100060: frame l thumb low
+    100062: frame l thumb mid
+    100064: frame l thumb tip
+    100066: frame l upperarm
+    100068: frame l wriste
+    100070: frame magazine
+    100072: frame ophandle
+    100074: frame r forearm
+    100076: frame r index low
+    100078: frame r index mid
+    100080: frame r index tip
+    100082: frame r middle low
+    100084: frame r middle mid
+    100086: frame r middle tip
+    100088: frame r pinky low
+    100090: frame r pinky mid
+    100092: frame r pinky tip
+    100094: frame r ring low
+    100096: frame r ring mid
+    100098: frame r ring tip
+    100100: frame r thumb low
+    100102: frame r thumb mid
+    100104: frame r thumb tip
+    100106: frame r upperarm
+    100108: frame r wriste
+    100110: frame safety
+    100112: frame safety button01
+    100114: frame trigger
+    100116: IK Chain01
+    100118: IK Chain02
+    100120: left wrist constraint
+    100122: right wrist constraint
+    100124: //RootNode
+    400000: '#flashlight'
+    400002: '#left hand cyborg'
+    400004: '#left hand marine'
+    400006: '#primary ejection'
+    400008: '#primary trigger'
+    400010: '#smoke'
+    400012: __unnamed
+    400014: Arms
+    400016: Camera01
+    400018: elbow left
+    400020: elbow right
+    400022: frame bone24
+    400024: frame display blue
+    400026: frame display empty
+    400028: frame display red
+    400030: frame display yellow
+    400032: frame gun
+    400034: frame l forearm
+    400036: frame l index low
+    400038: frame l index mid
+    400040: frame l index tip
+    400042: frame l middle mid
+    400044: frame l middle tip
+    400046: frame l middlelow
+    400048: frame l pinky low
+    400050: frame l pinky mid
+    400052: frame l pinky tip
+    400054: frame l ring low
+    400056: frame l ring mid
+    400058: frame l ring tip
+    400060: frame l thumb low
+    400062: frame l thumb mid
+    400064: frame l thumb tip
+    400066: frame l upperarm
+    400068: frame l wriste
+    400070: frame magazine
+    400072: frame ophandle
+    400074: frame r forearm
+    400076: frame r index low
+    400078: frame r index mid
+    400080: frame r index tip
+    400082: frame r middle low
+    400084: frame r middle mid
+    400086: frame r middle tip
+    400088: frame r pinky low
+    400090: frame r pinky mid
+    400092: frame r pinky tip
+    400094: frame r ring low
+    400096: frame r ring mid
+    400098: frame r ring tip
+    400100: frame r thumb low
+    400102: frame r thumb mid
+    400104: frame r thumb tip
+    400106: frame r upperarm
+    400108: frame r wriste
+    400110: frame safety
+    400112: frame safety button01
+    400114: frame trigger
+    400116: IK Chain01
+    400118: IK Chain02
+    400120: left wrist constraint
+    400122: right wrist constraint
+    400124: //RootNode
+    2300000: '#flashlight'
+    2300002: '#left hand cyborg'
+    2300004: '#left hand marine'
+    2300006: '#primary ejection'
+    2300008: '#primary trigger'
+    2300010: '#smoke'
+    2300012: frame bone24
+    2300014: frame display blue
+    2300016: frame display empty
+    2300018: frame display red
+    2300020: frame display yellow
+    2300022: frame gun
+    2300024: frame magazine
+    2300026: frame ophandle
+    2300028: frame safety
+    2300030: frame safety button01
+    2300032: frame trigger
+    3300000: '#flashlight'
+    3300002: '#left hand cyborg'
+    3300004: '#left hand marine'
+    3300006: '#primary ejection'
+    3300008: '#primary trigger'
+    3300010: '#smoke'
+    3300012: frame bone24
+    3300014: frame display blue
+    3300016: frame display empty
+    3300018: frame display red
+    3300020: frame display yellow
+    3300022: frame gun
+    3300024: frame magazine
+    3300026: frame ophandle
+    3300028: frame safety
+    3300030: frame safety button01
+    3300032: frame trigger
+    4300000: frame bone24
+    4300002: Arms
+    4300004: frame gun
+    4300006: frame display blue
+    4300008: frame display empty
+    4300010: frame display red
+    4300012: frame display yellow
+    4300014: frame magazine
+    4300016: frame ophandle
+    4300018: frame safety
+    4300020: frame safety button01
+    4300022: frame trigger
+    4300024: '#flashlight'
+    4300026: '#left hand cyborg'
+    4300028: '#left hand marine'
+    4300030: '#primary ejection'
+    4300032: '#primary trigger'
+    4300034: '#smoke'
+    4300036: __unnamed
+    7400000: Take 001 Throw
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: __unnamed
+    13700002: Arms
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Take 001 Throw
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 39
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: __unnamed
+        weight: 1
+      - path: Camera01
+        weight: 1
+      - path: elbow left
+        weight: 1
+      - path: elbow right
+        weight: 1
+      - path: frame bone24
+        weight: 1
+      - path: frame bone24/Arms
+        weight: 1
+      - path: frame bone24/frame gun
+        weight: 1
+      - path: frame bone24/frame gun/#flashlight
+        weight: 1
+      - path: frame bone24/frame gun/#left hand cyborg
+        weight: 1
+      - path: frame bone24/frame gun/#left hand marine
+        weight: 1
+      - path: frame bone24/frame gun/#primary ejection
+        weight: 1
+      - path: frame bone24/frame gun/#primary trigger
+        weight: 1
+      - path: frame bone24/frame gun/#smoke
+        weight: 1
+      - path: frame bone24/frame gun/frame display blue
+        weight: 1
+      - path: frame bone24/frame gun/frame display empty
+        weight: 1
+      - path: frame bone24/frame gun/frame display red
+        weight: 1
+      - path: frame bone24/frame gun/frame display yellow
+        weight: 1
+      - path: frame bone24/frame gun/frame magazine
+        weight: 1
+      - path: frame bone24/frame gun/frame ophandle
+        weight: 1
+      - path: frame bone24/frame gun/frame safety
+        weight: 1
+      - path: frame bone24/frame gun/frame safety button01
+        weight: 1
+      - path: frame bone24/frame gun/frame trigger
+        weight: 1
+      - path: frame bone24/frame l upperarm
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          index low
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          index low/frame l index mid
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          index low/frame l index mid/frame l index tip
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          middlelow
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          middlelow/frame l middle mid
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          middlelow/frame l middle mid/frame l middle tip
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          pinky low
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          pinky low/frame l pinky mid
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          pinky low/frame l pinky mid/frame l pinky tip
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          ring low
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          ring low/frame l ring mid
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          ring low/frame l ring mid/frame l ring tip
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          thumb low
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          thumb low/frame l thumb mid
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          thumb low/frame l thumb mid/frame l thumb tip
+        weight: 1
+      - path: frame bone24/frame r upperarm
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          index low
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          index low/frame r index mid
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          index low/frame r index mid/frame r index tip
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          middle low
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          middle low/frame r middle mid
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          middle low/frame r middle mid/frame r middle tip
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          pinky low
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          pinky low/frame r pinky mid
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          pinky low/frame r pinky mid/frame r pinky tip
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          ring low
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          ring low/frame r ring mid
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          ring low/frame r ring mid/frame r ring tip
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          thumb low
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          thumb low/frame r thumb mid
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          thumb low/frame r thumb mid/frame r thumb tip
+        weight: 1
+      - path: IK Chain01
+        weight: 1
+      - path: IK Chain02
+        weight: 1
+      - path: left wrist constraint
+        weight: 1
+      - path: right wrist constraint
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  additionalBone: 0
+  userData: 

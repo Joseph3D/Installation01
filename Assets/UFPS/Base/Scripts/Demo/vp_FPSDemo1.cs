@@ -49,7 +49,7 @@ public class vp_FPSDemo1 : MonoBehaviour
 	private Vector2 m_PerspectiveAngle = new Vector2(27, 223);
 	private Vector2 m_StartAngle = new Vector2(0, 0);
 	private Vector2 m_WeaponLayerAngle = new Vector2(0, -90);
-	private Vector2 m_ForcesAngle = new Vector2(-167, 33.10683f);
+	private Vector2 m_ForcesAngle = new Vector2(0, 0);
 	private Vector2 m_MechAngle = new Vector3(0, 180);
 	private Vector2 m_DrunkAngle = new Vector3(0, -90);
 	private Vector2 m_SniperAngle = new Vector2(20, 180);
@@ -85,45 +85,63 @@ public class vp_FPSDemo1 : MonoBehaviour
 	// presets
 	public TextAsset ArtilleryCamera = null;
 	public TextAsset ArtilleryController = null;
+	public TextAsset ArtilleryInput = null;
 	public TextAsset AstronautCamera = null;
 	public TextAsset AstronautController = null;
+	public TextAsset AstronautInput = null;
 	public TextAsset CowboyCamera = null;
 	public TextAsset CowboyController = null;
 	public TextAsset CowboyWeapon = null;
 	public TextAsset CowboyShooter = null;
+	public TextAsset CowboyInput = null;
 	public TextAsset CrouchController = null;
+	public TextAsset CrouchInput = null;
 	public TextAsset DefaultCamera = null;
 	public TextAsset DefaultWeapon = null;
+	public TextAsset DefaultInput = null;
 	public TextAsset DrunkCamera = null;
 	public TextAsset DrunkController = null;
+	public TextAsset DrunkInput = null;
 	public TextAsset ImmobileCamera = null;
 	public TextAsset ImmobileController = null;
+	public TextAsset ImmobileInput = null;
 	public TextAsset MaceCamera = null;
 	public TextAsset MaceWeapon = null;
+	public TextAsset MaceInput = null;
 	public TextAsset MafiaCamera = null;
 	public TextAsset MafiaWeapon = null;
 	public TextAsset MafiaShooter = null;
+	public TextAsset MafiaInput = null;
 	public TextAsset MechCamera = null;
 	public TextAsset MechController = null;
 	public TextAsset MechWeapon = null;
 	public TextAsset MechShooter = null;
+	public TextAsset MechInput = null;
 	public TextAsset ModernCamera = null;
 	public TextAsset ModernController = null;
 	public TextAsset ModernWeapon = null;
 	public TextAsset ModernShooter = null;
+	public TextAsset ModernInput = null;
 	public TextAsset MouseLowSensCamera = null;
+	public TextAsset MouseLowSensInput = null;
 	public TextAsset MouseRawUnityCamera = null;
+	public TextAsset MouseRawUnityInput = null;
 	public TextAsset MouseSmoothingCamera = null;
+	public TextAsset MouseSmoothingInput = null;
 	public TextAsset OldSchoolCamera = null;
 	public TextAsset OldSchoolController = null;
 	public TextAsset OldSchoolWeapon = null;
 	public TextAsset OldSchoolShooter = null;
+	public TextAsset OldSchoolInput = null;
 	public TextAsset Persp1999Camera = null;
 	public TextAsset Persp1999Weapon = null;
+	public TextAsset Persp1999Input = null;
 	public TextAsset PerspModernCamera = null;
 	public TextAsset PerspModernWeapon = null;
+	public TextAsset PerspModernInput = null;
 	public TextAsset PerspOldCamera = null;
 	public TextAsset PerspOldWeapon = null;
+	public TextAsset PerspOldInput = null;
 	public TextAsset PivotChestWeapon = null;
 	public TextAsset PivotElbowWeapon = null;
 	public TextAsset PivotMuzzleWeapon = null;
@@ -132,17 +150,22 @@ public class vp_FPSDemo1 : MonoBehaviour
 	public TextAsset SniperCamera = null;
 	public TextAsset SniperWeapon = null;
 	public TextAsset SniperShooter = null;
+	public TextAsset SniperInput = null;
 	public TextAsset StompingCamera = null;
+	public TextAsset StompingInput = null;
 	public TextAsset SystemOFFCamera = null;
 	public TextAsset SystemOFFController = null;
 	public TextAsset SystemOFFShooter = null;
 	public TextAsset SystemOFFWeapon = null;
 	public TextAsset SystemOFFWeaponGlideIn = null;
+	public TextAsset SystemOFFInput = null;
 	public TextAsset TurretCamera = null;
 	public TextAsset TurretWeapon = null;
 	public TextAsset TurretShooter = null;
+	public TextAsset TurretInput = null;
 	public TextAsset WallFacingCamera = null;
 	public TextAsset WallFacingWeapon = null;
+	public TextAsset WallFacingInput = null;
 
 
 	/// <summary>
@@ -250,6 +273,9 @@ public class vp_FPSDemo1 : MonoBehaviour
 
 		}
 
+		// always allow mouselook while mouse cursor is shown
+		m_Demo.Input.MouseCursorBlocksMouseLook = false;
+
 		// special case to cancel the crashing airplane example zoom reset
 		// if user navigates away from the 'EXTERNAL FORCES' screen
 		if (m_Demo.CurrentScreen != 3 && m_ChrashingAirplaneRestoreTimer.Active)
@@ -281,9 +307,10 @@ public class vp_FPSDemo1 : MonoBehaviour
 			m_Demo.FreezePlayer(m_OverviewPos, m_OverviewAngle, true);			// prevent player from moving
 			m_Demo.LastInputTime -= 20;											// makes the big arrow start fading 20 seconds earlier on this screen
 			m_Demo.RefreshDefaultState();
-			m_Demo.Input.ForceCursor = true;
+			m_Demo.Input.MouseCursorForced = true;
 		}
 
+		m_Demo.Input.MouseCursorForced = true;
 		m_Demo.ForceCameraShake();
 
 	}
@@ -303,7 +330,7 @@ public class vp_FPSDemo1 : MonoBehaviour
 			if (m_Demo.WeaponHandler.CurrentWeapon != null)
 			{
 				if (m_ExamplesCurrentSel == 0)
-					m_Demo.WeaponHandler.CurrentWeapon.SnapToExit();
+					((vp_FPWeapon)m_Demo.WeaponHandler.CurrentWeapon).SnapToExit();
 				else
 				{
 					if (wieldMotion)
@@ -319,7 +346,10 @@ public class vp_FPSDemo1 : MonoBehaviour
 						m_Demo.WeaponHandler.CurrentWeapon.Wield();
 				}
 				if (state != null)
+				{
+					m_Demo.PlayerEventHandler.ResetActivityStates();
 					m_Demo.PlayerEventHandler.SetState(state);
+				}
 			}, m_WeaponSwitchTimer);
 		}
 		else
@@ -353,10 +383,11 @@ public class vp_FPSDemo1 : MonoBehaviour
 			m_Demo.PlayerEventHandler.SetState("Freeze", false);
 			m_Demo.PlayerEventHandler.SetState("SystemOFF");
 			if (m_Demo.WeaponHandler.CurrentWeapon != null)
-				m_Demo.WeaponHandler.CurrentWeapon.SnapZoom();
+				((vp_FPWeapon)m_Demo.WeaponHandler.CurrentWeapon).SnapZoom();
 			m_Demo.Camera.SnapZoom();
 			m_Demo.Camera.SnapSprings();
-			m_Demo.Input.ForceCursor = false;
+			m_Demo.Input.MouseCursorForced = true;
+
 		}
 
 		// if selected button in toggle column has changed, change
@@ -377,9 +408,9 @@ public class vp_FPSDemo1 : MonoBehaviour
 			{
 				if(m_Demo.WeaponHandler.CurrentWeapon != null)
 				{
-					m_Demo.WeaponHandler.CurrentWeapon.SnapZoom();
-					m_Demo.WeaponHandler.CurrentWeapon.SnapSprings();
-					m_Demo.WeaponHandler.CurrentWeapon.SnapPivot();
+					((vp_FPWeapon)m_Demo.WeaponHandler.CurrentWeapon).SnapZoom();
+					((vp_FPWeapon)m_Demo.WeaponHandler.CurrentWeapon).SnapSprings();
+					((vp_FPWeapon)m_Demo.WeaponHandler.CurrentWeapon).SnapPivot();
 				}
 			}
 
@@ -401,7 +432,7 @@ public class vp_FPSDemo1 : MonoBehaviour
 						if (m_Demo.WeaponHandler.CurrentWeapon != null)
 						{
 							m_Demo.WeaponHandler.CurrentWeapon.SnapSprings();
-							m_Demo.WeaponHandler.CurrentWeapon.SnapZoom();
+							((vp_FPWeapon)m_Demo.WeaponHandler.CurrentWeapon).SnapZoom();
 						}
 					}
 					break;
@@ -433,7 +464,7 @@ public class vp_FPSDemo1 : MonoBehaviour
 					{
 						m_Demo.Camera.AddForce2(new Vector3(0.0f, -1.0f, 0.0f));
 						if (m_Demo.WeaponHandler.CurrentWeapon != null)
-							m_Demo.WeaponHandler.CurrentWeapon.AddForce(new Vector3(0, 0, 0), new Vector3(-0.3f, 0, 0));
+							((vp_FPWeapon)m_Demo.WeaponHandler.CurrentWeapon).AddForce(new Vector3(0, 0, 0), new Vector3(-0.3f, 0, 0));
 						m_AudioSource.pitch = Time.timeScale;
 						m_AudioSource.PlayOneShot(m_StompSound);
 					};
@@ -514,13 +545,14 @@ public class vp_FPSDemo1 : MonoBehaviour
 			m_Demo.DrawCrosshair = false;
 			m_Demo.ResetState();
 			m_Demo.Camera.Load(StompingCamera);
+			m_Demo.Input.Load(StompingInput);
 			m_Demo.WeaponHandler.SetWeapon(1);
 			m_Demo.Controller.Load(SmackController);
 			m_Demo.Camera.SnapZoom();
 			m_Demo.FirstFrame = false;
 			m_Demo.Teleport(m_ForcesPos, m_ForcesAngle);
 			m_Demo.ButtonColumnArrowY = -100.0f;
-			m_Demo.Input.ForceCursor = true;
+			m_Demo.Input.MouseCursorForced = true;
 		}
 
 		if (m_Demo.ShowGUI)
@@ -536,28 +568,31 @@ public class vp_FPSDemo1 : MonoBehaviour
 				{
 					case 0:	// --- Earthquake ---
 						m_Demo.Camera.Load(StompingCamera);
+						m_Demo.Input.Load(StompingInput);
 						m_Demo.Controller.Load(SmackController);
-						m_Demo.PlayerEventHandler.Earthquake.TryStart(new Vector3(0.2f, 0.2f, 10.0f));
+						m_Demo.PlayerEventHandler.CameraEarthQuake.TryStart(new Vector3(0.2f, 0.2f, 10.0f));
 						m_Demo.ButtonColumnArrowFadeoutTime = Time.time + 9;
 						m_AudioSource.Stop();
 						m_AudioSource.pitch = Time.timeScale;
 						m_AudioSource.PlayOneShot(m_EarthquakeSound);
 						break;
 					case 1:	// --- Boss Stomp ---
-						m_Demo.PlayerEventHandler.Earthquake.Stop();
+						m_Demo.PlayerEventHandler.CameraEarthQuake.Stop();
 						m_Demo.Camera.Load(ArtilleryCamera);
+						m_Demo.Input.Load(ArtilleryInput);
 						m_Demo.Controller.Load(SmackController);
-						m_Demo.PlayerEventHandler.GroundStomp.Send(1.0f);
+						m_Demo.PlayerEventHandler.CameraGroundStomp.Send(1.0f);
 						m_Demo.ButtonColumnArrowFadeoutTime = Time.time;
 						m_AudioSource.Stop();
 						m_AudioSource.pitch = Time.timeScale;
 						m_AudioSource.PlayOneShot(m_StompSound);
 						break;
 					case 2:	// --- Incoming Artillery ---
-						m_Demo.PlayerEventHandler.Earthquake.Stop();
+						m_Demo.PlayerEventHandler.CameraEarthQuake.Stop();
 						m_Demo.Camera.Load(ArtilleryCamera);
+						m_Demo.Input.Load(ArtilleryInput);
 						m_Demo.Controller.Load(ArtilleryController);
-						m_Demo.PlayerEventHandler.BombShake.Send(1.0f);
+						m_Demo.PlayerEventHandler.CameraBombShake.Send(1.0f);
 						m_Demo.Controller.AddForce(UnityEngine.Random.Range(-1.5f, 1.5f), 0.5f,
 																		UnityEngine.Random.Range(-1.5f, -0.5f));
 						m_Demo.ButtonColumnArrowFadeoutTime = Time.time + 1;
@@ -570,8 +605,9 @@ public class vp_FPSDemo1 : MonoBehaviour
 						break;
 					case 3:	// --- Crashing Airplane ---
 						m_Demo.Camera.Load(StompingCamera);
+						m_Demo.Input.Load(StompingInput);
 						m_Demo.Controller.Load(SmackController);
-						m_Demo.PlayerEventHandler.Earthquake.TryStart(new Vector3(0.25f, 0.2f, 10.0f));
+						m_Demo.PlayerEventHandler.CameraEarthQuake.TryStart(new Vector3(0.25f, 0.2f, 10.0f));
 						m_Demo.ButtonColumnArrowFadeoutTime = Time.time + 9;
 						m_AudioSource.Stop();
 						m_AudioSource.pitch = Time.timeScale;
@@ -608,11 +644,13 @@ public class vp_FPSDemo1 : MonoBehaviour
 			m_Demo.ResetState();
 			m_AudioSource.Stop();
 			m_Demo.DrawCrosshair = true;
-			m_Demo.FreezePlayer(m_MouseLookPos, m_MouseLookAngle, true);
-			m_Demo.Camera.Load(MouseRawUnityCamera);
+			m_Demo.FreezePlayer(m_MouseLookPos, m_MouseLookAngle);
 			m_Demo.FirstFrame = false;
 			m_Demo.WeaponHandler.SetWeapon(0);
-			m_Demo.Input.ForceCursor = true;
+			m_Demo.Input.MouseCursorForced = true;
+			m_Demo.Camera.Load(MouseRawUnityCamera);
+			m_Demo.Input.Load(MouseRawUnityInput);
+
 		}
 
 		if (m_Demo.ShowGUI)
@@ -629,13 +667,19 @@ public class vp_FPSDemo1 : MonoBehaviour
 				switch (m_Demo.ButtonSelection)
 				{
 					case 0:	// --- Raw Unity Mouse Input ---
+						m_Demo.PlayerEventHandler.ResetActivityStates();
 						m_Demo.Camera.Load(MouseRawUnityCamera);
+						m_Demo.Input.Load(MouseRawUnityInput);
 						break;
 					case 1:	// --- Mouse Smoothing ---
+						m_Demo.PlayerEventHandler.ResetActivityStates();
 						m_Demo.Camera.Load(MouseSmoothingCamera);
+						m_Demo.Input.Load(MouseSmoothingInput);
 						break;
 					case 2:	// --- Low Sens. + Acceleration ---
+						m_Demo.PlayerEventHandler.ResetActivityStates();
 						m_Demo.Camera.Load(MouseLowSensCamera);
+						m_Demo.Input.Load(MouseLowSensInput);
 						break;
 				}
 				m_Demo.LastInputTime = Time.time;
@@ -651,8 +695,8 @@ public class vp_FPSDemo1 : MonoBehaviour
 			}
 
 			// show a 'button toggle', a compound control for a basic on / off toggle
-			m_Demo.Camera.MouseAcceleration = m_Demo.ButtonToggle(new Rect((Screen.width / 2) + 110, 215, 90, 40),
-														"Acceleration", m_Demo.Camera.MouseAcceleration, showArrow, m_ImageUpPointer);
+			m_Demo.Input.MouseLookAcceleration = m_Demo.ButtonToggle(new Rect((Screen.width / 2) + 110, 215, 90, 40),
+														"Acceleration", m_Demo.Input.MouseLookAcceleration, showArrow, m_ImageUpPointer);
 			GUI.color = new Color(1, 1, 1, 1 * m_Demo.GlobalAlpha);
 			GUI.enabled = true;
 
@@ -675,10 +719,11 @@ public class vp_FPSDemo1 : MonoBehaviour
 		{
 			m_Demo.ResetState();
 			m_Demo.Camera.Load(PerspOldCamera);
+			m_Demo.Input.Load(PerspOldInput);
 			m_Demo.Camera.SnapZoom();	// prevents animated zooming and instead sets the zoom in one frame
 			m_Demo.FirstFrame = false;
 			m_Demo.FreezePlayer(m_OverviewPos, m_PerspectiveAngle, true);
-			m_Demo.Input.ForceCursor = true;
+			m_Demo.Input.MouseCursorForced = true;
 			m_Demo.WeaponHandler.SetWeapon(3);
 			m_Demo.SetWeaponPreset(PerspOldWeapon, null, true);
 			if (m_Demo.WeaponHandler.CurrentWeapon != null)
@@ -686,9 +731,9 @@ public class vp_FPSDemo1 : MonoBehaviour
 			m_Demo.WeaponHandler.SetWeaponLayer(vp_Layer.Weapon);
 			if (m_Demo.WeaponHandler.CurrentWeapon != null)
 			{
-				m_Demo.WeaponHandler.CurrentWeapon.SnapZoom();
+				((vp_FPWeapon)m_Demo.WeaponHandler.CurrentWeapon).SnapZoom();
 				m_Demo.WeaponHandler.CurrentWeapon.SnapSprings();
-				m_Demo.WeaponHandler.CurrentWeapon.SnapPivot();
+				((vp_FPWeapon)m_Demo.WeaponHandler.CurrentWeapon).SnapPivot();
 			}
 		}
 
@@ -737,6 +782,7 @@ public class vp_FPSDemo1 : MonoBehaviour
 			m_Demo.ResetState();
 			m_Demo.DrawCrosshair = true;
 			m_Demo.Camera.Load(WallFacingCamera);
+			m_Demo.Input.Load(WallFacingInput);
 			m_Demo.WeaponHandler.SetWeapon(3);
 			m_Demo.SetWeaponPreset(WallFacingWeapon);
 			m_Demo.Camera.SnapZoom();
@@ -745,7 +791,7 @@ public class vp_FPSDemo1 : MonoBehaviour
 			m_Demo.FreezePlayer(m_WeaponLayerPos, m_WeaponLayerAngle);
 			int layer = (m_WeaponLayerToggle ? vp_Layer.Weapon : 0);
 			m_Demo.WeaponHandler.SetWeaponLayer(layer);
-			m_Demo.Input.ForceCursor = true;
+			m_Demo.Input.MouseCursorForced = true;
 		}
 
 		if (m_Demo.ShowGUI)
@@ -781,6 +827,7 @@ public class vp_FPSDemo1 : MonoBehaviour
 			m_Demo.ResetState();
 			m_Demo.DrawCrosshair = false;
 			m_Demo.Camera.Load(DefaultCamera);
+			m_Demo.Input.Load(DefaultInput);
 			m_Demo.Controller.Load(ImmobileController);
 			m_Demo.FirstFrame = false;
 			m_Demo.FreezePlayer(m_OverviewPos, m_OverviewAngle);
@@ -788,8 +835,8 @@ public class vp_FPSDemo1 : MonoBehaviour
 			m_Demo.SetWeaponPreset(DefaultWeapon);
 			m_Demo.SetWeaponPreset(PivotMuzzleWeapon, null, true);
 			if (m_Demo.WeaponHandler.CurrentWeapon != null)
-				m_Demo.WeaponHandler.CurrentWeapon.SetPivotVisible(true);
-			m_Demo.Input.ForceCursor = true;
+				((vp_FPWeapon)m_Demo.WeaponHandler.CurrentWeapon).SetPivotVisible(true);
+			m_Demo.Input.MouseCursorForced = true;
 			m_Demo.WeaponHandler.SetWeaponLayer(vp_Layer.Weapon);
 		}
 

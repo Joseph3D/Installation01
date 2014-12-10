@@ -2,9 +2,9 @@
 // Component Preset Script
 ///////////////////////////////////////////////////////////
 
+// NOTE: mouselook settings have been moved to the 'InputClimb' preset
+
 ComponentType vp_FPCamera
-MouseSensitivity 1 1
-MouseAcceleration False
 PositionSpringStiffness 0.01
 PositionSpringDamping 0.25
 PositionSpring2Stiffness 0.95

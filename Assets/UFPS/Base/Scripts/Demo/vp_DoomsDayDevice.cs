@@ -144,7 +144,7 @@ public class vp_DoomsDayDevice : MonoBehaviour
 		if(m_PlayerAudioSource != null)
 			m_PlayerAudioSource.PlayOneShot(EarthQuakeSound);
 
-		m_Player.Earthquake.TryStart(new Vector3(0.05f, 0.05f, 10.0f));	// start the earthquake camera effect
+		m_Player.CameraEarthQuake.TryStart(new Vector3(0.05f, 0.05f, 10.0f));	// start the earthquake camera effect
 
 		vp_Timer.In(3, delegate()
 		{

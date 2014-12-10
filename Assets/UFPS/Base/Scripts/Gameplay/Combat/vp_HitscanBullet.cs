@@ -28,6 +28,7 @@ public class vp_HitscanBullet : MonoBehaviour
 	public string DamageMethodName = "Damage";	// user defined name of damage method on target
 												// TIP: this can be used to apply different types of damage, i.e
 												// magical, freezing, poison, electric
+	protected Transform m_Sender = null;		// inflictor / source of the damage
 
 	public float m_SparkFactor = 0.5f;		// chance of bullet impact generating a spark
 
@@ -49,8 +50,7 @@ public class vp_HitscanBullet : MonoBehaviour
 	protected Transform m_Transform = null;
 	protected Renderer m_Renderer = null;
 	protected bool m_Initialized = false;
-	
-	
+
 	void Awake()
 	{
 	
@@ -92,12 +92,16 @@ public class vp_HitscanBullet : MonoBehaviour
 	void DoHit()
 	{
 
-		Ray ray = new Ray(m_Transform.position, transform.forward);
+		Ray ray = new Ray(m_Transform.position, m_Transform.forward);
 		RaycastHit hit;
 
 		// raycast against all big, solid objects except the player itself
+		// SNIPPET: using this instead may be useful in cases where bullets
+		// fail to hit colliders (however likely at a performance cost)
+		//if (Physics.Linecast(m_Transform.position, m_Transform.position + (m_Transform.forward * Range), out hit, (IgnoreLocalPlayer ? vp_Layer.Mask.BulletBlockers : vp_Layer.Mask.IgnoreWalkThru)))
+
 		if (Physics.Raycast(ray, out hit, Range, (IgnoreLocalPlayer ? vp_Layer.Mask.BulletBlockers : vp_Layer.Mask.IgnoreWalkThru)))
-		{
+			{
 
 			// NOTE: we can't bail out of this if-statement based on !collider.isTrigger,
 			// because that would make bullets _disappear_ if they hit a trigger. to make a
@@ -155,7 +159,10 @@ public class vp_HitscanBullet : MonoBehaviour
 			}
 
 			// do damage on the target
-			hit.collider.SendMessageUpwards(DamageMethodName, Damage, SendMessageOptions.DontRequireReceiver);
+			if(m_Sender != null)
+				hit.collider.SendMessageUpwards(DamageMethodName, new vp_DamageInfo(Damage, m_Sender), SendMessageOptions.DontRequireReceiver);
+			else
+				hit.collider.SendMessageUpwards(DamageMethodName, Damage, SendMessageOptions.DontRequireReceiver);
 
 			// prevent adding decals to objects based on layer
 			if (NoDecalOnTheseLayers.Length > 0)
@@ -166,6 +173,7 @@ public class vp_HitscanBullet : MonoBehaviour
 					if (hit.transform.gameObject.layer != layer)
 						continue;
 
+					m_Renderer.enabled = false;
 					TryDestroy();
 					return;
 
@@ -186,17 +194,31 @@ public class vp_HitscanBullet : MonoBehaviour
 
 
 	/// <summary>
+	/// 
+	/// </summary>
+	public void SetSender(Transform sender)
+	{
+		m_Sender = sender;
+		if (sender.transform.root == Camera.main.transform.root)
+			IgnoreLocalPlayer = true;
+	}
+
+
+	/// <summary>
 	/// sees if the impact sound is still playing and, if not,
 	/// destroys the object. otherwise tries again in 1 sec
 	/// </summary>
-	protected void TryDestroy()
+	private void TryDestroy()
 	{
 
 		if (this == null)
 			return;
 
 		if (!m_Audio.isPlaying)
+		{
+			m_Renderer.enabled = true;
 			vp_Utility.Destroy(gameObject);
+		}
 		else
 			vp_Timer.In(1, TryDestroy);
 

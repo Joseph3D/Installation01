@@ -23,11 +23,19 @@ namespace GameLogic
         public string[] StartupAssets;
         private SpawnPointCollection SpawnPoints;
 
+        /// <summary>
+        /// Gets a value indicating wether assets required to run the game have been loaded
+        /// </summary>
         public bool AssetsLoaded
         {
             get { return _AssetsLoaded; }
             set { _AssetsLoaded = value; }
         }
+        private bool _AssetsLoaded;
+
+        /// <summary>
+        /// Gets a value indicating wether the GameManager has initialized all of the internal objects required for the game to start
+        /// </summary>
         public bool InternalsInitialized
         {
             get
@@ -36,6 +44,10 @@ namespace GameLogic
             }
         }
         private bool _InternalsInitialized;
+
+        /// <summary>
+        /// Gets a value indicating how many GameEntities are currently cached and tracked by the GameManager
+        /// </summary>
         public int GameEntityCacheCount
         {
             get
@@ -43,7 +55,10 @@ namespace GameLogic
                 return GameEntityCache.Count;
             }
         }
-        private bool _AssetsLoaded;
+
+        /// <summary>
+        /// Gets a value indicating wether the game is ready to start
+        /// </summary>
         public bool GameReadyToStart
         {
             get
@@ -54,6 +69,10 @@ namespace GameLogic
                 return false;
             }
         }
+
+        /// <summary>
+        /// Gets an value indicating the number of items in the resource cashe
+        /// </summary>
         public int ResourceCacheItemCount
         {
             get
@@ -61,16 +80,19 @@ namespace GameLogic
                 return ResourceCache.Count;
             }
         }
-        private const string PrefabsDirectory = "Prefabs/";
+
+        private const string PrefabsDirectory = "Prefabs/"; // Game's prefabs directory
 
         void Awake()
         {
-            
+            InitializeInternals();
+
+            GameObject.DontDestroyOnLoad(this); // the game manager is persistant and needs to survive loading and unloading scenes
         }
         
         void Start()
         {
-            InitializeInternals();
+            
         }
 
         void Update()
@@ -84,7 +106,7 @@ namespace GameLogic
         }
 
         /// <summary>
-        /// Spawns player at a random spawn point.
+        /// Spawns player CURRENTLY UNIMPLEMENTED
         /// </summary>
         private void SpawnPlayer()
         {
@@ -121,6 +143,12 @@ namespace GameLogic
             }
             _AssetsLoaded = true;
         }
+
+        /// <summary>
+        /// Loads a GameObject from the ResourcesFolder and adds it to the Resource Cache
+        /// </summary>
+        /// <param name="GameObjectFile">Name of game object files</param>
+        /// <param name="GameObjectHandle">Name of the resource entry in the resource cache</param>
         public void LoadGameObject(string GameObjectFile,string GameObjectHandle)
         {
             if(ResourceCache.ContainsKey(GameObjectHandle))
@@ -131,10 +159,17 @@ namespace GameLogic
             GameObject LoadedObject = Resources.Load(GameObjectFile) as GameObject;
             AddObjectToResourceCache(GameObjectHandle, LoadedObject);
         }
+
+        /// <summary>
+        /// Adds an object to the ResourceCache
+        /// </summary>
+        /// <param name="ObjectHandleName">Name of resource cache entry</param>
+        /// <param name="Handle">System.Object representing the resource</param>
         public void AddObjectToResourceCache(string ObjectHandleName, object Handle)
         {
             ResourceCache.Add(ObjectHandleName, Handle);
         }
+
         public bool ResourceCacheContains(string Handle)
         {
             return ResourceCache.ContainsKey(Handle);

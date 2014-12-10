@@ -24,3 +24,4 @@ basename.exe.stackdump
 obj/
 *.suo
 Assets/Packages/Standard Assets/
+Assets/UnityVS/Editor/UnityVS.VersionSpecific.dll

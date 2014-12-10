@@ -9,6 +9,9 @@
 //					features. animates the camera transform using springs, bob and
 //					perlin noise, in response to user input
 //
+//					NOTE: this class previously contained a mouselook implementation
+//					which has been moved to the 'vp_FPInput' class
+//
 ///////////////////////////////////////////////////////////////////////////////// 
 
 using UnityEngine;
@@ -24,19 +27,15 @@ public class vp_FPCamera : vp_Component
 	// character controller of the parent gameobject
 	public vp_FPController FPController = null;
 	
-	// camera input
-	public Vector2 MouseSensitivity = new Vector2(5.0f, 5.0f);
-	public int MouseSmoothSteps = 10;				// allowed range: 1-20
-	public float MouseSmoothWeight = 0.5f;			// allowed range: 0.0f - 1.0f
-	public bool MouseAcceleration = false;
-	public float MouseAccelerationThreshold = 0.4f;
-	protected Vector2 m_MouseMove = Vector2.zero;		// distance moved since last frame
-	protected List<Vector2> m_MouseSmoothBuffer = new List<Vector2>();
+	// NOTE: mouse input variables have been moved to vp_FPInput
 
 	// camera rendering
 	public float RenderingFieldOfView = 60.0f;
 	public float RenderingZoomDamping = 0.2f;
 	protected float m_FinalZoomTime = 0.0f;
+	protected float m_ZoomOffset = 0.0f;
+	public float ZoomOffset	{	get	{	return m_ZoomOffset;	}	// this can be set by an external script that needs to manipulate zoom
+								set	{	m_ZoomOffset = value;	}}
 
 	// camera position
 	public Vector3 PositionOffset = new Vector3(0.0f, 1.75f, 0.1f);
@@ -51,6 +50,7 @@ public class vp_FPCamera : vp_Component
 	protected vp_Spring m_PositionSpring = null;		// spring for external forces (falling impact, bob, earthquakes)
 	protected vp_Spring m_PositionSpring2 = null;		// 2nd spring for external forces (typically with stiffer spring settings)
 	protected bool m_DrawCameraCollisionDebugLine = false;
+	protected Vector3 PositionOnDeath = Vector3.zero;	// used for 3rd person death cam
 
 	// camera rotation
 	public Vector2 RotationPitchLimit = new Vector2(90.0f, -90.0f);
@@ -61,16 +61,21 @@ public class vp_FPCamera : vp_Component
 	public int RotationKneelingSoftness = 1;
 	public float RotationStrafeRoll = 0.01f;
 	public float RotationEarthQuakeFactor = 0.0f;
+	public Vector3 LookPoint = Vector3.zero;
 	protected float m_Pitch = 0.0f;
 	protected float m_Yaw = 0.0f;
 	protected vp_Spring m_RotationSpring = null;
-	protected Vector2 m_InitialRotation = Vector2.zero;	// angle of camera at moment of startup
+	protected RaycastHit m_LookPointHit;
+
+	// 3rd person
+	public Vector3 Position3rdPersonOffset = new Vector3(0.5f, 0.1f, 0.75f);	// 3rd person camera offset in relation to 1st person offset NOTE: this is disabled by default
+	protected float m_Current3rdPersonBlend = 0.0f;								// (0-1) extent to which camera has reached its target offset (during smooth transition to 3rd person mode)
+	protected Vector3 m_Final3rdPersonCameraOffset = Vector3.zero;				// only used in 3rd person mode. needed for calculating correct lookat-point in 3rd person
 
 	// camera shake
 	public float ShakeSpeed = 0.0f;
 	public Vector3 ShakeAmplitude = new Vector3(10, 10, 0);
 	protected Vector3 m_Shake = Vector3.zero;
-    public bool FallShakeEnabled = false;
 
 	// camera bob
 	public Vector4 BobRate = new Vector4(0.0f, 1.4f, 0.0f, 0.7f);			// TIP: use x for a mech / dino like walk cycle. y should be (x * 2) for a nice classic curve of motion. typical defaults for y are 0.9 (rate) and 0.1 (amp)
@@ -91,12 +96,13 @@ public class vp_FPCamera : vp_Component
 	protected bool m_BobWasElevating = false;
 
 	// camera collision
+	public bool HasCollision = true;										// if true, camera will run its own collision check
+	protected Vector3 m_CollisionVector = Vector3.zero;						// holds the direction and distance of a camera collision
 	protected Vector3 m_CameraCollisionStartPos = Vector3.zero;
 	protected Vector3 m_CameraCollisionEndPos = Vector3.zero;
 	protected RaycastHit m_CameraHit;
-
-	// debug
 	public bool DrawCameraCollisionDebugLine { get { return m_DrawCameraCollisionDebugLine; } set { m_DrawCameraCollisionDebugLine = value; } }	// for editor use
+	public Vector3 CollisionVector { get { return m_CollisionVector; } }
 
 	// event handler property cast as a playereventhandler
 	vp_FPPlayerEventHandler m_Player = null;
@@ -112,6 +118,24 @@ public class vp_FPCamera : vp_Component
 			return m_Player;
 		}
 	}
+
+	// rigidbody to look at for 3rd person death cam. NOTE: this will return
+	// the first rigidbody found under the player hierarchy which is assumed
+	// to belong to the root bone. if this is not the case, you may want
+	// to make this a public property
+	Rigidbody m_FirstRigidbody = null;
+	Rigidbody FirstRigidBody
+	{
+		get
+		{
+			if (m_FirstRigidbody == null)
+			{
+				m_FirstRigidbody = Transform.root.GetComponentInChildren<Rigidbody>();
+			}
+			return m_FirstRigidbody;
+		}
+	}
+
 
 	//////////////////////////////////////////////////////////
 	// angle properties
@@ -150,8 +174,6 @@ public class vp_FPCamera : vp_Component
 		get { return m_Yaw; }
 		set
 		{
-			// discard initial editor rotation
-			m_InitialRotation = Vector2.zero;
 			m_Yaw = value;
 		}
 	}
@@ -169,17 +191,17 @@ public class vp_FPCamera : vp_Component
 
 		FPController = Root.GetComponent<vp_FPController>();
 
-		// detect angle of camera at moment of startup. this will be added to all mouse
-		// input and is needed to retain initial rotation set by user in the editor.
-		m_InitialRotation = new Vector2(Transform.eulerAngles.y, Transform.eulerAngles.x);
-
 		// set parent gameobject layer to 'LocalPlayer', so camera can exclude it
+		// this also prevents shell casings from colliding with the charactercollider
 		Parent.gameObject.layer = vp_Layer.LocalPlayer;
-		foreach (Transform b in Parent)
-		{
-			b.gameObject.layer = vp_Layer.LocalPlayer;
-		}
 
+		// TODO: evaluate this for multiplayer
+		//foreach (Transform b in Parent)
+		//{
+		//	if (b.gameObject.layer != vp_Layer.PlayerDamageCollider)
+		//		b.gameObject.layer = vp_Layer.LocalPlayer;
+		//}
+	
 		// main camera initialization
 		// render everything except body and weapon
 		camera.cullingMask &= ~((1 << vp_Layer.LocalPlayer) | (1 << vp_Layer.Weapon));
@@ -217,12 +239,12 @@ public class vp_FPCamera : vp_Component
 
 		// --- secondary position spring ---
 		// this is mainly intended for positional force from recoil, stomping and explosions
-		m_PositionSpring2 = new vp_Spring(Transform, vp_Spring.UpdateMode.PositionAdditive, false);
+		m_PositionSpring2 = new vp_Spring(Transform, vp_Spring.UpdateMode.PositionAdditiveLocal, false);
 		m_PositionSpring2.MinVelocity = 0.00001f;
 
 		// --- rotation spring ---
 		// this is used for all sorts of angular force acting on the camera
-		m_RotationSpring = new vp_Spring(Transform, vp_Spring.UpdateMode.RotationAdditive, false);
+		m_RotationSpring = new vp_Spring(Transform, vp_Spring.UpdateMode.RotationAdditiveLocal, false);
 		m_RotationSpring.MinVelocity = 0.00001f;
 
 
@@ -235,8 +257,8 @@ public class vp_FPCamera : vp_Component
 	protected override void OnEnable()
 	{
 		base.OnEnable();
-		vp_TargetEvent<float>.Register(m_Root, "BombShake", OnMessage_BombShake);
-		vp_TargetEvent<float>.Register(m_Root, "GroundStomp", OnMessage_GroundStomp);
+		vp_TargetEvent<float>.Register(m_Root, "CameraBombShake", OnMessage_CameraBombShake);
+		vp_TargetEvent<float>.Register(m_Root, "CameraGroundStomp", OnMessage_CameraGroundStomp);
 	}
 
 
@@ -246,8 +268,8 @@ public class vp_FPCamera : vp_Component
 	protected override void OnDisable()
 	{
 		base.OnDisable();
-		vp_TargetEvent<float>.Unregister(m_Root, "BombShake", OnMessage_BombShake);
-		vp_TargetEvent<float>.Unregister(m_Root, "GroundStomp", OnMessage_GroundStomp);
+		vp_TargetEvent<float>.Unregister(m_Root, "CameraBombShake", OnMessage_CameraBombShake);
+		vp_TargetEvent<float>.Unregister(m_Root, "CameraGroundStomp", OnMessage_CameraGroundStomp);
 	}
 
 
@@ -292,17 +314,13 @@ public class vp_FPCamera : vp_Component
 	protected override void Update()
 	{
 
-		if (Input.GetKeyUp(KeyCode.J))
-			Debug.Log(
-		vp_TargetEventHandler.Dump());
-
 		base.Update();
 
 		if (Time.timeScale == 0.0f)
 		    return;
 
-		UpdateMouseLook();
-
+		UpdateInput();
+		
 	}
 
 
@@ -350,27 +368,92 @@ public class vp_FPCamera : vp_Component
 		m_Transform.position = FPController.SmoothPosition;
 
 		// apply current spring offsets
-		m_Transform.localPosition += (m_PositionSpring.State + m_PositionSpring2.State);
+		if (Player.IsFirstPerson.Get())
+			m_Transform.localPosition += (m_PositionSpring.State + m_PositionSpring2.State);
+		else
+			m_Transform.localPosition +=	(m_PositionSpring.State +
+											(Vector3.Scale(m_PositionSpring2.State, Vector3.up)));	// don't shake camera sideways in third person
 
 		// prevent camera from intersecting objects
-		DoCameraCollision();
+		if (HasCollision)
+			DoCameraCollision();
 
 		// rotate the parent gameobject (i.e. player model)
 		// NOTE: this rotation does not pitch the player model, it only applies yaw
-		Quaternion xQuaternion = Quaternion.AngleAxis(m_Yaw + m_InitialRotation.x, Vector3.up);
+		Quaternion xQuaternion = Quaternion.AngleAxis(m_Yaw, Vector3.up);
 		Quaternion yQuaternion = Quaternion.AngleAxis(0, Vector3.left);
 		Parent.rotation =
 			vp_MathUtility.NaNSafeQuaternion((xQuaternion * yQuaternion), Parent.rotation);
 
 		// pitch and yaw the camera
-		yQuaternion = Quaternion.AngleAxis((-m_Pitch) - m_InitialRotation.y, Vector3.left);
+		yQuaternion = Quaternion.AngleAxis((-m_Pitch), Vector3.left);
 		Transform.rotation =
 			vp_MathUtility.NaNSafeQuaternion((xQuaternion * yQuaternion), Transform.rotation);
 
 		// roll the camera
 		Transform.localEulerAngles +=
 			vp_MathUtility.NaNSafeVector3(Vector3.forward * m_RotationSpring.State.z);
+
+		// third person
+		Update3rdPerson();
+
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	void Update3rdPerson()
+	{
+
+		if (Position3rdPersonOffset == Vector3.zero)	// this system is disabled by default
+			return;
+
+		if (PositionOnDeath != Vector3.zero)
+		{
+			Transform.position = PositionOnDeath;
+			if (FirstRigidBody != null)
+				Transform.LookAt(FirstRigidBody.transform.position + Vector3.up);
+			else
+				Transform.LookAt(Root.position + Vector3.up);
+			return;
+		}
+
+		if (Player.IsFirstPerson.Get())
+		{
+			m_Final3rdPersonCameraOffset = Vector3.zero;
+			m_Current3rdPersonBlend = 0.0f;
+			LookPoint = GetLookPoint();
+			return;
+		}
+
+		m_Current3rdPersonBlend = Mathf.Lerp(m_Current3rdPersonBlend, 1.0f, Time.deltaTime);
+
+		m_Final3rdPersonCameraOffset = Transform.position;
 		
+		// brute force way of preventing camera to clip the player's head
+		if (Transform.localPosition.z > -0.2f)
+		{
+			Transform.localPosition = new Vector3(
+				Transform.localPosition.x,
+				Transform.localPosition.y,
+				-0.2f
+				);
+		}
+
+		// apply 3rd person offset
+		Vector3 offset = Transform.position;
+		offset += m_Transform.right * Position3rdPersonOffset.x;
+		offset += m_Transform.up * Position3rdPersonOffset.y;
+		offset += m_Transform.forward * Position3rdPersonOffset.z;
+		Transform.position = Vector3.Lerp(Transform.position, offset, m_Current3rdPersonBlend);
+
+		m_Final3rdPersonCameraOffset -= Transform.position;
+
+		DoCameraCollision();
+
+		LookPoint = GetLookPoint();
+
 	}
 
 
@@ -379,26 +462,31 @@ public class vp_FPCamera : vp_Component
 	/// raycasting from the controller to the camera and blocking
 	/// the camera on the first object hit
 	/// </summary>
-	protected virtual void DoCameraCollision()
+	public virtual void DoCameraCollision()
 	{
 
 		// start position is the center of the character controller
 		// and height of the camera PositionOffset. this will detect
 		// objects between the camera and controller even if the
 		// camera PositionOffset is far from the controller
-		m_CameraCollisionStartPos = FPController.Transform.TransformPoint(0, PositionOffset.y, 0);
 
+		m_CameraCollisionStartPos = FPController.Transform.TransformPoint(0, PositionOffset.y, 0)
+			- (m_Player.IsFirstPerson.Get() ? Vector3.zero : (FPController.Transform.position - FPController.SmoothPosition));	// this alleviates stuttering to some extent in third person
+		
 		// end position is the current camera position plus we'll move it
 		// back the distance of our Controller.radius in order to reduce
 		// camera clipping issues very close to walls
 		// TIP: for solving such issues, you can also try reducing the
 		// main camera's near clipping plane 
 		m_CameraCollisionEndPos = Transform.position + (Transform.position - m_CameraCollisionStartPos).normalized * FPController.CharacterController.radius;
-
+		m_CollisionVector = Vector3.zero;
 		if (Physics.Linecast(m_CameraCollisionStartPos, m_CameraCollisionEndPos, out m_CameraHit, vp_Layer.Mask.ExternalBlockers))
 		{
 			if (!m_CameraHit.collider.isTrigger)
+			{
 				Transform.position = m_CameraHit.point - (m_CameraHit.point - m_CameraCollisionStartPos).normalized * FPController.CharacterController.radius;
+				m_CollisionVector = (m_CameraHit.point - m_CameraCollisionEndPos);
+			}
 		}
 
 #if UNITY_EDITOR
@@ -467,80 +555,20 @@ public class vp_FPCamera : vp_Component
 
 
 	/// <summary>
-	/// rotates the camera for one frame
+	/// 
 	/// </summary>
-	public virtual void AddRotationForce(Vector3 force)
-	{
-		m_RotationSpring.AddForce(force);
-	}
-
-
-	/// <summary>
-	/// rotates the camera for one frame
-	/// </summary>
-	public void AddRotationForce(float x, float y, float z)
-	{
-		AddRotationForce(new Vector3(x, y, z));
-	}
-
-
-	/// <summary>
-	/// mouse look implementation with smooth filtering
-	/// </summary>
-	protected virtual void UpdateMouseLook()
+	protected virtual void UpdateInput()
 	{
 
-		// --- fetch mouse input ---
+		if (Player.Dead.Active)
+			return;
 
-		m_MouseMove.x = vp_Input.GetAxisRaw("Mouse X") * Time.timeScale;
-		m_MouseMove.y = vp_Input.GetAxisRaw("Mouse Y") * Time.timeScale;
+		if (Player.InputSmoothLook.Get() == Vector2.zero)
+			return;
 
-		// --- mouse smoothing ---
-		
-		// make sure the defined smoothing vars are within range
-		MouseSmoothSteps = Mathf.Clamp(MouseSmoothSteps, 1, 20);
-		MouseSmoothWeight = Mathf.Clamp01(MouseSmoothWeight);
-
-		// keep mousebuffer at a maximum of (MouseSmoothSteps + 1) values
-		while (m_MouseSmoothBuffer.Count > MouseSmoothSteps)
-			m_MouseSmoothBuffer.RemoveAt(0);
-
-		// add current input to mouse input buffer
-		m_MouseSmoothBuffer.Add(m_MouseMove);
-
-		// calculate mouse smoothing
-		float weight = 1;
-		Vector2 average = Vector2.zero;
-		float averageTotal = 0.0f;
-		for (int i = m_MouseSmoothBuffer.Count - 1; i > 0; i--)
-		{
-			average += m_MouseSmoothBuffer[i] * weight;
-			averageTotal += (1.0f * weight);
-			weight *= (MouseSmoothWeight / Delta);
-		}
-
-		// store the averaged input value
-		averageTotal = Mathf.Max(1, averageTotal);
-		Vector2 input = vp_MathUtility.NaNSafeVector2(average / averageTotal);
-
-		// --- mouse acceleration ---
-
-		float mouseAcceleration = 0.0f;
-
-		float accX = Mathf.Abs(input.x);
-		float accY = Mathf.Abs(input.y);
-
-		if (MouseAcceleration)
-		{
-			mouseAcceleration = Mathf.Sqrt((accX * accX) + (accY * accY)) / Delta;
-			mouseAcceleration = (mouseAcceleration <= MouseAccelerationThreshold) ? 0.0f : mouseAcceleration;
-		}
-		
-		// --- update camera ---
-
-		// modify pitch and yaw with input, sensitivity and acceleration
-		m_Yaw += input.x * (MouseSensitivity.x + mouseAcceleration);
-		m_Pitch -= input.y * (MouseSensitivity.y + mouseAcceleration);
+		// modify pitch and yaw with mouselook
+		m_Yaw += Player.InputSmoothLook.Get().x;
+		m_Pitch += Player.InputSmoothLook.Get().y;
 
 		// clamp angles
 		m_Yaw = m_Yaw < -360.0f ? m_Yaw += 360.0f : m_Yaw;
@@ -564,8 +592,18 @@ public class vp_FPCamera : vp_Component
 
 		RenderingZoomDamping = Mathf.Max(RenderingZoomDamping, 0.01f);
 		float zoom = 1.0f - ((m_FinalZoomTime - Time.time) / RenderingZoomDamping);
-		gameObject.camera.fieldOfView = Mathf.SmoothStep(gameObject.camera.fieldOfView, RenderingFieldOfView, zoom);
+		gameObject.camera.fieldOfView = Mathf.SmoothStep(gameObject.camera.fieldOfView, RenderingFieldOfView + ZoomOffset, zoom);
 
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public void RefreshZoom()
+	{
+		float zoom = 1.0f - ((m_FinalZoomTime - Time.time) / RenderingZoomDamping);
+		gameObject.camera.fieldOfView = Mathf.SmoothStep(gameObject.camera.fieldOfView, RenderingFieldOfView + ZoomOffset, zoom);
 	}
 
 
@@ -587,7 +625,7 @@ public class vp_FPCamera : vp_Component
 	public virtual void SnapZoom()
 	{
 
-		gameObject.camera.fieldOfView = RenderingFieldOfView;
+		gameObject.camera.fieldOfView = RenderingFieldOfView + ZoomOffset;
 
 	}
 
@@ -625,6 +663,9 @@ public class vp_FPCamera : vp_Component
 	{
 
 		if (BobAmplitude == Vector4.zero || BobRate == Vector4.zero)
+			return;
+
+		if (!Player.IsFirstPerson.Get())
 			return;
 
 		m_BobSpeed = ((BobRequireGroundContact && !FPController.Grounded) ? 0.0f : FPController.CharacterController.velocity.sqrMagnitude);
@@ -713,7 +754,7 @@ public class vp_FPCamera : vp_Component
 		if (Player == null)
 			return;
 
-		if (!Player.Earthquake.Active)
+		if (!Player.CameraEarthQuake.Active)
 			return;
 				
 		// apply horizontal move to the camera spring.
@@ -725,14 +766,14 @@ public class vp_FPCamera : vp_Component
 		// this produces sharp shakes with nice spring smoothness inbetween.
 		if (m_PositionSpring.State.y >= m_PositionSpring.RestState.y)
 		{
-			Vector3 earthQuakeForce = Player.EarthQuakeForce.Get();
+			Vector3 earthQuakeForce = Player.CameraEarthQuakeForce.Get();
 			earthQuakeForce.y = -earthQuakeForce.y;
-			Player.EarthQuakeForce.Set(earthQuakeForce);
+			Player.CameraEarthQuakeForce.Set(earthQuakeForce);
 		}
-		m_PositionSpring.AddForce(Player.EarthQuakeForce.Get() * PositionEarthQuakeFactor);
+		m_PositionSpring.AddForce(Player.CameraEarthQuakeForce.Get() * PositionEarthQuakeFactor);
 
 		// apply earthquake roll force on the camera rotation spring
-		m_RotationSpring.AddForce(Vector3.forward * (-Player.EarthQuakeForce.Get().x * 2) * RotationEarthQuakeFactor);
+		m_RotationSpring.AddForce(Vector3.forward * (-Player.CameraEarthQuakeForce.Get().x * 2) * RotationEarthQuakeFactor);
 
 	}
 
@@ -887,11 +928,65 @@ public class vp_FPCamera : vp_Component
 		if(stop)
 			Stop();
 
-		// initial rotation is used to retain the rotation given to a player
-		// when placed in the editor. upon teleport it can be disregarded
-		if (resetInitialRotation)
-			m_InitialRotation = Vector2.zero;
+	}
 
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public Vector3 GetLookPoint()
+	{
+
+		// 3RD PERSON and looking at a solid object
+		if (!Player.IsFirstPerson.Get())
+		{
+
+			// raycast to see if we hit an external blocker
+			if (Physics.Linecast(
+				Transform.position,	// aim source: position of camera taking 3rd person camera pos into account
+				((Transform.position) + (Transform.forward * 1000)),		// max aim range: 1000 meters
+				out m_LookPointHit,
+				vp_Layer.Mask.ExternalBlockers) && !m_LookPointHit.collider.isTrigger &&	// only aim at non-local player solids
+				(Root.InverseTransformPoint(m_LookPointHit.point).z > 0.0f)	// don't aim at stuff between camera & local player
+				)
+			{
+				return m_LookPointHit.point;
+			}
+
+		}
+
+		// 1ST PERSON or 3rd person and looking into empty space
+		return ((Transform.position) + (Transform.forward * 1000));
+
+	}
+	
+
+
+
+	/// <summary>
+	/// returns the contact point on the surface of the first physical
+	/// object that the camera looks at
+	/// </summary>
+	public virtual Vector3 OnValue_LookPoint
+	{
+		get
+		{
+			return LookPoint;
+		}
+	}
+
+
+	/// <summary>
+	/// returns the direction between the camera position and the
+	/// look point. NOTE: _not_ the direction between the player
+	/// model's head and the look point
+	/// </summary>
+	protected virtual Vector3 OnValue_CameraLookDirection
+	{
+		get
+		{
+			return (Player.LookPoint.Get() - Transform.position).normalized;
+		}
 	}
 
 
@@ -901,31 +996,30 @@ public class vp_FPCamera : vp_Component
 	/// </summary>
 	protected virtual void OnMessage_FallImpact(float impact)
 	{
-        if (FallShakeEnabled)
-        {
-            impact = (float)Mathf.Abs((float)impact * 55.0f);
-            // ('55' is for preset backwards compatibility)
 
-            float posImpact = (float)impact * PositionKneeling;
-            float rotImpact = (float)impact * RotationKneeling;
+		impact = (float)Mathf.Abs((float)impact * 55.0f);
+		// ('55' is for preset backwards compatibility)
 
-            // smooth step the impacts to make the springs react more subtly
-            // from short falls, and more aggressively from longer falls
-            posImpact = Mathf.SmoothStep(0, 1, posImpact);
-            rotImpact = Mathf.SmoothStep(0, 1, rotImpact);
-            rotImpact = Mathf.SmoothStep(0, 1, rotImpact);
+		float posImpact = (float)impact * PositionKneeling;
+		float rotImpact = (float)impact * RotationKneeling;
 
-            // apply impact to camera position spring
-            if (m_PositionSpring != null)
-                m_PositionSpring.AddSoftForce(Vector3.down * posImpact, PositionKneelingSoftness);
+		// smooth step the impacts to make the springs react more subtly
+		// from short falls, and more aggressively from longer falls
+		posImpact = Mathf.SmoothStep(0, 1, posImpact);
+		rotImpact = Mathf.SmoothStep(0, 1, rotImpact);
+		rotImpact = Mathf.SmoothStep(0, 1, rotImpact);
 
-            // apply impact to camera rotation spring
-            if (m_RotationSpring != null)
-            {
-                float roll = Random.value > 0.5f ? (rotImpact * 2) : -(rotImpact * 2);
-                m_RotationSpring.AddSoftForce(Vector3.forward * roll, RotationKneelingSoftness);
-            }
-        }
+		// apply impact to camera position spring
+		if (m_PositionSpring != null)
+			m_PositionSpring.AddSoftForce(Vector3.down * posImpact, PositionKneelingSoftness);
+
+		// apply impact to camera rotation spring
+		if (m_RotationSpring != null)
+		{
+			float roll = Random.value > 0.5f ? (rotImpact * 2) : -(rotImpact * 2);
+			m_RotationSpring.AddSoftForce(Vector3.forward * roll, RotationKneelingSoftness);
+		}
+
 	}
 
 
@@ -951,7 +1045,7 @@ public class vp_FPCamera : vp_Component
 	/// makes the ground shake as if a large dinosaur or mech is
 	/// approaching. great for bosses!
 	/// </summary>
-	protected virtual void OnMessage_GroundStomp(float impact)
+	protected virtual void OnMessage_CameraGroundStomp(float impact)
 	{
 
 		AddForce2(new Vector3(0.0f, -1.0f, 0.0f) * impact);
@@ -962,7 +1056,7 @@ public class vp_FPCamera : vp_Component
 	/// <summary>
 	/// makes the ground shake as if a bomb has gone off nearby
 	/// </summary>
-	protected virtual void OnMessage_BombShake(float impact)
+	protected virtual void OnMessage_CameraBombShake(float impact)
 	{
 
 		DoBomb((new Vector3(1.0f, -10.0f, 1.0f) * impact),
@@ -973,9 +1067,9 @@ public class vp_FPCamera : vp_Component
 
 	
 	/// <summary>
-	/// this callback is triggered right after the activity in question
-	/// has been approved for activation. it prevents the player from
-	/// running while zooming
+	/// this callback is triggered right after the 'Zoom' activity
+	/// has been approved for activation. it prevents the player
+	/// from running while zooming
 	/// </summary>
 	protected virtual void OnStart_Zoom()
 	{
@@ -1035,17 +1129,47 @@ public class vp_FPCamera : vp_Component
 
 
 	/// <summary>
-	/// gets the forward vector of the camera
+	/// 
 	/// </summary>
-	protected virtual Vector3 OnValue_Forward
+	protected virtual void OnStart_Dead()
 	{
-		get
-		{
-			return Forward;
-		}
+
+		if (Player.IsFirstPerson.Get())
+			return;
+		
+		PositionOnDeath = Transform.position - m_Final3rdPersonCameraOffset;
+
 	}
 
 
+	/// <summary>
+	/// 
+	/// </summary>
+	protected virtual void OnStop_Dead()
+	{
+
+		if (Player.IsFirstPerson.Get())
+			return;
+
+		PositionOnDeath = Vector3.zero;
+		m_Current3rdPersonBlend = 0.0f;
+
+	}
+
+
+	/// <summary>
+	/// makes the playereventhandler 'IsLocal' value event always
+	/// return true, since if this player has a first person camera
+	/// it's very reliably a local player. otherwise, it defaults to
+	/// false
+	/// </summary>
+	protected virtual bool OnValue_IsLocal
+	{
+		get
+		{
+			return true;
+		}
+	}
 
 
 }

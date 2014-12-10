@@ -78,7 +78,13 @@ public class UFPSMenu
 		EditorUtility.DisplayDialog("Convert Old DamageHandlers", objectsUpdated + " gameobjects updated." + ((objectsUpdated > 0) ? "\n\nNOTE: You may want to update your prefabs too. This is best done by dragging the un-modified prefab into the scene, running this wizard again and pressing \"Apply\" on the prefab." : ""), "OK");
 
 	}
-	
+
+	[MenuItem("UFPS/Wizards/Generate Remote Player", false, 101)]
+	public static void GenerateRemotePlayer()
+	{
+		vp_RemotePlayerWizard.Generate();
+	}
+
 	// -------- duplicate this code block to create your own custom item type --------
 	// for more info, see the comments in "vp_CustomType.cs"
 	[MenuItem("UFPS/Wizards/Create Item Type/Custom", false, 101)]

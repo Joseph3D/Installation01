@@ -20,7 +20,7 @@ MuzzleFlashFadeSpeed 0.1800278
 ShellScale 0.05
 ShellEjectDirection 1 1 0.5
 ShellEjectPosition 0.15 0 0.5
-ShellEjectVelocity 0.25
+ShellEjectVelocity 0.5
 ShellEjectDelay 0
 ShellEjectSpin 0.5
 SoundFirePitch 1 1

@@ -10,17 +10,16 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-using UnityEngine;
+using UnityEngine; 
 using System.Collections.Generic;
 
 [RequireComponent(typeof(AudioSource))]
 
-public class vp_FPWeapon : vp_Component
+public class vp_FPWeapon : vp_Weapon
 {
 
-	// weapon model
-	public GameObject WeaponPrefab = null;
-	protected GameObject m_WeaponModel = null;
+	// 1st person weapon prefab
+	public GameObject WeaponPrefab = null;		// NOTE: this is always a PREFAB from the PROJECT VIEW and only used in 1st person
 
 	// character controller of the parent gameobject
 	protected CharacterController Controller = null;
@@ -34,14 +33,11 @@ public class vp_FPWeapon : vp_Component
 	public float RenderingZScale = 1.0f;
 
 	// weapon position spring
-	public Vector3 PositionOffset = new Vector3(0.15f, -0.15f, -0.15f);
 	public float PositionSpringStiffness = 0.01f;
 	public float PositionSpringDamping = 0.25f;
 	public float PositionFallRetract = 1.0f;
-	public float PositionPivotSpringStiffness = 0.01f;
+	public float PositionPivotSpringStiffness = 0.01f; 
 	public float PositionPivotSpringDamping = 0.25f;
-	public float PositionSpring2Stiffness = 0.95f;
-	public float PositionSpring2Damping = 0.25f;
 	public float PositionKneeling = 0.06f;
 	public int PositionKneelingSoftness = 1;
 	public Vector3 PositionWalkSlide = new Vector3(0.5f, 0.75f, 0.5f);
@@ -50,7 +46,6 @@ public class vp_FPWeapon : vp_Component
 	public float PositionInputVelocityScale = 1.0f;
 	public float PositionMaxInputVelocity = 25;
 	protected vp_Spring m_PositionSpring = null;		// spring for player motion (shake, falling impact, sway, bob etc.)
-	protected vp_Spring m_PositionSpring2 = null;		// spring for secondary forces like recoil (typically with stiffer spring settings)
 	protected vp_Spring m_PositionPivotSpring = null;
 	protected vp_Spring m_RotationPivotSpring = null;
 	protected GameObject m_WeaponCamera = null;
@@ -59,13 +54,10 @@ public class vp_FPWeapon : vp_Component
 	protected Transform m_WeaponGroupTransform = null;
 
 	// weapon rotation spring
-	public Vector3 RotationOffset = Vector3.zero;
 	public float RotationSpringStiffness = 0.01f;
 	public float RotationSpringDamping = 0.25f;
 	public float RotationPivotSpringStiffness = 0.01f;
 	public float RotationPivotSpringDamping = 0.25f;
-	public float RotationSpring2Stiffness = 0.95f;
-	public float RotationSpring2Damping = 0.25f;
 	public float RotationKneeling = 0;
 	public int RotationKneelingSoftness = 1;
 	public Vector3 RotationLookSway = new Vector3(1.0f, 0.7f, 0.0f);
@@ -75,7 +67,6 @@ public class vp_FPWeapon : vp_Component
 	public float RotationInputVelocityScale = 1.0f;
 	public float RotationMaxInputVelocity = 15;
 	protected vp_Spring m_RotationSpring = null;		// spring for player motion (falling impact, sway, bob etc.)
-	protected vp_Spring m_RotationSpring2 = null;		// spring for secondary forces like recoil (typically with stiffer spring settings)
 	protected Vector3 m_SwayVel = Vector3.zero;
 	protected Vector3 m_FallSway = Vector3.zero;
 
@@ -114,6 +105,27 @@ public class vp_FPWeapon : vp_Component
 	protected Vector3 m_PosStep = Vector3.zero;
 	protected Vector3 m_RotStep = Vector3.zero;
 
+	// weapon lookdown
+
+	public bool LookDownActive = false;
+	public float LookDownYawLimit = 60;
+
+	public Vector3 LookDownPositionOffsetMiddle = new Vector3(0.32f, -0.37f, 0.78f);
+	public Vector3 LookDownPositionOffsetLeft = new Vector3(0.27f, -0.31f, 0.7f);
+	public Vector3 LookDownPositionOffsetRight = new Vector3(0.6f, -0.41f, 0.86f);
+	public float LookDownPositionSpringPower = 1.0f;
+
+	public Vector3 LookDownRotationOffsetMiddle = new Vector3(-3.9f, 2.24f, 4.69f);
+	public Vector3 LookDownRotationOffsetLeft = new Vector3(-7f, -10.5f, 15.6f);
+	public Vector3 LookDownRotationOffsetRight = new Vector3(-9.2f, -9.8f, 48.84f);
+	public float LookDownRotationSpringPower = 1.0f;
+	
+	protected Vector3 m_CurrentPosRestState = Vector3.zero;
+	protected Vector3 m_CurrentRotRestState = Vector3.zero;
+	protected AnimationCurve m_LookDownCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.8f, 0.2f, 0.9f, 1.5f), new Keyframe(1, 1));
+	protected float m_LookDownPitch = 0.0f;
+	protected float m_LookDownYaw = 0.0f;
+
 	// sound
 	public AudioClip SoundWield = null;							// sound for bringing out the weapon
 	public AudioClip SoundUnWield = null;						// sound for putting the weapon away
@@ -130,8 +142,6 @@ public class vp_FPWeapon : vp_Component
 	// weapon switching
 	public Vector3 PositionExitOffset = new Vector3(0.0f, -1.0f, 0.0f);		// used by the camera when switching the weapon out of view
 	public Vector3 RotationExitOffset = new Vector3(40.0f, 0.0f, 0.0f);
-	protected bool m_Wielded = true;
-	public bool Wielded { get { return (m_Wielded && Rendering); } }
 
 	// misc
 	public GameObject WeaponCamera { get { return m_WeaponCamera; } }
@@ -139,20 +149,21 @@ public class vp_FPWeapon : vp_Component
 	public Vector3 DefaultPosition { get { return (Vector3)DefaultState.Preset.GetFieldValue("PositionOffset"); } }
 	public Vector3 DefaultRotation { get { return (Vector3)DefaultState.Preset.GetFieldValue("RotationOffset"); } }
 	public bool DrawRetractionDebugLine { get { return m_DrawRetractionDebugLine; } set { m_DrawRetractionDebugLine = value; } }	// for editor use
-	protected Vector2 m_MouseMove = Vector2.zero;		// mouse distance moved since last frame
+	protected Vector2 m_LookInput = Vector2.zero;		// input look distance moved since last frame
+	protected const float LOOKDOWNSPEED = 2;
 
-	// event handler property cast as a playereventhandler
-	vp_FPPlayerEventHandler m_Player = null;
-	vp_FPPlayerEventHandler Player
+	// event handler property cast as a fpplayereventhandler
+	vp_FPPlayerEventHandler m_FPPlayer = null;
+	vp_FPPlayerEventHandler FPPlayer
 	{
 		get
 		{
-			if (m_Player == null)
+			if (m_FPPlayer == null)
 			{
 				if (EventHandler != null)
-					m_Player = (vp_FPPlayerEventHandler)EventHandler;
+					m_FPPlayer = EventHandler as vp_FPPlayerEventHandler;
 			}
-			return m_Player;
+			return m_FPPlayer;
 		}
 	}
 
@@ -209,7 +220,7 @@ public class vp_FPWeapon : vp_Component
 
 	}
 
-	
+
 	/// <summary>
 	/// in 'Start' we do things that need to be run once at the
 	/// beginning, but potentially depend on all other scripts
@@ -220,14 +231,14 @@ public class vp_FPWeapon : vp_Component
 	protected override void Start()
 	{
 
-		base.Start();
-
 		// attempt to spawn a weapon model, if available
 		InstantiateWeaponModel();
 
-		// set up the weapon group, to which the weapon and pivot
-		// object will be childed at runtime (the main purpose of
-		// this is allowing runtime pivot manipulation)
+		base.Start();	// TODO: maybe to this first?
+
+		// set up the weapon group, to which the weapon and pivot object
+		// will be childed at runtime (the main purpose of this is to
+		// allow runtime pivot manipulation)
 		m_WeaponGroup = new GameObject(name + "Transform");
 		m_WeaponGroupTransform = m_WeaponGroup.transform;
 		m_WeaponGroupTransform.parent = Transform.parent;
@@ -264,7 +275,7 @@ public class vp_FPWeapon : vp_Component
 		m_PositionPivotSpring = new vp_Spring(Transform, vp_Spring.UpdateMode.Position);
 		m_PositionPivotSpring.RestState = PositionPivot;
 
-		m_PositionSpring2 = new vp_Spring(Transform, vp_Spring.UpdateMode.PositionAdditive);
+		m_PositionSpring2 = new vp_Spring(Transform, vp_Spring.UpdateMode.PositionAdditiveLocal);
 		m_PositionSpring2.MinVelocity = 0.00001f;
 
 		m_RotationSpring = new vp_Spring(m_WeaponGroup.gameObject.transform, vp_Spring.UpdateMode.Rotation);
@@ -273,7 +284,7 @@ public class vp_FPWeapon : vp_Component
 		m_RotationPivotSpring = new vp_Spring(Transform, vp_Spring.UpdateMode.Rotation);
 		m_RotationPivotSpring.RestState = RotationPivot;
 
-		m_RotationSpring2 = new vp_Spring(m_WeaponGroup.gameObject.transform, vp_Spring.UpdateMode.RotationAdditive);
+		m_RotationSpring2 = new vp_Spring(m_WeaponGroup.gameObject.transform, vp_Spring.UpdateMode.RotationAdditiveLocal);
 		m_RotationSpring2.MinVelocity = 0.00001f;
 
 		// snap the springs so they always start out rested & in the right place
@@ -335,7 +346,7 @@ public class vp_FPWeapon : vp_Component
 		base.Update();
 
 		if (Time.timeScale != 0.0f)
-			UpdateMouseLook();
+			UpdateInput();
 
 	}
 
@@ -345,8 +356,6 @@ public class vp_FPWeapon : vp_Component
 	/// </summary>
 	protected override void FixedUpdate()
 	{
-
-		base.FixedUpdate();
 
 		if (Time.timeScale != 0.0f)
 		{
@@ -367,29 +376,21 @@ public class vp_FPWeapon : vp_Component
 
 			UpdateSprings();
 
+			UpdateLookDown();
+
 		}
 
 	}
 
 
 	/// <summary>
-	/// applies positional and angular force to the weapon. the
-	/// typical use for this method is applying recoil force.
+	/// 
 	/// </summary>
-	public virtual void AddForce2(Vector3 positional, Vector3 angular)
+	protected override void LateUpdate()
 	{
-
-		m_PositionSpring2.AddForce(positional);
-		m_RotationSpring2.AddForce(angular);
-
+		// NOTE: just here to 'mute' the inherited LateUpdate
 	}
-
-
-	public virtual void AddForce2(float xPos, float yPos, float zPos, float xRot, float yRot, float zRot)
-	{
-		AddForce2(new Vector3(xPos, yPos, zPos), new Vector3(xRot, yRot, zRot));
-	}
-
+	
 
 	/// <summary>
 	/// pushes the weapon position spring along the 'force' vector
@@ -474,24 +475,26 @@ public class vp_FPWeapon : vp_Component
 
 
 	/// <summary>
-	/// performs a mouselook implementation specific to weapon motions
+	/// performs a smooth look implementation specific to weapon motions
 	/// </summary>
-	protected virtual void UpdateMouseLook()
+	protected virtual void UpdateInput()
 	{
 
-		// get mouse input for this frame. unlike camera mouse input, this must
-		// be divided by delta for rotation spring framerate independence, and
-		// multiplied by timescale _twice_  for proper slow motion behavior
-		m_MouseMove.x = vp_Input.GetAxisRaw("Mouse X") / Delta * Time.timeScale * Time.timeScale;
-		m_MouseMove.y = vp_Input.GetAxisRaw("Mouse Y") / Delta * Time.timeScale * Time.timeScale;
+		if (Player.Dead.Active)
+			return;
 
-		// limit rotation velocity to protect against extreme mouse sensitivity
-		m_MouseMove *= RotationInputVelocityScale;
-		m_MouseMove = Vector3.Min(m_MouseMove, Vector3.one * RotationMaxInputVelocity);
-		m_MouseMove = Vector3.Max(m_MouseMove, Vector3.one * -RotationMaxInputVelocity);
+		// get input for this frame. unlike camera input, this is non-smoothed,
+		// divided by delta for rotation spring framerate independence and
+		// multiplied by timescale _twice_  for proper slow motion behavior
+		m_LookInput = FPPlayer.InputRawLook.Get() / Delta * Time.timeScale * Time.timeScale;
+
+		// limit rotation velocity to protect against extreme input sensitivity
+		m_LookInput *= RotationInputVelocityScale;
+		m_LookInput = Vector3.Min(m_LookInput, Vector3.one * RotationMaxInputVelocity);
+		m_LookInput = Vector3.Max(m_LookInput, Vector3.one * -RotationMaxInputVelocity);
 
 	}
-
+	
 
 	/// <summary>
 	/// interpolates to the target FOV value
@@ -676,17 +679,17 @@ public class vp_FPWeapon : vp_Component
 	protected virtual void UpdateEarthQuake()
 	{
 
-		if (Player == null)
+		if (FPPlayer == null)
 			return;
 
-		if (!Player.Earthquake.Active)
+		if (!FPPlayer.CameraEarthQuake.Active)
 			return;
 
 		if (!Controller.isGrounded)
 			return;
 
 		// apply earthquake force on the weapon
-		Vector3 earthQuakeForce = Player.EarthQuakeForce.Get();
+		Vector3 earthQuakeForce = FPPlayer.CameraEarthQuakeForce.Get();
 		AddForce(new Vector3(0, 0, -earthQuakeForce.z * 0.015f) /** m_EarthQuakeWeaponShakeFactor*/,
 					new Vector3(earthQuakeForce.y * 2, -earthQuakeForce.x, earthQuakeForce.x * 2) /** m_EarthQuakeWeaponShakeFactor*/);
 
@@ -696,15 +699,87 @@ public class vp_FPWeapon : vp_Component
 	/// <summary>
 	/// 
 	/// </summary>
-	protected virtual void UpdateSprings()
+	protected override void UpdateSprings()
 	{
 
 		m_PositionSpring.FixedUpdate();
 		m_PositionPivotSpring.FixedUpdate();
 		m_RotationPivotSpring.FixedUpdate();
-		m_PositionSpring2.FixedUpdate();
 		m_RotationSpring.FixedUpdate();
+		m_PositionSpring2.FixedUpdate();
 		m_RotationSpring2.FixedUpdate();
+
+	}
+
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	void UpdateLookDown()
+	{
+
+		if (!LookDownActive)
+			return;
+
+		// only compute lookdown motions if camera is pitched below horizon
+		if (FPPlayer.Rotation.Get().x < 0 && m_LookDownPitch == 0.0f && m_LookDownYaw == 0.0f)
+			return;
+
+		if (FPPlayer.Rotation.Get().x > 0)
+		{
+
+			// get the degree to which we're looking down
+			// (0.0f = looking at horizon, 1.0f = looking at your feet)
+			m_LookDownPitch = Mathf.Lerp(m_LookDownPitch, vp_MathUtility.SnapToZero(Mathf.Max(0.0f, ((FPPlayer.Rotation.Get().x) / (90.0f)))), (Time.deltaTime * LOOKDOWNSPEED));
+
+			// get angle between player body mesh and actual controller yaw,
+			// also, multiply by downpitch in the pitch range below yaw limit
+			m_LookDownYaw = Mathf.Lerp(m_LookDownYaw, vp_MathUtility.SnapToZero(Mathf.DeltaAngle(FPPlayer.Rotation.Get().y, FPPlayer.BodyYaw.Get())) / 90.0f
+													* vp_MathUtility.SnapToZero(Mathf.Max(0.0f, ((FPPlayer.Rotation.Get().x - LookDownYawLimit) / (90.0f - LookDownYawLimit)))), (Time.deltaTime * LOOKDOWNSPEED));
+		}
+		else
+		{
+			m_LookDownPitch *= 0.9f;
+			m_LookDownYaw *= 0.9f;
+			if (m_LookDownPitch < 0.01f)
+				m_LookDownPitch = 0.0f;
+			if (m_LookDownYaw < 0.01f)
+				m_LookDownYaw = 0.0f;
+		}
+
+		// force the general lookdown position and rotation of the weapon // NOTE: this
+		// will temporarily undo spring physics to the degree that we are pitching down
+		// (looking slightly below the horizon will leave spring motions nearly untouched.
+		// looking at your feet will kill them entirely). this is rectified below
+		m_WeaponGroupTransform.localPosition = vp_MathUtility.NaNSafeVector3(Vector3.Lerp(m_WeaponGroupTransform.localPosition, LookDownPositionOffsetMiddle, m_LookDownCurve.Evaluate(m_LookDownPitch)));
+		m_WeaponGroupTransform.localRotation = vp_MathUtility.NaNSafeQuaternion(Quaternion.Slerp(m_WeaponGroupTransform.localRotation, Quaternion.Euler(LookDownRotationOffsetMiddle), m_LookDownPitch));
+
+		// set the yaw (left / right) position and rotation
+		if (m_LookDownYaw > 0)	// left
+		{
+			m_WeaponGroupTransform.localPosition = vp_MathUtility.NaNSafeVector3(Vector3.Lerp(m_WeaponGroupTransform.localPosition, LookDownPositionOffsetLeft, Mathf.SmoothStep(0, 1, m_LookDownYaw)));
+			m_WeaponGroupTransform.localRotation = vp_MathUtility.NaNSafeQuaternion(Quaternion.Slerp(m_WeaponGroupTransform.localRotation, Quaternion.Euler(LookDownRotationOffsetLeft), m_LookDownYaw));
+		}
+		else	// right
+		{
+			m_WeaponGroupTransform.localPosition = vp_MathUtility.NaNSafeVector3(Vector3.Lerp(m_WeaponGroupTransform.localPosition, LookDownPositionOffsetRight, Mathf.SmoothStep(0, 1, -m_LookDownYaw)));
+			m_WeaponGroupTransform.localRotation = vp_MathUtility.NaNSafeQuaternion(Quaternion.Slerp(m_WeaponGroupTransform.localRotation, Quaternion.Euler(LookDownRotationOffsetRight), -m_LookDownYaw));
+		}
+
+		// get a blended value towards the current spring rest state. this
+		// is needed to prevent tiny hiccups when switching between states
+		m_CurrentPosRestState = Vector3.Lerp(m_CurrentPosRestState, m_PositionSpring.RestState, Time.fixedDeltaTime);
+		m_CurrentRotRestState = Vector3.Lerp(m_CurrentRotRestState, m_RotationSpring.RestState, Time.fixedDeltaTime);
+
+		// restore the spring physics, by blending them back on to the
+		// degree determined by current downpitch
+		m_WeaponGroupTransform.localPosition += vp_MathUtility.NaNSafeVector3((m_PositionSpring.State - m_CurrentPosRestState) * (m_LookDownPitch * LookDownPositionSpringPower));
+		m_WeaponGroupTransform.localEulerAngles -= vp_MathUtility.NaNSafeVector3((new Vector3(
+			Mathf.DeltaAngle(m_RotationSpring.State.x, m_CurrentRotRestState.x),
+			Mathf.DeltaAngle(m_RotationSpring.State.y, m_CurrentRotRestState.y),
+			Mathf.DeltaAngle(m_RotationSpring.State.z, m_CurrentRotRestState.z))
+			* (m_LookDownPitch * LookDownRotationSpringPower)));
 
 	}
 
@@ -763,7 +838,7 @@ public class vp_FPWeapon : vp_Component
 	/// <summary>
 	/// applies swaying forces to the weapon in response to user
 	/// input and character controller motion. this includes
-	/// mouselook, falling, strafing and walking.
+	/// looking around, falling, strafing and walking.
 	/// </summary>
 	protected virtual void UpdateSwaying()
 	{
@@ -780,11 +855,11 @@ public class vp_FPWeapon : vp_Component
 
 		// --- pitch & yaw rotational sway ---
 
-		// sway the weapon transform using mouse input and weapon 'weight'
+		// sway the weapon transform using input and weapon 'weight'
 		m_RotationSpring.AddForce(new Vector3(
-			(m_MouseMove.y * (RotationLookSway.x * 0.025f)),
-			(m_MouseMove.x * (RotationLookSway.y * -0.025f)),
-			m_MouseMove.x * (RotationLookSway.z * -0.025f)));
+			(m_LookInput.y * (RotationLookSway.x * 0.025f)),
+			(m_LookInput.x * (RotationLookSway.y * -0.025f)),
+			m_LookInput.x * (RotationLookSway.z * -0.025f)));
 
 		// --- falling ---
 
@@ -945,20 +1020,21 @@ public class vp_FPWeapon : vp_Component
 	public override void Activate()
 	{
 
-		m_Wielded = true;
-		Rendering = true;
-		m_DeactivationTimer.Cancel();
+		base.Activate();
+
 		SnapZoom();
+
 		if (m_WeaponGroup != null)
 		{
 			if (!vp_Utility.IsActive(m_WeaponGroup))
 				vp_Utility.Activate(m_WeaponGroup);
 		}
+
 		SetPivotVisible(false);
 
 	}
 
-
+	
 	/// <summary>
 	/// performs special deactivation logic for unwielding a
 	/// weapon properly
@@ -1043,8 +1119,10 @@ public class vp_FPWeapon : vp_Component
 	/// resets all the springs to their default positions, i.e.
 	/// for when loading a new camera or switching a weapon
 	/// </summary>
-	public virtual void SnapSprings()
+	public override void SnapSprings()
 	{
+
+		base.SnapSprings();
 
 		if (m_PositionSpring != null)
 		{
@@ -1063,13 +1141,6 @@ public class vp_FPWeapon : vp_Component
 		}
 		Transform.localPosition = PositionPivot;
 
-		if (m_PositionSpring2 != null)
-		{
-			m_PositionSpring2.RestState = Vector3.zero;
-			m_PositionSpring2.State = Vector3.zero;
-			m_PositionSpring2.Stop(true);
-		}
-
 		if (m_RotationPivotSpring != null)
 		{
 			m_RotationPivotSpring.RestState = RotationPivot;
@@ -1085,20 +1156,13 @@ public class vp_FPWeapon : vp_Component
 			m_RotationSpring.Stop(true);
 		}
 
-		if (m_RotationSpring2 != null)
-		{
-			m_RotationSpring2.RestState = Vector3.zero;
-			m_RotationSpring2.State = Vector3.zero;
-			m_RotationSpring2.Stop(true);
-		}
-
 	}
 
 
 	/// <summary>
 	/// stops all the springs
 	/// </summary>
-	public virtual void StopSprings()
+	public override void StopSprings()
 	{
 
 		if (m_PositionSpring != null)
@@ -1107,17 +1171,11 @@ public class vp_FPWeapon : vp_Component
 		if (m_PositionPivotSpring != null)
 			m_PositionPivotSpring.Stop(true);
 
-		if (m_PositionSpring2 != null)
-			m_PositionSpring2.Stop(true);
-
 		if (m_RotationSpring != null)
 			m_RotationSpring.Stop(true);
 
 		if (m_RotationPivotSpring != null)
 			m_RotationPivotSpring.Stop(true);
-
-		if (m_RotationSpring2 != null)
-			m_RotationSpring2.Stop(true);
 
 	}
 
@@ -1127,17 +1185,17 @@ public class vp_FPWeapon : vp_Component
 	/// the 'active' parameter, playing wield or unwield sounds
 	/// and animations accordingly
 	/// </summary>
-	public virtual void Wield(bool showWeapon = true)
+	public override void Wield(bool isWielding = true)
 	{
 
-		if (showWeapon)
-			SnapToExit();
+		if (isWielding)
+			SnapToExit();	// wielding previously unwielded weapon: start at exit offset
 
 		// smoothly rotate and move the weapon into / out of view
-		PositionOffset = (showWeapon ? DefaultPosition : PositionExitOffset);
-		RotationOffset = (showWeapon ? DefaultRotation : RotationExitOffset);
+		PositionOffset = (isWielding ? DefaultPosition : PositionExitOffset);
+		RotationOffset = (isWielding ? DefaultRotation : RotationExitOffset);
 
-		m_Wielded = showWeapon;
+		m_Wielded = isWielding;
 
 		Refresh();
 		StateManager.CombineStates();
@@ -1146,21 +1204,26 @@ public class vp_FPWeapon : vp_Component
 		if (Audio != null)
 		{
 
-			if ((showWeapon ? SoundWield : SoundUnWield) != null)
+			if ((isWielding ? SoundWield : SoundUnWield) != null)
 			{
 				if (vp_Utility.IsActive(gameObject))
 				{
 					Audio.pitch = Time.timeScale;
-					Audio.PlayOneShot((showWeapon ? SoundWield : SoundUnWield));
+					Audio.PlayOneShot((isWielding ? SoundWield : SoundUnWield));
 				}
 			}
 		}
 
 		// play animation
-		if ((showWeapon ? AnimationWield : AnimationUnWield) != null)
+		if ((isWielding ? AnimationWield : AnimationUnWield) != null)
 		{
 			if (vp_Utility.IsActive(gameObject))
-				m_WeaponModel.animation.CrossFade((showWeapon ? AnimationWield : AnimationUnWield).name);
+			{
+				if(isWielding)
+					m_WeaponModel.animation.CrossFade(AnimationWield.name);
+				else
+					m_WeaponModel.animation.CrossFade(AnimationUnWield.name);
+			}
 		}
 
 
@@ -1217,7 +1280,7 @@ public class vp_FPWeapon : vp_Component
 	protected virtual void OnMessage_HeadImpact(float impact)
 	{
 
-		AddForce(Vector3.zero, Vector3.forward * (Mathf.Abs((float)impact) * 20.0f) * Time.timeScale);
+		AddForce(Vector3.zero, Vector3.forward * (impact * 20.0f) * Time.timeScale);
 
 	}
 
@@ -1226,7 +1289,7 @@ public class vp_FPWeapon : vp_Component
 	/// makes the weapon shake as if a large dinosaur or mech
 	/// is approaching. great for bosses!
 	/// </summary>
-	protected virtual void OnMessage_GroundStomp(float impact)
+	protected virtual void OnMessage_CameraGroundStomp(float impact)
 	{
 
 		AddForce(Vector3.zero, new Vector3(-0.25f, 0.0f, 0.0f) * impact);
@@ -1237,7 +1300,7 @@ public class vp_FPWeapon : vp_Component
 	/// <summary>
 	/// makes the weapon shake as if a bomb has gone off nearby
 	/// </summary>
-	protected virtual void OnMessage_BombShake(float impact)
+	protected virtual void OnMessage_CameraBombShake(float impact)
 	{
 		
 		AddForce(Vector3.zero, new Vector3(-0.3f, 0.1f, 0.5f) * impact);
@@ -1245,6 +1308,37 @@ public class vp_FPWeapon : vp_Component
 	}
 
 	
+	/// <summary>
+	/// 
+	/// </summary>
+	protected virtual void OnMessage_CameraToggle3rdPerson()
+	{
+		RefreshWeaponModel();
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	protected override Vector3 OnValue_AimDirection
+	{
+
+		get
+		{
+
+			if (FPPlayer.IsFirstPerson.Get())
+				return FPPlayer.HeadLookDirection.Get();
+
+			if (Weapon3rdPersonModel == null)
+				return FPPlayer.HeadLookDirection.Get();
+
+			return (Weapon3rdPersonModel.transform.position - FPPlayer.LookPoint.Get()).normalized;
+
+		}
+
+	}
+
+
 }
 
 

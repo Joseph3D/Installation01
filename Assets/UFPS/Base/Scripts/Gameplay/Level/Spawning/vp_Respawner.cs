@@ -151,7 +151,7 @@ public class vp_Respawner : MonoBehaviour
 	/// the version of 'GetSpawnPoint' that takes a position and
 	/// rotation (called directly by the master)
 	/// </summary>
-	protected virtual void PickSpawnPoint()
+	public virtual void PickSpawnPoint()
 	{
 
 		// return if the object has been destroyed (for example
@@ -238,7 +238,7 @@ public class vp_Respawner : MonoBehaviour
 	/// forces an object's 'Placement' to 'position', 'rotation' and
 	/// respawns it at that point
 	/// </summary>
-	protected virtual void PickSpawnPoint(Vector3 position, Quaternion rotation)
+	public virtual void PickSpawnPoint(Vector3 position, Quaternion rotation)
 	{
 
 		Placement.Position = position;
@@ -252,12 +252,18 @@ public class vp_Respawner : MonoBehaviour
 	/// <summary>
 	/// 
 	/// </summary>
-	protected virtual void Respawn()
+	public virtual void Respawn()
 	{
 
 		// reactivate and reset
 		vp_Utility.Activate(gameObject);
 		SpawnFX();
+
+		// in multiplayer, this should only be true if we're the master / host
+		if (vp_Gameplay.isMaster)
+		{
+			vp_GlobalEvent<Transform, vp_Placement>.Send("Respawn", transform.root, Placement);
+		}
 
 		SendMessage("Reset");		// will trigger on vp_Respawners + vp_DamageHandlers
 
@@ -282,7 +288,7 @@ public class vp_Respawner : MonoBehaviour
 			return;
 
 		m_Transform.position = Placement.Position;
-		//m_Transform.rotation = Placement.Rotation;
+
 		if (rigidbody != null && !rigidbody.isKinematic)
 		{
 			rigidbody.angularVelocity = Vector3.zero;

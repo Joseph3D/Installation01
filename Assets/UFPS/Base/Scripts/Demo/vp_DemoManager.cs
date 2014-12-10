@@ -85,6 +85,10 @@ public class vp_DemoManager
 	public virtual void Update()
 	{
 
+		// force-prevent 'Screen position out of view frustum' error should it occur
+		if (double.IsNaN(Camera.main.fieldOfView))
+			Camera.main.fieldOfView = 60.0f;
+
 		// uncomment this to enable toggling gui on 'G'
 		//if (Input.GetKeyDown(KeyCode.G))
 		//	ShowGUI = !ShowGUI;

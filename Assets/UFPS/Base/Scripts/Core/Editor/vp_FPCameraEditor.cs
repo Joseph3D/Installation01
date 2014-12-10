@@ -91,14 +91,16 @@ public class vp_FPCameraEditor : Editor
 		// preset
 		m_PresetFoldout = vp_PresetEditorGUIUtility.PresetFoldout(m_PresetFoldout, m_Component);
 
-		// update
-		if (GUI.changed)
+		// update default state and persist in order not to loose inspector tweaks
+		// due to state switches during runtime - UNLESS a runtime state button has
+		// been pressed (in which case user wants to toggle states as opposed to
+		// reset / alter them)
+		if (GUI.changed &&
+			(!vp_PresetEditorGUIUtility.RunTimeStateButtonTarget == m_Component))
 		{
 
 			EditorUtility.SetDirty(target);
 
-			// update the default state in order not to loose inspector tweaks
-			// due to state switches during runtime
 			if (Application.isPlaying)
 				m_Component.RefreshDefaultState();
 
@@ -119,19 +121,11 @@ public class vp_FPCameraEditor : Editor
 	{
 
 		m_CameraMouseFoldout = EditorGUILayout.Foldout(m_CameraMouseFoldout, "Mouse");
-		if (m_CameraMouseFoldout)
-		{
-			m_Component.MouseSensitivity = EditorGUILayout.Vector2Field("Sensitivity", m_Component.MouseSensitivity);
-			m_Component.MouseSmoothSteps = EditorGUILayout.IntSlider("Smooth Steps", m_Component.MouseSmoothSteps, 1, 20);
-			m_Component.MouseSmoothWeight = EditorGUILayout.Slider("Smooth Weight", m_Component.MouseSmoothWeight, 0, 1);
-			m_Component.MouseAcceleration = EditorGUILayout.Toggle("Acceleration", m_Component.MouseAcceleration);
-			if (!m_Component.MouseAcceleration)
-				GUI.enabled = false;
-			m_Component.MouseAccelerationThreshold = EditorGUILayout.Slider("Acc. Threshold", m_Component.MouseAccelerationThreshold, 0, 5);
-			GUI.enabled = true;
 
-			vp_EditorGUIUtility.Separator();
-		}
+		if (m_CameraMouseFoldout)
+			EditorGUILayout.HelpBox("Mouse look settings have been moved to the 'vp_FPInput' component. For more information, please see the release notes of UFPS v1.4.8.", MessageType.Info);
+
+		vp_EditorGUIUtility.Separator();
 
 	}
 
@@ -171,6 +165,7 @@ public class vp_FPCameraEditor : Editor
 
 			m_Component.PositionOffset = EditorGUILayout.Vector3Field("Offset", m_Component.PositionOffset);
 			m_Component.PositionOffset.y = Mathf.Max(m_Component.PositionGroundLimit, m_Component.PositionOffset.y);
+			m_Component.Position3rdPersonOffset = EditorGUILayout.Vector3Field("3rd Person Offset", m_Component.Position3rdPersonOffset);
 			m_Component.PositionGroundLimit = EditorGUILayout.Slider("Ground Limit", m_Component.PositionGroundLimit, -5, 5);
 			m_Component.PositionSpringStiffness = EditorGUILayout.Slider("Spring Stiffness", m_Component.PositionSpringStiffness, 0, 1);
 			m_Component.PositionSpringDamping = EditorGUILayout.Slider("Spring Damping", m_Component.PositionSpringDamping, 0, 1);
@@ -204,7 +199,7 @@ public class vp_FPCameraEditor : Editor
 		if (m_CameraRotationFoldout)
 		{
 			m_Component.RotationPitchLimit = EditorGUILayout.Vector2Field("Pitch Limit (Min:Max)", m_Component.RotationPitchLimit);
-			EditorGUILayout.MinMaxSlider(ref m_Component.RotationPitchLimit.y, ref m_Component.RotationPitchLimit.x, 90.0f, -90.0f);
+			EditorGUILayout.MinMaxSlider(ref m_Component.RotationPitchLimit.y, ref m_Component.RotationPitchLimit.x, -90.0f, 90.0f);
 			m_Component.RotationYawLimit = EditorGUILayout.Vector2Field("Yaw Limit (Min:Max)", m_Component.RotationYawLimit);
 			EditorGUILayout.MinMaxSlider(ref m_Component.RotationYawLimit.x, ref m_Component.RotationYawLimit.y, -360.0f, 360.0f);
 			m_Component.RotationKneeling = EditorGUILayout.Slider("Kneeling", m_Component.RotationKneeling, 0, 0.5f);

@@ -55,7 +55,7 @@ public class vp_SpawnPoint : MonoBehaviour
 	}
 	public static vp_Placement GetRandomPlacement(float physicsCheckRadius)
 	{
-		return GetRandomPlacement(physicsCheckRadius);
+		return GetRandomPlacement(physicsCheckRadius, null);
 	}
 	public static vp_Placement GetRandomPlacement(string tag)
 	{
@@ -70,15 +70,22 @@ public class vp_SpawnPoint : MonoBehaviour
 
 		// fetch a random spawnpoint
 		vp_SpawnPoint spawnPoint = null;
-		if(string.IsNullOrEmpty(tag))
+		if (string.IsNullOrEmpty(tag))
 			spawnPoint = GetRandomSpawnPoint();
 		else
+		{
 			spawnPoint = GetRandomSpawnPoint(tag);
+			if (spawnPoint == null)
+			{
+				spawnPoint = GetRandomSpawnPoint();
+				Debug.LogWarning("Warning (vp_SpawnPoint --> GetRandomPlacement) Could not find a spawnpoint tagged '" + tag + "'. Falling back to 'any random spawnpoint'.");
+			}
+		}
 		
 		// if no spawnpoint was found, revert to world origin
 		if (spawnPoint == null)
 		{
-			Debug.LogError("Error (vp_SpawnPoint --> GetRandomPlacement) Could not find a spawnpoint" + (!string.IsNullOrEmpty(tag) ? (" tagged '" + tag + "'.") : "."));
+			Debug.LogError("Error (vp_SpawnPoint --> GetRandomPlacement) Could not find a spawnpoint" + (!string.IsNullOrEmpty(tag) ? (" tagged '" + tag + "'") : ".") + " Reverting to world origin.");
 			return null;
 		}
 
@@ -119,7 +126,12 @@ public class vp_SpawnPoint : MonoBehaviour
 	/// </summary>
 	public static vp_SpawnPoint GetRandomSpawnPoint()
 	{
+
+		if (SpawnPoints.Count < 1)
+			return null;
+
 		return SpawnPoints[Random.Range(0, SpawnPoints.Count)];
+
 	}
 
 

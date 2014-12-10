@@ -127,6 +127,19 @@ public static class vp_MathUtility
 	}
 
 
+
+	/// <summary>
+	/// returns true if the supplied integer is an odd value and false
+	/// if it's an even value. this can be used to perform logic every
+	/// other time something happens, or for every other iteration in
+	/// a loop
+	/// </summary>
+	public static bool IsOdd(int val)
+	{
+		return (val % 2 != 0);
+	}
+
+
 	/// <summary>
 	/// Returns the state of a bob wave motion with the specified
 	/// parameters at the current 'Time.time'.

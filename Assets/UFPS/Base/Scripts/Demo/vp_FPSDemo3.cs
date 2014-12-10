@@ -20,7 +20,8 @@ public class vp_FPSDemo3 : MonoBehaviour
 	private vp_FPCamera m_FPSCamera = null;
 	public GameObject PlayerGameObject = null;
 	private vp_FPSDemoManager m_Demo = null;
-
+	private vp_BodyAnimator m_BodyAnimator = null;
+	
 	// images
 	public Texture ImageLeftArrow = null;
 	public Texture ImageRightArrow = null;
@@ -92,7 +93,12 @@ public class vp_FPSDemo3 : MonoBehaviour
 			m_Demo.FirstFrame = false;
 			m_Demo.DrawCrosshair = false;
 			m_Demo.FreezePlayer(m_OverviewPos, m_OverviewAngle, true);
-			m_Demo.Input.ForceCursor = true;
+			m_Demo.Input.MouseCursorForced = true;
+
+			m_BodyAnimator = (vp_BodyAnimator)Component.FindObjectOfType(typeof(vp_BodyAnimator));
+			if (m_BodyAnimator != null)
+				m_BodyAnimator.gameObject.SetActive(false);
+
 		}
 
 		m_Demo.DrawBoxes("welcome", "Featuring the SMOOTHEST CONTROLS and the most POWERFUL FPS CAMERA\navailable for Unity, Ultimate FPS is an awesome script pack for achieving that special\n 'AAA FPS' feeling. This demo will walk you through some of its core features ...\n", null, ImageRightArrow, null, null);
@@ -115,10 +121,13 @@ public class vp_FPSDemo3 : MonoBehaviour
 			m_Demo.UnFreezePlayer();
 			m_Demo.Teleport(m_StartPos, m_StartAngle);
 			Screen.lockCursor = true;
-			m_Demo.Input.ForceCursor = false;
+			m_Demo.Input.MouseCursorForced = false;
+			if(m_BodyAnimator != null)
+				m_BodyAnimator.gameObject.SetActive(true);
+
 		}
 
-		m_Demo.DrawBoxes("part i: some examples", "This level has some basic gameplay features.\n• Press SHIFT to SPRINT, C to CROUCH, and the RIGHT MOUSE BUTTON to AIM.\n• To SWITCH WEAPONS, press Q, E or 1-3.\n• Press R to RELOAD, and F to INTERACT.", ImageLeftArrow, ImageRightArrow, delegate() { m_Demo.LoadLevel(1); });
+		m_Demo.DrawBoxes("part i: some examples", "This level has some basic gameplay features.\n• Press SHIFT to SPRINT, C to CROUCH, and the RIGHT MOUSE BUTTON to AIM.\n• To SWITCH WEAPONS, press Q, E or 1-3.\n• Press R to RELOAD, F to INTERACT and V for 3RD PERSON.", ImageLeftArrow, ImageRightArrow, delegate() { m_Demo.LoadLevel(1); });
 
 		// draw menu re-enable text
 		if (m_Demo.ShowGUI && Screen.lockCursor && !m_LoadingNextLevel && !m_Demo.ClosingDown)
@@ -143,7 +152,7 @@ public class vp_FPSDemo3 : MonoBehaviour
 			m_Demo.FirstFrame = false;
 			m_Demo.DrawCrosshair = false;
 			m_Demo.FreezePlayer(m_OutroPos, m_OutroAngle, true);
-			m_Demo.Input.ForceCursor = true;
+			m_Demo.Input.MouseCursorForced = true;
 			m_OutroStartTime = Time.time;
 		}
 

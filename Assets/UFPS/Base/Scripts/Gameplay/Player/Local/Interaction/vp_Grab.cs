@@ -53,6 +53,7 @@ public class vp_Grab : vp_Interactable
 	// variables for grabbing logic
 	public Vector3 CarryingOffset = new Vector3(0.0f, -0.5f, 1.5f);	// determines how the object is carried in relation to our body
 	public float CameraPitchDownLimit = 0.0f;						// restricts the camera's downward pitch while carrying this object
+	protected Vector3 m_TempCarryingOffset = Vector3.zero;			// work variable
 	protected bool m_IsFetching = false;
 	protected float duration = 0.0f;
 	protected float m_FetchProgress = 0;
@@ -148,11 +149,11 @@ public class vp_Grab : vp_Interactable
 	protected virtual void UpdateInput()
 	{
 
-		m_CurrentMouseMove.x = vp_Input.GetAxisRaw("Mouse X") * Time.timeScale;
-		m_CurrentMouseMove.y = vp_Input.GetAxisRaw("Mouse Y") * Time.timeScale;
+		m_CurrentMouseMove.x = m_Player.InputRawLook.Get().x * Time.timeScale;
+		m_CurrentMouseMove.y = m_Player.InputRawLook.Get().y * Time.timeScale;
 
 		// toss object upon fire button pressed
-		if (vp_Input.GetButtonDown("Attack"))
+		if (m_Player.InputGetButtonDown.Send("Attack"))
 		{
 			m_Player.Interact.TryStart();
 			return;
@@ -196,11 +197,13 @@ public class vp_Grab : vp_Interactable
 			(m_Player.Rotation.Get().x > m_Camera.RotationPitchLimit.y) ? m_CurrentMouseMove.y * 0.015f : m_CurrentMouseMove.y * 0.05f,
 			0.0f));
 
+		m_TempCarryingOffset = (m_Player.IsFirstPerson.Get() ? CarryingOffset : CarryingOffset - m_Camera.Position3rdPersonOffset);
+
 		// update object position
 		m_Transform.position = Vector3.Lerp(m_Transform.position, (m_Camera.Transform.position - m_CurrentSwayForce) +
-			(m_Camera.Transform.right * CarryingOffset.x) +
-			(m_Camera.Transform.up * m_Transform.localScale.y * (CarryingOffset.y + (m_CurrentShake.y * 0.5f))) +
-			(m_Camera.Transform.forward * CarryingOffset.z),
+			(m_Camera.Transform.right * m_TempCarryingOffset.x) +
+			(m_Camera.Transform.up * m_Transform.localScale.y * (m_TempCarryingOffset.y + (m_CurrentShake.y * 0.5f))) +
+			(m_Camera.Transform.forward * m_TempCarryingOffset.z),
 			((m_FetchProgress < 1.0f) ? m_FetchProgress : (Time.deltaTime * (Stiffness * 60.0f))));
 
 	}
@@ -291,7 +294,7 @@ public class vp_Grab : vp_Interactable
 			return false;
 
 		if (m_WeaponHandler == null)
-			m_WeaponHandler = m_Player.GetComponentInChildren<vp_FPWeaponHandler>();
+			m_WeaponHandler = m_Player.GetComponentInChildren<vp_WeaponHandler>();
 
 		if (m_Audio == null)
 			m_Audio = m_Player.audio;
@@ -417,13 +420,13 @@ public class vp_Grab : vp_Interactable
 		}
 
 		// throw the object if fire button used
-		if (vp_Input.GetButtonDown("Attack"))
+		if (m_Player.InputGetButtonDown.Send("Attack"))
 		{
 
 			vp_AudioUtility.PlayRandomSound(m_Audio, ThrowSounds, SoundsPitch);
 			if (m_Transform.rigidbody != null)
 			{
-				m_Transform.rigidbody.AddForce(m_Player.Velocity.Get() + m_Player.Forward.Get() * ThrowStrength, ForceMode.Impulse);
+				m_Transform.rigidbody.AddForce(m_Player.Velocity.Get() + m_Player.CameraLookDirection.Get() * ThrowStrength, ForceMode.Impulse);
 				if (AllowThrowRotation)
 					m_Transform.rigidbody.AddTorque(m_Camera.Transform.forward * (Random.value > 0.5f ? 0.5f : -0.5f) +
 													m_Camera.Transform.right * (Random.value > 0.5f ? 0.5f : -0.5f),
@@ -436,7 +439,7 @@ public class vp_Grab : vp_Interactable
 
 			vp_AudioUtility.PlayRandomSound(m_Audio, DropSounds, SoundsPitch);
 			if (m_Transform.rigidbody != null)
-				m_Transform.rigidbody.AddForce(m_Player.Velocity.Get() + m_Player.Forward.Get(), ForceMode.Impulse);
+				m_Transform.rigidbody.AddForce(m_Player.Velocity.Get() + m_Player.CameraLookDirection.Get(), ForceMode.Impulse);
 
 		}
 

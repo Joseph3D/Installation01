@@ -5,17 +5,11 @@
 //	https://twitter.com/VisionPunk
 //	http://www.visionpunk.com
 //
-//	description:	A class to allow the player to climb objects.
-//					This script attempts to keep the player a certain distance from
-//					the object which is useful for climbing objects that are at an angle.
-//					This script also takes over the regular player controls.
+//	description:	this script allows the player to climb objects. it attempts to keep
+//					the player at a certain distance from the object which is useful for
+//					climbing objects that are at an angle. note that this script takes
+//					over the regular player controls.
 //					
-//					Note:
-//					This script works best if the object it's attached to has 2
-//					child GameObjects, one named 'MountTop' which is to align the player
-//					when interacting from the top of the object and 'MountBottom'
-//					to align the player with the bottom of the object on interaciton.
-//
 ///////////////////////////////////////////////////////////////////////////////// 
 
 using UnityEngine;
@@ -98,10 +92,6 @@ public class vp_Climb : vp_Interactable
 		if(m_Camera == null)
 			m_Camera = m_Player.GetComponentInChildren<vp_FPCamera>();
 		
-		float angle = Vector3.Angle(-m_Transform.forward, m_Transform.position - m_Camera.Transform.position);
-		if (Mathf.Abs(angle) > 75 && m_Controller.Transform.position.y < GetTopOfCollider(m_Transform))
-    		return false;
-		
 		if(Sounds.AudioSource == null)
 			Sounds.AudioSource = m_Player.audio;
 		
@@ -132,15 +122,13 @@ public class vp_Climb : vp_Interactable
 		m_Player.Jump.Stop();
 		
 		// disallow normal input while climbing
-		m_Player.AllowGameplayInput.Set(false);
+		m_Player.InputAllowGameplay.Set(false);
 		
 		// stop any movement on our controller. this is helpful in case we jumped onto the climbable.
 		m_Player.Stop.Send();
 		
 		// let's unequip our weapon
 		m_LastWeaponEquipped = m_Player.CurrentWeaponIndex.Get();
-		
-		// put the weapon away
 		m_Player.SetWeapon.TryStart(0);
 		
 		m_Player.Interactable.Set(null);
@@ -199,9 +187,7 @@ public class vp_Climb : vp_Interactable
 		Vector3 endPosition = GetNewPosition(); // cache the end position
 		Quaternion startingRotation = m_Camera.transform.rotation; // cache start rotation
 		Quaternion endRotation = Quaternion.LookRotation(-m_Transform.forward); // cache end rotation
-
-
-
+		
 		// set a bool to test if we are starting our climb from the top or not
 		bool fromTop = m_Controller.Transform.position.y > m_Transform.collider.bounds.center.y;
 
@@ -212,7 +198,7 @@ public class vp_Climb : vp_Interactable
 			endPosition += m_Controller.Transform.up * (m_Controller.CharacterController.height / 2); // modifies the ending position to be up from the bottom a little
 
 		// modify the ending rotation based on where we start our climb
-		if (fromTop && m_Transform.InverseTransformDirection(m_Player.Forward.Get()).z > 0.0f)
+		if (fromTop && m_Transform.InverseTransformDirection(-m_Player.CameraLookDirection.Get()).z > 0.0f)
 			endRotation = Quaternion.Euler(new Vector3(45.0f, endRotation.eulerAngles.y, endRotation.eulerAngles.z));
 		else
 			endRotation = Quaternion.Euler(new Vector3(-45.0f, endRotation.eulerAngles.y, endRotation.eulerAngles.z));
@@ -256,7 +242,7 @@ public class vp_Climb : vp_Interactable
 		m_Player.Interactable.Set(null);
 		
 		// re-allow normal input
-		m_Player.AllowGameplayInput.Set(true);
+		m_Player.InputAllowGameplay.Set(true);
 		
 		// lets reequip the weapon we had
 		m_Player.SetWeapon.TryStart(m_LastWeaponEquipped);
@@ -302,7 +288,7 @@ public class vp_Climb : vp_Interactable
 		float t = 0;
 
 		// rotates the camera pitch to straight ahead over a short period
-		while (t < 1 && vp_Input.GetAxisRaw("Mouse Y") == 0.0f)	// just don't interfere with mouselook
+		while (t < 1 && m_Player.InputRawLook.Get().y == 0.0f)	// just don't interfere with mouselook
 		{
 
 			t += Time.deltaTime;
@@ -408,28 +394,28 @@ public class vp_Climb : vp_Interactable
 			moveVector = Vector3.down * pitch;
 		
 		float speed = ClimbSpeed;
-		float testDirection = (moveVector * vp_Input.GetAxisRaw("Vertical")).y;
+		float testDirection = (moveVector * m_Player.InputClimbVector.Get()).y;
 		if(SimpleClimb)
 		{
 			moveVector = Vector3.up;
 			speed *= .75f;
-			testDirection = vp_Input.GetAxisRaw("Vertical");
+			testDirection = m_Player.InputClimbVector.Get();
 		}
 
-		// If we reach the top or bottom of the current climbable, stop climbing
+		// if we reach the top or bottom of the current climbable, stop climbing
 		if((testDirection > 0 && newPosition.y > GetTopOfCollider(m_Transform) - m_Controller.CharacterController.height * 0.25f) ||
 			(testDirection < 0 && m_Controller.Grounded && m_Controller.GroundTransform.GetInstanceID() != m_Transform.GetInstanceID()))
 		{
 			m_Player.Climb.TryStop();
 			return;
 		}
-		
+
 		// cancel the climbing sound timer if not moving
-		if(vp_Input.GetAxisRaw("Vertical") == 0)
+		if (m_Player.InputClimbVector.Get() == 0)
 			m_ClimbingSoundTimer.Cancel();
 		
 		// play climbing sounds
-		if(vp_Input.GetAxisRaw("Vertical") != 0 && !m_ClimbingSoundTimer.Active && Sounds.ClimbingSounds.Count > 0)
+		if (m_Player.InputClimbVector.Get() != 0 && !m_ClimbingSoundTimer.Active && Sounds.ClimbingSounds.Count > 0)
 		{
 			float t = Mathf.Abs((5 / moveVector.y) * (Time.deltaTime * 5) / Sounds.ClimbingSoundSpeed);
 			vp_Timer.In( SimpleClimb ? t*3 : t, delegate() {
@@ -438,11 +424,13 @@ public class vp_Climb : vp_Interactable
 		}
 			
 		// Move our player by the climbSpeed
-		newPosition += moveVector * speed * Time.deltaTime * vp_Input.GetAxisRaw("Vertical");
+		newPosition += moveVector * speed * Time.deltaTime * m_Player.InputClimbVector.Get();
 		
 		m_Player.Position.Set( Vector3.Slerp( m_Controller.Transform.position, newPosition, Time.deltaTime * speed) );
-		
+			
+
 	}
+	
 	
 	
 	/// <summary>
@@ -480,11 +468,11 @@ public class vp_Climb : vp_Interactable
 		if(m_Player == null)
 			return;
 		
-		if((vp_Input.GetButton("Jump") || vp_Input.GetButtonDown("Interact")))
+		if((m_Player.InputGetButton.Send("Jump") || m_Player.InputGetButtonDown.Send("Interact")))
 		{
 			m_Player.Climb.TryStop();
 			
-			if(vp_Input.GetButton("Jump"))
+			if(m_Player.InputGetButton.Send("Jump"))
 				m_Controller.AddForce(-m_Controller.Transform.forward * m_Controller.MotorJumpForce);
 		}
 		

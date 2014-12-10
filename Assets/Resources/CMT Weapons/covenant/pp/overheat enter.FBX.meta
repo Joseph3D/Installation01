@@ -1,0 +1,242 @@
+fileFormatVersion: 2
+guid: 5ef0a705f7a9ab142bd4d66331dd57ff
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: '#flashlight'
+    100002: '#meter'
+    100004: '#primary trigger'
+    100006: '#primary trigger01'
+    100008: '#secondary trigger'
+    100010: '#secondary trigger flare1'
+    100012: '#secondary trigger flare2'
+    100014: '#vent_front'
+    100016: '#vent_mid'
+    100018: '#vent_rear'
+    100020: __unnamed
+    100022: Arms
+    100024: Camera01
+    100026: elbow left
+    100028: elbow right
+    100030: frame bone24
+    100032: frame cover
+    100034: frame dial
+    100036: frame face
+    100038: frame gun
+    100040: frame jaw_lower
+    100042: frame jaw_upper
+    100044: frame l forearm
+    100046: frame l index low
+    100048: frame l index mid
+    100050: frame l index tip
+    100052: frame l middle mid
+    100054: frame l middle tip
+    100056: frame l middlelow
+    100058: frame l pinky low
+    100060: frame l pinky mid
+    100062: frame l pinky tip
+    100064: frame l ring low
+    100066: frame l ring mid
+    100068: frame l ring tip
+    100070: frame l thumb low
+    100072: frame l thumb mid
+    100074: frame l thumb tip
+    100076: frame l upperarm
+    100078: frame l wriste
+    100080: frame r forearm
+    100082: frame r index low
+    100084: frame r index mid
+    100086: frame r index tip
+    100088: frame r middle low
+    100090: frame r middle mid
+    100092: frame r middle tip
+    100094: frame r pinky low
+    100096: frame r pinky mid
+    100098: frame r pinky tip
+    100100: frame r ring low
+    100102: frame r ring mid
+    100104: frame r ring tip
+    100106: frame r thumb low
+    100108: frame r thumb mid
+    100110: frame r thumb tip
+    100112: frame r upperarm
+    100114: frame r wriste
+    100116: IK Chain01
+    100118: IK Chain02
+    100120: left wrist constraint
+    100122: //RootNode
+    100124: right wrist constraint
+    400000: '#flashlight'
+    400002: '#meter'
+    400004: '#primary trigger'
+    400006: '#primary trigger01'
+    400008: '#secondary trigger'
+    400010: '#secondary trigger flare1'
+    400012: '#secondary trigger flare2'
+    400014: '#vent_front'
+    400016: '#vent_mid'
+    400018: '#vent_rear'
+    400020: __unnamed
+    400022: Arms
+    400024: Camera01
+    400026: elbow left
+    400028: elbow right
+    400030: frame bone24
+    400032: frame cover
+    400034: frame dial
+    400036: frame face
+    400038: frame gun
+    400040: frame jaw_lower
+    400042: frame jaw_upper
+    400044: frame l forearm
+    400046: frame l index low
+    400048: frame l index mid
+    400050: frame l index tip
+    400052: frame l middle mid
+    400054: frame l middle tip
+    400056: frame l middlelow
+    400058: frame l pinky low
+    400060: frame l pinky mid
+    400062: frame l pinky tip
+    400064: frame l ring low
+    400066: frame l ring mid
+    400068: frame l ring tip
+    400070: frame l thumb low
+    400072: frame l thumb mid
+    400074: frame l thumb tip
+    400076: frame l upperarm
+    400078: frame l wriste
+    400080: frame r forearm
+    400082: frame r index low
+    400084: frame r index mid
+    400086: frame r index tip
+    400088: frame r middle low
+    400090: frame r middle mid
+    400092: frame r middle tip
+    400094: frame r pinky low
+    400096: frame r pinky mid
+    400098: frame r pinky tip
+    400100: frame r ring low
+    400102: frame r ring mid
+    400104: frame r ring tip
+    400106: frame r thumb low
+    400108: frame r thumb mid
+    400110: frame r thumb tip
+    400112: frame r upperarm
+    400114: frame r wriste
+    400116: IK Chain01
+    400118: IK Chain02
+    400120: left wrist constraint
+    400122: //RootNode
+    400124: right wrist constraint
+    2300000: '#flashlight'
+    2300002: '#meter'
+    2300004: '#primary trigger'
+    2300006: '#primary trigger01'
+    2300008: '#secondary trigger'
+    2300010: '#secondary trigger flare1'
+    2300012: '#secondary trigger flare2'
+    2300014: '#vent_front'
+    2300016: '#vent_mid'
+    2300018: '#vent_rear'
+    2300020: frame bone24
+    2300022: frame cover
+    2300024: frame dial
+    2300026: frame face
+    2300028: frame gun
+    2300030: frame jaw_lower
+    2300032: frame jaw_upper
+    3300000: '#flashlight'
+    3300002: '#meter'
+    3300004: '#primary trigger'
+    3300006: '#primary trigger01'
+    3300008: '#secondary trigger'
+    3300010: '#secondary trigger flare1'
+    3300012: '#secondary trigger flare2'
+    3300014: '#vent_front'
+    3300016: '#vent_mid'
+    3300018: '#vent_rear'
+    3300020: frame bone24
+    3300022: frame cover
+    3300024: frame dial
+    3300026: frame face
+    3300028: frame gun
+    3300030: frame jaw_lower
+    3300032: frame jaw_upper
+    4300000: frame bone24
+    4300002: Arms
+    4300004: frame gun
+    4300006: frame cover
+    4300008: frame dial
+    4300010: frame face
+    4300012: frame jaw_lower
+    4300014: frame jaw_upper
+    4300016: '#flashlight'
+    4300018: '#meter'
+    4300020: '#primary trigger'
+    4300022: '#primary trigger01'
+    4300024: '#secondary trigger'
+    4300026: '#secondary trigger flare1'
+    4300028: '#secondary trigger flare2'
+    4300030: '#vent_front'
+    4300032: '#vent_mid'
+    4300034: '#vent_rear'
+    4300036: __unnamed
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: __unnamed
+    13700002: Arms
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 

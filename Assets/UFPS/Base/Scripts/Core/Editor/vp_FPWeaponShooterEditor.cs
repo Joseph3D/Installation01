@@ -109,14 +109,16 @@ public class vp_FPWeaponShooterEditor : Editor
 		// preset
 		m_PresetFoldout = vp_PresetEditorGUIUtility.PresetFoldout(m_PresetFoldout, m_Component);
 
-		// update
-		if (GUI.changed)
+		// update default state and persist in order not to loose inspector tweaks
+		// due to state switches during runtime - UNLESS a runtime state button has
+		// been pressed (in which case user wants to toggle states as opposed to
+		// reset / alter them)
+		if (GUI.changed &&
+			(!vp_PresetEditorGUIUtility.RunTimeStateButtonTarget == m_Component))
 		{
 
 			EditorUtility.SetDirty(target);
 
-			// update the default state in order not to loose inspector tweaks
-			// due to state switches during runtime
 			if (Application.isPlaying)
 				m_Component.RefreshDefaultState();
 
@@ -158,6 +160,16 @@ public class vp_FPWeaponShooterEditor : Editor
 			m_Component.ProjectileCount = EditorGUILayout.IntField("Count", m_Component.ProjectileCount);
 			m_Component.ProjectileSpread = EditorGUILayout.Slider("Spread", m_Component.ProjectileSpread, 0, 360);
 			m_Component.ProjectileSpawnDelay = Mathf.Abs(EditorGUILayout.FloatField("Spawn Delay", m_Component.ProjectileSpawnDelay));
+
+			GUI.enabled = false;
+			if (m_Component.m_ProjectileSpawnPoint != null)
+			{
+				EditorGUILayout.BeginHorizontal();
+				EditorGUILayout.PrefixLabel("Spawn Point");
+				EditorGUILayout.LabelField(m_Component.m_ProjectileSpawnPoint.ToString());
+				EditorGUILayout.EndHorizontal();
+			}
+			GUI.enabled = true;
 
 			vp_EditorGUIUtility.Separator();
 
@@ -245,6 +257,7 @@ public class vp_FPWeaponShooterEditor : Editor
 			else
 				GUILayout.Label("Muzzle Flash can be shown when the game is playing.", vp_EditorGUIUtility.NoteStyle);
 			GUI.enabled = true;
+			//m_Component.MuzzleFlashFirstShotMaxDeviation = EditorGUILayout.Slider("1st Shot Max Deviation", m_Component.MuzzleFlashFirstShotMaxDeviation, 0, 180);	// NOTE: currently broken
 
 			vp_EditorGUIUtility.Separator();
 		}

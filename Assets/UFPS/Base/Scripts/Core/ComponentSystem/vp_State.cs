@@ -57,9 +57,10 @@ public class vp_State
 
 			m_Enabled = value;
 
+#if UNITY_EDITOR
 			if (!Application.isPlaying)
 				return;
-
+#endif
 			if (StateManager == null)
 				return;
 
