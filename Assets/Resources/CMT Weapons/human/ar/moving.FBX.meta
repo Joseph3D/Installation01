@@ -194,8 +194,9 @@ ModelImporter:
     4300032: '#primary trigger'
     4300034: '#smoke'
     4300036: __unnamed
-    7400000: Take 001
+    7400000: Take 001 Moving
     9500000: //RootNode
+    11100000: //RootNode
     13700000: __unnamed
     13700002: Arms
   materials:
@@ -213,7 +214,201 @@ ModelImporter:
     animationScaleError: .5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Take 001 Moving
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 22
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: __unnamed
+        weight: 1
+      - path: Camera01
+        weight: 1
+      - path: elbow left
+        weight: 1
+      - path: elbow right
+        weight: 1
+      - path: frame bone24
+        weight: 1
+      - path: frame bone24/Arms
+        weight: 1
+      - path: frame bone24/frame gun
+        weight: 1
+      - path: frame bone24/frame gun/#flashlight
+        weight: 1
+      - path: frame bone24/frame gun/#left hand cyborg
+        weight: 1
+      - path: frame bone24/frame gun/#left hand marine
+        weight: 1
+      - path: frame bone24/frame gun/#primary ejection
+        weight: 1
+      - path: frame bone24/frame gun/#primary trigger
+        weight: 1
+      - path: frame bone24/frame gun/#smoke
+        weight: 1
+      - path: frame bone24/frame gun/frame display blue
+        weight: 1
+      - path: frame bone24/frame gun/frame display empty
+        weight: 1
+      - path: frame bone24/frame gun/frame display red
+        weight: 1
+      - path: frame bone24/frame gun/frame display yellow
+        weight: 1
+      - path: frame bone24/frame gun/frame magazine
+        weight: 1
+      - path: frame bone24/frame gun/frame ophandle
+        weight: 1
+      - path: frame bone24/frame gun/frame safety
+        weight: 1
+      - path: frame bone24/frame gun/frame safety button01
+        weight: 1
+      - path: frame bone24/frame gun/frame trigger
+        weight: 1
+      - path: frame bone24/frame l upperarm
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          index low
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          index low/frame l index mid
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          index low/frame l index mid/frame l index tip
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          middlelow
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          middlelow/frame l middle mid
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          middlelow/frame l middle mid/frame l middle tip
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          pinky low
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          pinky low/frame l pinky mid
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          pinky low/frame l pinky mid/frame l pinky tip
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          ring low
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          ring low/frame l ring mid
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          ring low/frame l ring mid/frame l ring tip
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          thumb low
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          thumb low/frame l thumb mid
+        weight: 1
+      - path: frame bone24/frame l upperarm/frame l forearm/frame l wriste/frame l
+          thumb low/frame l thumb mid/frame l thumb tip
+        weight: 1
+      - path: frame bone24/frame r upperarm
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          index low
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          index low/frame r index mid
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          index low/frame r index mid/frame r index tip
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          middle low
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          middle low/frame r middle mid
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          middle low/frame r middle mid/frame r middle tip
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          pinky low
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          pinky low/frame r pinky mid
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          pinky low/frame r pinky mid/frame r pinky tip
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          ring low
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          ring low/frame r ring mid
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          ring low/frame r ring mid/frame r ring tip
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          thumb low
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          thumb low/frame r thumb mid
+        weight: 1
+      - path: frame bone24/frame r upperarm/frame r forearm/frame r wriste/frame r
+          thumb low/frame r thumb mid/frame r thumb tip
+        weight: 1
+      - path: IK Chain01
+        weight: 1
+      - path: IK Chain02
+        weight: 1
+      - path: left wrist constraint
+        weight: 1
+      - path: Left Wrist Controller
+        weight: 1
+      - path: Left Wrist Controller/Left Wrist IK Goal
+        weight: 1
+      - path: Left Wrist Controller/Left Wrist Orientation
+        weight: 1
+      - path: right wrist constraint
+        weight: 1
+      - path: Right Wrist Controller
+        weight: 1
+      - path: Right Wrist Controller/Right Wrist IK Goal
+        weight: 1
+      - path: Right Wrist Controller/Right Wrist Orientation
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
     isReadable: 1
   meshes:
     lODScreenPercentages: []
@@ -249,6 +444,6 @@ ModelImporter:
     feetSpacing: 0
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 1
   additionalBone: 0
   userData: 
