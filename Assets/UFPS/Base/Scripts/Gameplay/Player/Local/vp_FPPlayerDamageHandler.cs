@@ -89,6 +89,7 @@ public class vp_FPPlayerDamageHandler : vp_PlayerDamageHandler
 	/// </summary>
 	protected virtual void Update()
 	{
+
 		// TODO: this is demo code and should not be present here!
 		// fade timescale back to normal if dead during slomo (this needs
 		// to be iterated every frame which is why it's in Update)
@@ -139,13 +140,13 @@ public class vp_FPPlayerDamageHandler : vp_PlayerDamageHandler
 		FPPlayer.HUDDamageFlash.Send(damageInfo);
 
 		// shake camera to left or right depending on direction of damage
-		if (damageInfo.Sender != null)
+		if (damageInfo.Source != null)
 		{
 
 			m_DamageAngle = vp_3DUtility.LookAtAngleHorizontal(
 				FPCamera.Transform.position,
 				FPCamera.Transform.forward,
-				damageInfo.Sender.position);
+				damageInfo.Source.position);
 
 			// phase out the shake over 30 degrees to the sides to minimize
 			// interference when aiming at the attacker. damage from straight

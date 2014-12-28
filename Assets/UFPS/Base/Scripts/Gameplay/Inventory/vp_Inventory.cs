@@ -28,8 +28,7 @@
 //					5)	the vp_TargetEvent system is mostly used for interaction with
 //						external objects (as opposed to the vp_PlayerEventHandler),
 //						since vp_Inventory doesn't necessarily sit on a player.
-//					6)	the derived class vp_FPInventory should be used for local,
-//						first person players.
+//					6)	the derived class vp_PlayerInventory should be used for players
 //
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -93,11 +92,17 @@ public class vp_Inventory : MonoBehaviour
 	}
 	[SerializeField]
 	protected SpaceLimitSection m_SpaceLimit;
-
-
-
+	
 	protected Transform m_Transform = null;
-
+	protected Transform Transform
+	{
+		get
+		{
+			if(m_Transform == null)
+				m_Transform = transform;
+			return m_Transform;
+		}
+	}
 
 	[System.Serializable]
 	public class ItemCap
@@ -144,9 +149,9 @@ public class vp_Inventory : MonoBehaviour
 		}
 	}
 
-	private const int UNLIMITED = -1;
-	private const int UNIDENTIFIED = -1;
-	private const int MAXCAPACITY = -1;
+	protected const int UNLIMITED = -1;
+	protected const int UNIDENTIFIED = -1;
+	protected const int MAXCAPACITY = -1;
 
 	[SerializeField]
 	[HideInInspector]
@@ -244,7 +249,9 @@ public class vp_Inventory : MonoBehaviour
 	/// </summary>
 	protected virtual void Awake()
 	{
-		m_Transform = transform;
+
+		SaveInitialState();
+
 	}
 
 
@@ -256,8 +263,6 @@ public class vp_Inventory : MonoBehaviour
 
 		Refresh();
 
-		SaveInitialState();
-
 	}
 
 
@@ -268,14 +273,14 @@ public class vp_Inventory : MonoBehaviour
 	protected virtual void OnEnable()
 	{
 
-		vp_TargetEventReturn<vp_Inventory>.Register(m_Transform, "GetInventory", GetInventory);
+		vp_TargetEventReturn<vp_Inventory>.Register(Transform, "GetInventory", GetInventory);
 
-		vp_TargetEventReturn<vp_ItemType, int, bool>.Register(m_Transform, "TryGiveItem", TryGiveItem);
-		vp_TargetEventReturn<vp_ItemType, int, bool>.Register(m_Transform, "TryGiveItems", TryGiveItems);
-		vp_TargetEventReturn<vp_UnitBankType, int, int, bool>.Register(m_Transform, "TryGiveUnitBank", TryGiveUnitBank);
-		vp_TargetEventReturn<vp_UnitType, int, bool>.Register(m_Transform, "TryGiveUnits", TryGiveUnits);
-		vp_TargetEventReturn<vp_UnitBankType, int, int, bool>.Register(m_Transform, "TryDeduct", TryDeduct);
-		vp_TargetEventReturn<vp_ItemType, int>.Register(m_Transform, "GetItemCount", GetItemCount);
+		vp_TargetEventReturn<vp_ItemType, int, bool>.Register(Transform, "TryGiveItem", TryGiveItem);
+		vp_TargetEventReturn<vp_ItemType, int, bool>.Register(Transform, "TryGiveItems", TryGiveItems);
+		vp_TargetEventReturn<vp_UnitBankType, int, int, bool>.Register(Transform, "TryGiveUnitBank", TryGiveUnitBank);
+		vp_TargetEventReturn<vp_UnitType, int, bool>.Register(Transform, "TryGiveUnits", TryGiveUnits);
+		vp_TargetEventReturn<vp_UnitBankType, int, int, bool>.Register(Transform, "TryDeduct", TryDeduct);
+		vp_TargetEventReturn<vp_ItemType, int>.Register(Transform, "GetItemCount", GetItemCount);
 		
 	}
 
@@ -286,14 +291,14 @@ public class vp_Inventory : MonoBehaviour
 	protected virtual void OnDisable()
 	{
 
-		vp_TargetEventReturn<vp_ItemType, int, bool>.Unregister(m_Transform, "TryGiveItem", TryGiveItem);
-		vp_TargetEventReturn<vp_ItemType, int, bool>.Unregister(m_Transform, "TryGiveItems", TryGiveItems);
-		vp_TargetEventReturn<vp_UnitBankType, int, int, bool>.Unregister(m_Transform, "TryGiveUnitBank", TryGiveUnitBank);
-		vp_TargetEventReturn<vp_UnitType, int, bool>.Unregister(m_Transform, "TryGiveUnits", TryGiveUnits);
-		vp_TargetEventReturn<vp_UnitBankType, int, int, bool>.Unregister(m_Transform, "TryDeduct", TryDeduct);
-		vp_TargetEventReturn<vp_ItemType, int>.Unregister(m_Transform, "GetItemCount", GetItemCount);
+		vp_TargetEventReturn<vp_ItemType, int, bool>.Unregister(Transform, "TryGiveItem", TryGiveItem);
+		vp_TargetEventReturn<vp_ItemType, int, bool>.Unregister(Transform, "TryGiveItems", TryGiveItems);
+		vp_TargetEventReturn<vp_UnitBankType, int, int, bool>.Unregister(Transform, "TryGiveUnitBank", TryGiveUnitBank);
+		vp_TargetEventReturn<vp_UnitType, int, bool>.Unregister(Transform, "TryGiveUnits", TryGiveUnits);
+		vp_TargetEventReturn<vp_UnitBankType, int, int, bool>.Unregister(Transform, "TryDeduct", TryDeduct);
+		vp_TargetEventReturn<vp_ItemType, int>.Unregister(Transform, "GetItemCount", GetItemCount);
 
-		vp_TargetEventReturn<vp_Inventory>.Unregister(m_Transform, "HasInventory", GetInventory);
+		vp_TargetEventReturn<vp_Inventory>.Unregister(Transform, "HasInventory", GetInventory);
 
 	}
 
@@ -374,9 +379,10 @@ public class vp_Inventory : MonoBehaviour
 	protected virtual void DoAddItem(vp_ItemType type, int id)
 	{
 		ItemInstances.Add(new vp_ItemInstance(type, id));
-		m_FirstItemsDirty = true;
 		if (SpaceEnabled)
 			m_UsedSpace += type.Space;
+		m_FirstItemsDirty = true;
+		m_ItemDictionaryDirty = true;
 		SetDirty();
 	}
 
@@ -396,6 +402,7 @@ public class vp_Inventory : MonoBehaviour
 		ItemInstances.Remove(item);
 
 		m_FirstItemsDirty = true;
+		m_ItemDictionaryDirty = true;
 
 		if (SpaceEnabled)
 			m_UsedSpace = Mathf.Max(0, (m_UsedSpace - item.Type.Space));
@@ -795,7 +802,7 @@ public class vp_Inventory : MonoBehaviour
 	/// <summary>
 	/// 
 	/// </summary>
-	protected virtual vp_ItemInstance GetItem(vp_ItemType itemType)
+	public virtual vp_ItemInstance GetItem(vp_ItemType itemType)
 	{
 
 		// TIP: turn the comments in this method into debug output for
@@ -853,8 +860,10 @@ public class vp_Inventory : MonoBehaviour
 	/// to the dictionary from the serialized list. returns null if
 	/// 'itemType' is null or no matching item can be found
 	/// </summary>
-	protected vp_ItemInstance GetItem(vp_ItemType itemType, int id)
+	public vp_ItemInstance GetItem(vp_ItemType itemType, int id)
 	{
+
+		//Debug.Log("GetItem @ " + Time.frameCount);
 
 		// TIP: turn the comments in this method into debug output for
 		// a very detailed look at the code flow at runtime
@@ -993,7 +1002,7 @@ public class vp_Inventory : MonoBehaviour
 	/// <summary>
 	/// NOTE: only for internal inventory unit banks!
 	/// </summary>
-	protected virtual vp_UnitBankInstance GetInternalUnitBank(vp_UnitType unitType)
+	public virtual vp_UnitBankInstance GetInternalUnitBank(vp_UnitType unitType)
 	{
 		
 		for (int v = 0; v < m_InternalUnitBanks.Count; v++)
@@ -1393,8 +1402,9 @@ public class vp_Inventory : MonoBehaviour
 	/// <summary>
 	/// 
 	/// </summary>
-	protected virtual void Clear()
+	public virtual void Clear()
 	{
+
 
 		for (int v = InternalUnitBanks.Count - 1; v > -1; v--)
 		{

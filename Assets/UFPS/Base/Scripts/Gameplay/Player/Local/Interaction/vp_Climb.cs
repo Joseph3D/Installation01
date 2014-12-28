@@ -116,7 +116,7 @@ public class vp_Climb : vp_Interactable
 
 		// reset camera initial rotation (otherwise the camera
 		// will be rotated with the offset it had at spawn-time)
-		m_Camera.SetRotation(m_Camera.Transform.eulerAngles, false, true);
+		m_Camera.SetRotation(m_Camera.Transform.eulerAngles, false);
 
 		// stop jumping
 		m_Player.Jump.Stop();

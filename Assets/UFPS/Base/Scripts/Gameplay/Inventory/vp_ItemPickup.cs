@@ -40,14 +40,14 @@ public class vp_ItemPickup : MonoBehaviour
 	{
 		get
 		{
-			#if UNITY_EDITOR
+#if UNITY_EDITOR
 			if (m_Item.Type == null)
 			{
 				Debug.LogWarning(string.Format(MissingItemTypeError, this), gameObject);
 				return null;
 			}
 			return m_Item.Type.GetType();
-			#else
+#else
 			if (m_ItemType == null)
 				m_ItemType = m_Item.Type.GetType();
 			return m_ItemType;
@@ -114,10 +114,11 @@ public class vp_ItemPickup : MonoBehaviour
 	public class RecipientTagsSection
 	{
 		public List<string> Tags = new List<string>();
-		
-		#if UNITY_EDITOR
-		[vp_HelpBox(typeof(RecipientTagsSection), UnityEditor.MessageType.None, typeof(vp_ItemPickup), null, true)]	public float helpbox;
-		#endif
+
+#if UNITY_EDITOR
+		[vp_HelpBox(typeof(RecipientTagsSection), UnityEditor.MessageType.None, typeof(vp_ItemPickup), null, true)]
+		public float helpbox;
+#endif
 	}
 	[SerializeField]
 	protected RecipientTagsSection m_Recipient;
@@ -143,10 +144,10 @@ public class vp_ItemPickup : MonoBehaviour
 		public string SuccessMultiple = "Picked up {4} {1}s.";
 		public string FailSingle = "Can't pick up {2} right now.";
 		public string FailMultiple = "Can't pick up {4} {1}s right now.";
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 		[vp_HelpBox(typeof(MessageSection), UnityEditor.MessageType.None, typeof(vp_ItemPickup), null, true)]
 		public float helpbox;
-		#endif
+#endif
 	}
 	[SerializeField]
 	protected MessageSection m_Messages;
@@ -200,7 +201,7 @@ public class vp_ItemPickup : MonoBehaviour
 	protected virtual void Awake()
 	{
 
-		if(ItemType == typeof(vp_UnitType))
+		if (ItemType == typeof(vp_UnitType))
 			Amount = Mathf.Max(1, Amount);
 
 		// set the main collider of this gameobject to be a trigger
@@ -249,7 +250,7 @@ public class vp_ItemPickup : MonoBehaviour
 		//	m_NameTag.Text = ID.ToString();
 
 	}
-	
+
 
 	/// <summary>
 	/// 
@@ -287,7 +288,7 @@ public class vp_ItemPickup : MonoBehaviour
 		if (ItemType == null)
 			return;
 
-		if(!vp_Gameplay.isMaster)
+		if (!vp_Gameplay.isMaster)
 			return;
 
 		if (!collider.enabled)
@@ -344,13 +345,14 @@ public class vp_ItemPickup : MonoBehaviour
 
 		if (result == true)
 		{
-			m_PickedUpAmount = (vp_TargetEventReturn<vp_ItemType, int>.SendUpwards(col, "GetItemCount", m_Item.Type) - prevAmount);
+			m_PickedUpAmount = (vp_TargetEventReturn<vp_ItemType, int>.SendUpwards(col, "GetItemCount", m_Item.Type) - prevAmount);	// calculate resulting amount given
 			OnSuccess(col.transform);
 		}
 		else
 		{
 			OnFail(col.transform);
 		}
+
 
 	}
 
@@ -391,9 +393,11 @@ public class vp_ItemPickup : MonoBehaviour
 		else
 			msg = string.Format(m_Messages.SuccessMultiple, m_Item.Type.IndefiniteArticle, m_Item.Type.DisplayName, m_Item.Type.DisplayNameFull, m_Item.Type.Description, m_PickedUpAmount.ToString());
 
-		vp_GlobalEvent<vp_ItemPickup, Transform>.Send("NetworkGivePickup", this, recipient);	// will only execute on the master in multiplayer
+		vp_GlobalEvent<Transform, string>.Send("HUDText", recipient, msg);	// TODO: check if this is sent to local player (!)
 
-		vp_GlobalEvent<Transform, string>.Send("HUDText", recipient, msg);
+		if (vp_Gameplay.isMultiplayer && vp_Gameplay.isMaster)
+			vp_GlobalEvent<vp_ItemPickup, Transform>.Send("NetworkGivePickup", this, recipient);	// will only execute on the master in multiplayer
+
 
 	}
 

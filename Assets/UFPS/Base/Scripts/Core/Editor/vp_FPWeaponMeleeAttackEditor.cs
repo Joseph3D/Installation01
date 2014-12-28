@@ -61,6 +61,7 @@ public class vp_FPWeaponMeleeAttackEditor : Editor
 	{
 
 		m_Persister.IsActive = false;
+		m_Persister = null;	// NOTE: may prevent 'IsPlayingOrAllowExecuteInEditMode' error
 
 	}
 

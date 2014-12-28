@@ -258,7 +258,7 @@ public class vp_FPInput : vp_Component
 
 		// if mouse cursor is visible, an extra click is needed
 		// before we can attack
-		if (!Screen.lockCursor)
+		if (!vp_Utility.LockCursor)
 			return;
 
 		if (vp_Input.GetButton("Attack"))
@@ -354,7 +354,7 @@ public class vp_FPInput : vp_Component
 		// across the whole screen and firing will be disabled
 		if (MouseCursorForced)
 		{
-			Screen.lockCursor = false;
+			vp_Utility.LockCursor = false;
 			return;
 		}
 
@@ -372,7 +372,7 @@ public class vp_FPInput : vp_Component
 					{
 						// mouse is being held down inside a mouse cursor zone, so make
 						// sure the cursor is not locked and don't lock it this frame
-						Screen.lockCursor = false;
+						vp_Utility.LockCursor = false;
 						goto DontLock;
 					}
 				}
@@ -380,7 +380,7 @@ public class vp_FPInput : vp_Component
 
 			// no zones prevent firing the current weapon. hide mouse cursor
 			// and lock it at the center of the screen
-			Screen.lockCursor = true;
+			vp_Utility.LockCursor = true;
 
 		}
 
@@ -390,7 +390,7 @@ public class vp_FPInput : vp_Component
 		if (vp_Input.GetButtonUp("Accept1")
 			|| vp_Input.GetButtonUp("Accept2")
 			|| vp_Input.GetButtonUp("Menu"))
-			Screen.lockCursor = !Screen.lockCursor;
+			vp_Utility.LockCursor = !vp_Utility.LockCursor;
 
 	}
 
@@ -402,7 +402,7 @@ public class vp_FPInput : vp_Component
 	{
 
 		// don't allow mouselook if we are using the mouse cursor
-		if (MouseCursorBlocksMouseLook && !Screen.lockCursor)
+		if (MouseCursorBlocksMouseLook && !vp_Utility.LockCursor)
 			return Vector2.zero;
 
 		// only recalculate mouselook once per frame or smoothing will break
@@ -475,7 +475,7 @@ public class vp_FPInput : vp_Component
 	{
 
 		// don't allow mouselook if we are using the mouse cursor
-		if (MouseCursorBlocksMouseLook && !Screen.lockCursor)
+		if (MouseCursorBlocksMouseLook && !vp_Utility.LockCursor)
 			return Vector2.zero;
 
 		m_MouseLookRawMove.x = vp_Input.GetAxisRaw("Mouse X");

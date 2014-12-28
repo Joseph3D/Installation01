@@ -59,7 +59,7 @@ public class vp_PainHUD : MonoBehaviour
 	public float ArrowVisibleDuration = 1.5f;	// how long it takes for an arrow to fade out post damage
 	public float ArrowShakeDuration = 0.125f;	// duration of the small shake imposed on the arrows for every incoming damage event
 
-	protected float m_LastDamageTime = 0.0f;	// last moment of incoming damage used for the arrow shake
+	protected float m_LastInflictorTime = 0.0f;	// last moment of incoming damage used for the arrow shake
 
 	protected Color m_PainColor = new Color(0.8f, 0, 0, 0);
 	protected Color m_ArrowColor = new Color(0.8f, 0, 0, 0);		
@@ -205,7 +205,7 @@ public class vp_PainHUD : MonoBehaviour
 			// NOTE: to make the arrows shake individually, you can instead use
 			// '(Time.time - m_Inflictors[v].DamageTime)', but it won't look
 			// quite as slick ;)
-			float push = (ArrowShakeDuration - (Time.time - m_LastDamageTime)) / ArrowShakeDuration;
+			float push = (ArrowShakeDuration - (Time.time - m_LastInflictorTime)) / ArrowShakeDuration;
 			push = Mathf.Lerp(0, 1, push);
 			scale += ((Screen.width / 100) * push);
 
@@ -256,22 +256,22 @@ public class vp_PainHUD : MonoBehaviour
 
 		m_PainColor.a += (damageInfo.Damage * PainIntensity);
 
-		if (damageInfo.Sender != null)
+		if (damageInfo.Source != null)
 		{
-			m_LastDamageTime = Time.time;
+			m_LastInflictorTime = Time.time;
 			bool create = true;
 			// update damage time for existing inflictors and see if we
 			// need to create a new inflictor
 			foreach (Inflictor i in m_Inflictors)
 			{
-				if (i.Transform == damageInfo.Sender.transform)
+				if (i.Transform == damageInfo.Source.transform)
 				{
 					i.DamageTime = Time.time;
 					create = false;
 				}
 			}
 			if (create)
-				m_Inflictors.Add(new Inflictor(damageInfo.Sender, Time.time));
+				m_Inflictors.Add(new Inflictor(damageInfo.Source, Time.time));
 		}
 
 		// BLUR: uncomment to enable on Unity Pro

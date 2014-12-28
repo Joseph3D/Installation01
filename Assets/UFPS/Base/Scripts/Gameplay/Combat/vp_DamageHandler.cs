@@ -16,21 +16,24 @@ using UnityEngine;
 using UnityEditor;
 #endif
 using System;
+using System.Collections.Generic;
 
 
 public class vp_DamageHandler : MonoBehaviour
 {
 
 	// health and death
-	public float MaxHealth = 1.0f;					// initial health of the object instance, to be reset on respawn
-	public GameObject [] DeathSpawnObjects = null;	// gameobjects to spawn when object dies.
-													// TIP: could be fx, could also be rigidbody rubble
-	public float MinDeathDelay = 0.0f;				// random timespan in seconds to delay death. good for cool serial explosions
+	public float MaxHealth = 1.0f;						// initial health of the object instance, to be reset on respawn
+	public GameObject [] DeathSpawnObjects = null;		// gameobjects to spawn when object dies.
+														// TIP: could be fx, could also be rigidbody rubble
+	public float MinDeathDelay = 0.0f;					// random timespan in seconds to delay death. good for cool serial explosions
 	public float MaxDeathDelay = 0.0f;
-	public float CurrentHealth = 0.0f;			// current health of the object instance
+	public float CurrentHealth = 0.0f;					// current health of the object instance
+	protected bool m_InstaKill = false;					// temporarily disables death delay, for example: on death by impact
 
+	// sounds
+	public AudioClip DeathSound = null;					// sound to play upon death
 	protected AudioSource m_Audio = null;
-	public AudioClip DeathSound = null;				// sound to play upon death
 	
 	// impact damage
 	public float ImpactDamageThreshold = 10;
@@ -53,6 +56,19 @@ public class vp_DamageHandler : MonoBehaviour
 	[HideInInspector]
 	public GameObject DeathEffect = null;
 
+	// cache of known damagehandlers, stored by collider (for optimization)
+	protected static Dictionary<Collider, vp_DamageHandler> m_DamageHandlersByCollider = null;
+	protected static Dictionary<Collider, vp_DamageHandler> DamageHandlersByCollider
+	{
+		get
+		{
+			if (m_DamageHandlersByCollider == null)
+				m_DamageHandlersByCollider = new Dictionary<Collider, vp_DamageHandler>(100);
+			return m_DamageHandlersByCollider;
+		}
+	}
+	protected static vp_DamageHandler m_GetDamageHandlerOfColliderResult = null;
+
 	// NOTE: these variables are obsolete and will be removed
 	protected Vector3 m_StartPosition;
 	protected Quaternion m_StartRotation;
@@ -61,6 +77,88 @@ public class vp_DamageHandler : MonoBehaviour
 	[vp_HelpBox(typeof(vp_DamageHandler), UnityEditor.MessageType.None, typeof(vp_DamageHandler), null, true, vp_PropertyDrawerUtility.Space.Nothing)]
 	public float helpbox;
 #endif
+
+	// --- lazy initialization  for performance ---
+
+	protected Transform m_Transform = null;
+	public Transform Transform
+	{
+		get
+		{
+			if (m_Transform == null)
+				m_Transform = transform;
+			return m_Transform;
+		}
+	}
+
+	protected vp_Respawner m_Respawner = null;
+	public vp_Respawner Respawner
+	{
+		get
+		{
+			if (m_Respawner == null)
+				m_Respawner = GetComponent<vp_Respawner>();
+			return m_Respawner;
+		}
+	}
+
+	/// <summary>
+	/// returns the IMMEDIATE source of damage (default: ourselves, which
+	/// will be the cause if we take falling damage). can also be set to
+	/// another transform, such as the transform of an exploding grenade,
+	/// or in the cause of bullets: the transform of the person pulling the
+	/// trigger
+	/// </summary>
+	protected Transform Source
+	{
+		get
+		{
+			if (m_Source == null)
+				m_Source = Transform;
+			return m_Source;
+		}
+		set
+		{
+			m_Source = value;
+		}
+	}
+	protected Transform m_Source = null;
+
+	
+	/// <summary>
+	/// returns the ORIGINAL source of damage, such as the transform of
+	/// the person who threw the grenade that killed us. in the case of
+	/// of bullets the original source will be same as the source, i.e.
+	/// the person who pulled the trigger
+	/// </summary>
+	protected Transform OriginalSource
+	{
+		get
+		{
+			if (m_OriginalSource == null)
+				m_OriginalSource = Transform;
+			return m_OriginalSource;
+		}
+		set
+		{
+			m_OriginalSource = value;
+		}
+	}
+	protected Transform m_OriginalSource = null;
+
+
+	[Obsolete("This property will be removed in an upcoming release.")]
+	public Transform Sender
+	{
+		get
+		{
+			return Source;
+		}
+		set
+		{
+			Source = value;
+		}
+	}
 
 
 
@@ -106,7 +204,7 @@ public class vp_DamageHandler : MonoBehaviour
 	{
 		Damage(new vp_DamageInfo(damage, null));
 	}
-	public virtual void Damage(vp_DamageInfo projectileInfo)
+	public virtual void Damage(vp_DamageInfo damageInfo)
 	{
 
 		if (!enabled)
@@ -118,28 +216,82 @@ public class vp_DamageHandler : MonoBehaviour
 		if (CurrentHealth <= 0.0f)
 			return;
 
-		CurrentHealth = Mathf.Min(CurrentHealth - projectileInfo.Damage, MaxHealth);
+		if (damageInfo != null)
+		{
+			if(damageInfo.Source != null)
+				Source = damageInfo.Source;
+			if (damageInfo.OriginalSource != null)
+				OriginalSource = damageInfo.OriginalSource;
+			//Debug.Log("Damage! Source: " + damageInfo.Source + " ... " + "OriginalSource: " + damageInfo.OriginalSource);
+		}
+
+		CurrentHealth = Mathf.Min(CurrentHealth - damageInfo.Damage, MaxHealth);
 
 		if (vp_Gameplay.isMaster)
 		{
 
 			// only do this in multiplayer
-			if (vp_Gameplay.isMultiplayer && (projectileInfo.Sender != null))
-				vp_GlobalEvent<Transform, Transform, float>.Send("Damage", transform.root, projectileInfo.Sender, projectileInfo.Damage, vp_GlobalEventMode.REQUIRE_LISTENER);
+			if (vp_Gameplay.isMultiplayer && (damageInfo.Source != null))
+				vp_GlobalEvent<Transform, Transform, float>.Send("Damage", Transform.root, damageInfo.OriginalSource, damageInfo.Damage, vp_GlobalEventMode.REQUIRE_LISTENER);
 
 			// do this in multiplayer and singleplayer
 			if (CurrentHealth <= 0.0f)
-				vp_Timer.In(UnityEngine.Random.Range(MinDeathDelay, MaxDeathDelay), delegate()
-				{
-					SendMessage("Die");		// picked up by vp_DamageHandlers and vp_Respawners
-				});
+			{
+				// send the 'Die' message, to be picked up by vp_DamageHandlers and vp_Respawners
+				if (m_InstaKill)
+					SendMessage("Die");
+				else
+					vp_Timer.In(UnityEngine.Random.Range(MinDeathDelay, MaxDeathDelay), delegate()	{	SendMessage("Die");	});
+			}
 
 		}
-
 
 		// TIP: if you want to do things like play a special impact
 		// sound upon every hit (but only if the object survives)
 		// this is the place
+
+	}
+
+
+	/// <summary>
+	/// this 'SendMessage' target will instantly kill the transform
+	/// with info about the cause - and original cause - for death.
+	/// its argument must be an object array containing 2 transforms.
+	/// the first transform should be the immediate cause of a death
+	/// (for example: a grenade). the second transform should be
+	/// the original cause for this happening (the player who threw
+	/// the grenade). the grenade will trigger a damage arrow
+	/// pointing to it in the pain HUD. the player would typically
+	/// get score in multiplayer
+	/// </summary>
+	public virtual void DieBySources(Transform[] sourceAndOriginalSource)
+	{
+
+		if (sourceAndOriginalSource.Length != 2)
+		{
+			Debug.LogWarning("Warning (" + this + ") 'DieBySources' argument must contain 2 transforms.");
+			return;
+		}
+
+		Source = sourceAndOriginalSource[0];
+		OriginalSource = sourceAndOriginalSource[1];
+
+		Die();
+
+	}
+
+
+	/// <summary>
+	/// this 'SendMessage' target will instantly kill the transform
+	/// with info about the immediate cause for death. 'source'
+	/// will trigger a damage arrow pointing to it in the pain HUD.
+	/// if it's a player, it would typically get score in multiplayer
+	/// </summary>
+	public virtual void DieBySource(Transform source)
+	{
+
+		OriginalSource = Source = source;
+		Die();
 
 	}
 
@@ -160,16 +312,28 @@ public class vp_DamageHandler : MonoBehaviour
 			m_Audio.PlayOneShot(DeathSound);
 		}
 
-		RemoveBulletHoles();
-		
-		vp_Utility.Activate(gameObject, false);
-
 		foreach (GameObject o in DeathSpawnObjects)
 		{
-			if(o != null)
-				vp_Utility.Instantiate(o, transform.position, transform.rotation);
+			if (o != null)
+			{
+				GameObject g = (GameObject)vp_Utility.Instantiate(o, Transform.position, Transform.rotation);
+				if ((Source != null) && (g != null))
+					vp_TargetEvent<Transform>.Send(g.transform, "SetSource", OriginalSource);
+			}
 		}
-		
+
+		if (Respawner == null)
+		{
+			vp_Utility.Destroy(gameObject);
+		}
+		else
+		{
+			RemoveBulletHoles();
+			vp_Utility.Activate(gameObject, false);
+		}
+
+		m_InstaKill = false;
+
 	}
 
 
@@ -180,7 +344,9 @@ public class vp_DamageHandler : MonoBehaviour
 	{
 
 		CurrentHealth = MaxHealth;
-	
+		Source = null;
+		OriginalSource = null;
+
 	}
 	
 
@@ -198,21 +364,53 @@ public class vp_DamageHandler : MonoBehaviour
 
 
 	/// <summary>
-	/// 
+	/// calculates and applies impact damage
 	/// </summary>
-	void OnCollisionEnter(Collision collision)
+	protected virtual void OnCollisionEnter(Collision collision)
 	{
 
 		float force = collision.relativeVelocity.sqrMagnitude * 0.1f;
 
 		float damage = (force > ImpactDamageThreshold) ? (force * ImpactDamageMultiplier) : 0.0f;
 
-		if (damage > 0.0f)
+		if (damage <= 0.0f)
+			return;
+
+		if (CurrentHealth - damage <= 0.0f)
+			m_InstaKill = true;
+
+		Damage(damage);
+
+	}
+
+
+	/// <summary>
+	/// retrieves, finds and caches target damagehandlers for more
+	/// efficient fetching in the future
+	/// </summary>
+	public static vp_DamageHandler GetDamageHandlerOfCollider(Collider col)
+	{
+
+		// try to fetch a known damagehandler on this target
+		if (!DamageHandlersByCollider.TryGetValue(col, out m_GetDamageHandlerOfColliderResult))
 		{
-			if (CurrentHealth - damage <= 0.0f)
-				MaxDeathDelay = MinDeathDelay = 0.0f;
-			Damage(damage);
+			// no damagehandler on record: see if there is one
+			m_GetDamageHandlerOfColliderResult = col.transform.root.GetComponentInChildren<vp_DamageHandler>();
+			DamageHandlersByCollider.Add(col, m_GetDamageHandlerOfColliderResult);		// add result to the dictionary (even if null)
 		}
+
+		return m_GetDamageHandlerOfColliderResult;
+
+	}
+
+
+	/// <summary>
+	/// resets the cache of colliders and damagehandlers on level load
+	/// </summary>
+	protected void OnLevelWasLoaded()
+	{
+
+		DamageHandlersByCollider.Clear();
 
 	}
 
@@ -233,7 +431,7 @@ public class vp_DamageHandler : MonoBehaviour
 	}
 
 
-	// -------- everything below this line is temp helper logic related to vp_Respawner transition --------
+	// -------- everything below this line is temp helper logic related to vp_Respawner transition in v1.4 --------
 	
 
 	/// <summary>

@@ -61,6 +61,7 @@ public class vp_FPWeaponShooterEditor : Editor
 	{
 
 		m_Persister.IsActive = false;
+		m_Persister = null;	// NOTE: may prevent 'IsPlayingOrAllowExecuteInEditMode' error
 
 	}
 
@@ -160,6 +161,7 @@ public class vp_FPWeaponShooterEditor : Editor
 			m_Component.ProjectileCount = EditorGUILayout.IntField("Count", m_Component.ProjectileCount);
 			m_Component.ProjectileSpread = EditorGUILayout.Slider("Spread", m_Component.ProjectileSpread, 0, 360);
 			m_Component.ProjectileSpawnDelay = Mathf.Abs(EditorGUILayout.FloatField("Spawn Delay", m_Component.ProjectileSpawnDelay));
+			m_Component.ProjectileSourceIsRoot = EditorGUILayout.Toggle("Root Obj. is Source", m_Component.ProjectileSourceIsRoot);
 
 			GUI.enabled = false;
 			if (m_Component.m_ProjectileSpawnPoint != null)

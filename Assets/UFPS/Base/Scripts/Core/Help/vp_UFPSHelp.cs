@@ -46,8 +46,11 @@ public class vp_UFPSHelp : vp_Help
 		    "Enable 'Space Limit' to restrict inventory capacity by weight or volume.","In 'Volume' mode, bullets will consume space if added straight to the inventory, but will 'disappear' when loaded into weapons.", "To modify the space consumption of an item type: click it in the 'Items' list, select it in the Project View and edit it in the Inspector."},
 		    "")},
 		{typeof(vp_DamageHandler), new vp_HelpInfo(new string[]{
-			"Looking for respawn parameters? In UFPS 1.4.7, this component no longer handles respawning. To create a vp_Respawner component with your previous settings restored, go to the UFPS menu -> Wizards -> Convert Old DamageHandlers."},
+			"Looking for respawn parameters? Since UFPS v1.4.7, this component no longer handles respawning. To create a vp_Respawner component with your previous settings restored, go to the UFPS menu -> Wizards -> Convert Old DamageHandlers."},
 			"")},
+		{typeof(vp_PlayerInventory.AutoWieldSection), new vp_HelpInfo(new string[]{
+		    "These flags determine when weapons should be automatically wielded due to picking up weapons, or ammo for weapons."},
+		    "")},
 
 
 	};

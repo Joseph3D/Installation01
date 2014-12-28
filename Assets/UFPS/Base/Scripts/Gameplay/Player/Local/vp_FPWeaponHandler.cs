@@ -5,7 +5,8 @@
 //	https://twitter.com/VisionPunk
 //	http://www.visionpunk.com
 //
-//	description:	
+//	description:	weapon handler logic that is specific to a local first person
+//					player should be added to this script
 //
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -18,16 +19,6 @@ using System.Collections;
 public class vp_FPWeaponHandler : vp_WeaponHandler
 {
 	
-	/// <summary>
-	/// 
-	/// </summary>
-	protected virtual void OnMessage_CameraToggle3rdPerson()
-	{
-
-		m_Player.IsFirstPerson.Set(!m_Player.IsFirstPerson.Get());
-
-	}
-
 
 	/// <summary>
 	/// 
@@ -41,7 +32,6 @@ public class vp_FPWeaponHandler : vp_WeaponHandler
 		return m_Player.Reload.TryStart();
 
 	}
-
 
 
 }

@@ -41,6 +41,7 @@ public class vp_Respawner : MonoBehaviour
 		
 	public float MinRespawnTime = 3.0f;		// random timespan in seconds to delay respawn
 	public float MaxRespawnTime = 3.0f;
+	public float LastRespawnTime = 0.0f;	// the last point in time at which we respawned. intended use: to prevent hurting a player who has just respawned
 	public bool SpawnOnAwake = false;
 
 	public AudioClip SpawnSound = null;		// sound to play upon respawn
@@ -61,6 +62,18 @@ public class vp_Respawner : MonoBehaviour
 
 	protected vp_Timer.Handle m_RespawnTimer = new vp_Timer.Handle();
 
+	// cache of known respawners, stored by collider (for optimization)
+	protected static Dictionary<Collider, vp_Respawner> m_RespawnersByCollider = null;
+	protected static Dictionary<Collider, vp_Respawner> RespawnersByCollider
+	{
+		get
+		{
+			if (m_RespawnersByCollider == null)
+				m_RespawnersByCollider = new Dictionary<Collider, vp_Respawner>(100);
+			return m_RespawnersByCollider;
+		}
+	}
+	protected static vp_Respawner m_GetRespawnerOfColliderResult = null;
 
 	/// <summary>
 	/// 
@@ -255,6 +268,8 @@ public class vp_Respawner : MonoBehaviour
 	public virtual void Respawn()
 	{
 
+		LastRespawnTime = Time.time;
+
 		// reactivate and reset
 		vp_Utility.Activate(gameObject);
 		SpawnFX();
@@ -297,6 +312,36 @@ public class vp_Respawner : MonoBehaviour
 
 	}
 
+
+	/// <summary>
+	/// retrieves, finds and caches target respawners for more
+	/// efficient fetching in the future
+	/// </summary>
+	public static vp_Respawner GetRespawnerOfCollider(Collider col)
+	{
+
+		// try to fetch a known respawner on this target
+		if (!RespawnersByCollider.TryGetValue(col, out m_GetRespawnerOfColliderResult))
+		{
+			// no respawners on record: see if there is one
+			m_GetRespawnerOfColliderResult = col.transform.root.GetComponentInChildren<vp_Respawner>();
+			RespawnersByCollider.Add(col, m_GetRespawnerOfColliderResult);		// add result to the dictionary (even if null)
+		}
+
+		return m_GetRespawnerOfColliderResult;
+
+	}
+
+
+	/// <summary>
+	/// resets the cache of colliders and damagehandlers on level load
+	/// </summary>
+	protected void OnLevelWasLoaded()
+	{
+
+		RespawnersByCollider.Clear();
+
+	}
 
 }
 

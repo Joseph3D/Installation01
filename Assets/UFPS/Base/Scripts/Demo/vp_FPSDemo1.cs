@@ -185,7 +185,7 @@ public class vp_FPSDemo1 : MonoBehaviour
 		m_Demo.Input.MouseCursorZones[0] = new Rect((Screen.width * 0.5f) - 370, 40, 80, 80);
 		m_Demo.Input.MouseCursorZones[1] = new Rect((Screen.width * 0.5f) + 290, 40, 80, 80);
 		m_Demo.Input.MouseCursorZones[2] = new Rect(0, 0, 150, Screen.height);
-		Screen.lockCursor = false;
+		vp_Utility.LockCursor = false;
 
 		m_Demo.Camera.RenderingFieldOfView = 20;
 		m_Demo.Camera.SnapZoom();
@@ -396,7 +396,7 @@ public class vp_FPSDemo1 : MonoBehaviour
 		{
 
 
-			Screen.lockCursor = true;
+			vp_Utility.LockCursor = true;
 			m_Demo.ResetState();
 
 			m_Demo.PlayerEventHandler.Attack.Stop(0.5f);
@@ -522,7 +522,7 @@ public class vp_FPSDemo1 : MonoBehaviour
 		}
 
 		// draw menu re-enable text
-		if (m_Demo.ShowGUI && Screen.lockCursor)
+		if (m_Demo.ShowGUI && vp_Utility.LockCursor)
 		{
 			GUI.color = new Color(1, 1, 1, ((m_Demo.ClosingDown) ? m_Demo.GlobalAlpha : 1.0f));
 			GUI.Label(new Rect((Screen.width / 2) - 200, 140, 400, 20), "(Press ENTER to reenable menu)", m_Demo.CenterStyle);

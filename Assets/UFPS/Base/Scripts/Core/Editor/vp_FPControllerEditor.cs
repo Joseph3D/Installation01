@@ -57,6 +57,7 @@ public class vp_FPControllerEditor : Editor
 	{
 
 		m_Persister.IsActive = false;
+		m_Persister = null;	// NOTE: may prevent 'IsPlayingOrAllowExecuteInEditMode' error
 
 	}
 
@@ -182,6 +183,7 @@ public class vp_FPControllerEditor : Editor
 			m_Component.PhysicsSlopeSlidiness = EditorGUILayout.Slider("Slope Slidiness", m_Component.PhysicsSlopeSlidiness, 0.0f, 1.0f); 
 			m_Component.PhysicsWallBounce = EditorGUILayout.Slider("Wall Bounce", m_Component.PhysicsWallBounce, 0, 0.9f);
 			m_Component.PhysicsWallFriction = EditorGUILayout.Slider("Wall Friction", m_Component.PhysicsWallFriction, 0.0f, 1);
+			m_Component.PhysicsCrouchHeightModifier = EditorGUILayout.Slider("Crouch Height Modifier", m_Component.PhysicsCrouchHeightModifier, 0.5f, 1);
 
 			if (Application.isPlaying)
 				GUI.enabled = false;

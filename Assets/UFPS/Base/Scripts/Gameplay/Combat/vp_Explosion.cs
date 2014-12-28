@@ -23,16 +23,19 @@ public class vp_Explosion : MonoBehaviour
 
 	// gameplay
 	public float Radius = 15.0f;					// any objects within radius will be affected by the explosion
-	public float Force = 1000.0f;					// amount of motion force to apply to affected objects
+	public float Force = 1000.0f;					// amount of positional force to apply to affected objects
 	public float UpForce = 10.0f;					// how much to push affected objects up in the air
 	public float Damage = 10;						// amount of damage to apply to objects via their 'Damage' method
+	public bool AllowCover = false;			// if true, damage can only be done with line of sight between explosion center and target top or center
 	public float CameraShake = 1.0f;				// how much of a shockwave impulse to apply to the camera
 	public string DamageMessageName = "Damage";		// user defined name of damage method on affected object
 														// TIP: this can be used to apply different types of damage, i.e
 														// magical, freezing, poison, electric
+	public bool RequireDamageHandler = true;		// if true (default) the target must have a vp_DamageHandler-derived component on it.
+													// otherwise the explosion will broadcast a unity message 'Damage' with a float argument
+	protected bool m_HaveExploded = false;			// when true, the explosion is flagged for removal / recycling
 	
 	// sound
-	AudioSource m_Audio = null;
 	public AudioClip Sound = null;
 	public float SoundMinPitch = 0.8f;				// random pitch range for explosion sound
 	public float SoundMaxPitch = 1.2f;
@@ -40,98 +43,105 @@ public class vp_Explosion : MonoBehaviour
 	// fx
 	public List <GameObject> FXPrefabs = new List<GameObject>();	// list of special effects objects to spawn
 	
-	protected Transform m_Transform = null;
-	
-	
-	protected virtual void Awake()
+	// physics
+	protected Ray m_Ray;
+	protected RaycastHit m_RaycastHit;
+	protected Collider m_TargetCollider = null;
+	protected Transform m_TargetTransform = null;
+	protected Rigidbody m_TargetRigidbody = null;
+	protected float m_DistanceModifier = 0.0f;
+
+	// a dictionary to make sure we don't damage the same object several times in a frame
+	protected Dictionary<vp_DamageHandler, object> m_DHandlersHitByThisExplosion = new Dictionary<vp_DamageHandler, object>(50);
+
+	// a dictionary for caching known colliders+damagehandler, for optimization
+	protected static vp_DamageHandler m_TargetDHandler = null;
+
+	// --- misc properties ---
+
+	protected float DistanceModifier
 	{
-	
-		m_Transform = transform;
-		m_Audio = audio;
-	
+		get
+		{
+			if (m_DistanceModifier == 0.0f)
+				m_DistanceModifier = (1 - Vector3.Distance(Transform.position, m_TargetTransform.position) / Radius);
+			return m_DistanceModifier;
+		}
+	}
+
+	protected Transform m_Transform = null;
+	protected Transform Transform
+	{
+		get
+		{
+			if (m_Transform == null)
+				m_Transform = transform;
+			return m_Transform;
+		}
+	}
+
+	protected Transform m_Source = null;
+	protected Transform Source
+	{
+		get
+		{
+			if (m_Source == null)
+				m_Source = transform;
+			return m_Source;
+		}
+		set
+		{
+			m_Source = value;
+		}
+	}
+
+	protected Transform m_OriginalSource = null;
+	protected Transform OriginalSource
+	{
+		get
+		{
+			if (m_OriginalSource == null)
+				m_OriginalSource = transform;
+			return m_OriginalSource;
+		}
+		set
+		{
+			m_OriginalSource = value;
+		}
+	}
+
+	protected AudioSource m_Audio = null;
+	protected AudioSource Audio
+	{
+		get
+		{
+			if (m_Audio == null)
+				m_Audio = audio;
+			return m_Audio;
+		}
 	}
 
 
 	/// <summary>
 	/// 
 	/// </summary>
-	void OnEnable()
+	protected virtual void OnEnable()
 	{
+		// register method to allow keeping track of who caused the explosion
+		Source = transform;
+		OriginalSource = null;
+		vp_TargetEvent<Transform>.Register(transform, "SetSource", SetSource);
+	}
 
-		// spawn effects gameobjects
-		foreach(GameObject fx in FXPrefabs)
-		{
-			if (fx != null)
-			{
-				Component[] c;
-				c = fx.GetComponents<vp_Explosion>();
-				if (c.Length == 0)
-					vp_Utility.Instantiate(fx, m_Transform.position, m_Transform.rotation);
-				else
-					Debug.LogError("Error: vp_Explosion->FXPrefab must not be a vp_Explosion (risk of infinite loop).");
-			}
-		}
 
-		// apply shockwave to all rigidbodies and FPSPlayers within range, but
-		// ignore small and walk-thru objects such as debris, triggers and water
-		Collider[] colliders = Physics.OverlapSphere(m_Transform.position, Radius, vp_Layer.Mask.IgnoreWalkThru);
-		foreach (Collider hit in colliders)
-		{
-			if (hit != this.collider)
-			{
-
-				float distanceModifier = (1 - Vector3.Distance(m_Transform.position,
-							hit.transform.position) / Radius);
-
-				//Debug.Log(hit.transform.name + Time.time);	// snippet to dump affected objects
-				if (hit.rigidbody)
-				{
-
-					// explosion up-force should only work on grounded objects,
-					// otherwise object may acquire extreme speeds. also, this
-					// gives a more profound effect of explosion force being
-					// deflected off the ground
-					Ray ray = new Ray(hit.transform.position, -Vector3.up);
-					RaycastHit hit2;
-					if (!Physics.Raycast(ray, out hit2, 1))
-						UpForce = 0.0f;
-
-					// bash the found object
-					hit.rigidbody.AddExplosionForce((Force / Time.timeScale) / vp_TimeUtility.AdjustedTimeScale, m_Transform.position, Radius, UpForce);
-
-				}
-				else
-				{
-
-					// bash things that listen to the 'ForceImpact' message (e.g. players)
-					vp_TargetEvent<Vector3>.Send(hit.transform.root, "ForceImpact", (hit.transform.position -
-																							m_Transform.position).normalized *
-																							Force * 0.001f * distanceModifier);
-
-					//// shake things that listen to the 'CameraBombShake' message (e.g. cameras)
-					vp_TargetEvent<float>.Send(hit.transform.root, "CameraBombShake", (distanceModifier * CameraShake));
-
-				}
-
-				// damage the object, if applicable
-				if (hit.gameObject.layer != vp_Layer.Debris)
-				{
-
-					hit.gameObject.BroadcastMessage(DamageMessageName, new vp_DamageInfo(distanceModifier * Damage, transform),
-																SendMessageOptions.DontRequireReceiver);	// TODO: use targetevent
-
-				}
-				
-			}
-
-		}
-
-		// play explosion sound
-		m_Audio.clip = Sound;
-		m_Audio.pitch = Random.Range(SoundMinPitch, SoundMaxPitch)* Time.timeScale;
-		if (!m_Audio.playOnAwake)
-			m_Audio.Play();
-
+	/// <summary>
+	/// 
+	/// </summary>
+	protected virtual void OnDisable()
+	{
+		Source = null;
+		OriginalSource = null;
+		vp_TargetEvent<Transform>.Unregister(transform, "SetSource", SetSource);
 	}
 
 
@@ -141,15 +151,243 @@ public class vp_Explosion : MonoBehaviour
 	void Update()
 	{
 
-		// the explosion should be removed as soon as the sound has
-		// stopped playing. NOTE: this implementation assumes that
-		// the sound is always longer in seconds than the explosion
-		// effect. should be OK in most cases.
-		if(!m_Audio.isPlaying)
-			vp_Utility.Destroy(gameObject);
+		// the explosion should be removed as soon as the sound has stopped playing.
+		// NOTE: this implementation assumes that the sound is always longer in seconds
+		// than the explosion effect. should be OK in most cases
+		if (m_HaveExploded)
+		{
+			if (!Audio.isPlaying)
+				vp_Utility.Destroy(gameObject);
+			return;
+		}
+
+		DoExplode();
 
 	}
-	
+
+
+	/// <summary>
+	/// spawns effects, applies forces and damage to close by objects
+	/// and flags the explosion for removal
+	/// </summary>
+	void DoExplode()
+	{
+
+		m_HaveExploded = true;
+
+		// spawn effects gameobjects
+		foreach (GameObject fx in FXPrefabs)
+		{
+			if (fx != null)
+			{
+#if UNITY_EDITOR
+				Component[] c;
+				c = fx.GetComponents<vp_Explosion>();	// OK from a performance perspective because it only occurs in editor
+				if (c.Length > 0)
+					Debug.LogError("Error: vp_Explosion->FXPrefab must not be a vp_Explosion (risk of infinite loop).");
+				else
+#endif
+					vp_Utility.Instantiate(fx, Transform.position, Transform.rotation);
+			}
+		}
+
+		// clear the list of affected objects in case this explosion has been pooled
+		m_DHandlersHitByThisExplosion.Clear();
+
+		// apply shockwave to all rigidbodies and FPSPlayers within range, but
+		// ignore small and walk-thru objects such as debris, triggers and water
+		Collider[] colliders = Physics.OverlapSphere(Transform.position, Radius, vp_Layer.Mask.IgnoreWalkThru);
+		foreach (Collider hit in colliders)
+		{
+
+			if (hit.gameObject.isStatic)
+				continue;
+
+			m_DistanceModifier = 0.0f;
+
+			if ((hit != null) && (hit != this.collider))
+			{
+
+				m_TargetCollider = hit;
+				m_TargetTransform = hit.transform;
+
+				// --- add camera shake ---
+				AddUFPSCameraShake();
+
+				// --- abort if we have no line of sight to target ---
+				if (TargetInCover())
+					continue;
+
+				// --- try to add force ---
+				m_TargetRigidbody = hit.rigidbody;
+				if (m_TargetRigidbody != null)		// target has a rigidbody: apply force using Unity physics
+					AddRigidbodyForce();
+				else 								// target has no rigidbody. try and apply force using UFPS physics
+					AddUFPSForce();
+
+				// --- try to add damage ---
+				m_TargetDHandler = vp_DamageHandler.GetDamageHandlerOfCollider(m_TargetCollider);
+				if (m_TargetDHandler != null)		// this was a known damagehandler target: send the damage!
+					DoUFPSDamage(DistanceModifier * Damage);
+				else if (!RequireDamageHandler)		// this target was known to have no damagehandler. send damage using unitymessage (if allowed)
+					DoUnityDamage(DistanceModifier * Damage);
+							
+				//Debug.Log(m_TargetTransform.name + Time.time);	// SNIPPET: to dump affected objects
+
+			}
+
+		}
+
+		// play explosion sound
+		Audio.clip = Sound;
+		Audio.pitch = Random.Range(SoundMinPitch, SoundMaxPitch) * Time.timeScale;
+		if (!Audio.playOnAwake)
+			Audio.Play();
+
+	}
+
+
+	/// <summary>
+	/// if taking cover is allowed this method will return true whenever
+	/// the target is hidden (waist up) behind a solid object. it will
+	/// return false if there is a clear line of sight between the
+	/// explosion's center and the target's top OR center
+	/// </summary>
+	protected virtual bool TargetInCover()
+	{
+
+		if (!AllowCover)
+			return false;
+
+		m_Ray.origin = Transform.position;	// center of explosion
+
+		// try to find a clear line of sight to target
+
+		// --- middle / hips ---
+		m_Ray.direction = (m_TargetCollider.bounds.center - Transform.position).normalized;
+		if (Physics.Raycast(m_Ray, out m_RaycastHit, Radius + 1.0f) && (m_RaycastHit.collider == m_TargetCollider))
+			return false;	// target's center / waist exposed
+
+		// --- top / head ---
+		m_Ray.direction = ((vp_3DUtility.HorizontalVector(m_TargetCollider.bounds.center) + (Vector3.up * (m_TargetCollider.bounds.max.y))) - Transform.position).normalized;
+		if (Physics.Raycast(m_Ray, out m_RaycastHit, Radius + 1.0f) && (m_RaycastHit.collider == m_TargetCollider))
+			return false;	// target's top / head exposed
+
+		// SNIPPET: tracking explosion damage against feet can end up somewhat
+		// unintuitive in-game. for example, getting killed by explosive force
+		// reaching a player's feet along the ground under a car may be simply
+		// confusing ("wait-what-happened"), but uncomment this to allow for it:
+			// --- bottom / feet ---
+			//m_Ray.direction = ((vp_3DUtility.HorizontalVector(m_TargetCollider.bounds.center) + (Vector3.up * m_TargetCollider.bounds.min.y)) - Transform.position).normalized;
+			//if (Physics.Raycast(m_Ray, out m_RaycastHit, Radius + 1.0f) && (m_RaycastHit.collider == m_TargetCollider))
+			//	return false;	// target's bottom / feet exposed
+
+		// no line of sight found to target!
+		return true;
+
+	}
+
+
+	/// <summary>
+	/// applies force to a target by means of the Unity physics engine
+	/// </summary>
+	protected virtual void AddRigidbodyForce()
+	{
+
+		// TEMP: in UFPS multiplayer, we end up here with a remote player target.
+		// this is not entirely correct, but works for now since it has no effect
+		if (m_TargetRigidbody.isKinematic)
+			return;
+
+		// explosion up-force should only work on grounded objects, otherwise
+		// object may acquire extreme speeds. also, this gives a more profound
+		// effect of explosion force being deflected off the ground
+		m_Ray.origin = m_TargetTransform.position;
+		m_Ray.direction = -Vector3.up;
+		if (!Physics.Raycast(m_Ray, out m_RaycastHit, 1))
+			UpForce = 0.0f;
+
+		// bash the found object
+		m_TargetRigidbody.AddExplosionForce((Force / Time.timeScale) / vp_TimeUtility.AdjustedTimeScale, Transform.position, Radius, UpForce);
+		
+	}
+
+
+	/// <summary>
+	/// applies force to a target using UFPS camera & controller physics.
+	/// this should only affect human players (local or remote) and possibly
+	/// AI that use the UFPS body system
+	/// </summary>
+	protected virtual void AddUFPSForce()
+	{
+
+		// bash things that listen to the 'ForceImpact' message (e.g. players)
+		vp_TargetEvent<Vector3>.Send(m_TargetTransform.root, "ForceImpact", (m_TargetTransform.position -
+																				Transform.position).normalized *
+																				Force * 0.001f * DistanceModifier);
+
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	protected virtual void AddUFPSCameraShake()
+	{
+
+		// shake things that listen to the 'CameraBombShake' message (e.g. cameras)
+		vp_TargetEvent<float>.Send(m_TargetTransform.root, "CameraBombShake", (DistanceModifier * CameraShake));
+
+	}
+
+
+	/// <summary>
+	/// sends damage to a target that has a vp_DamageHandler (or derived)
+	/// component
+	/// </summary>
+	protected virtual void DoUFPSDamage(float damage)
+	{
+
+		// abort if this explosion has already hit this damagehandler
+		if (m_DHandlersHitByThisExplosion.ContainsKey(m_TargetDHandler))
+			return;
+
+		// remember that we have processed this target
+		m_DHandlersHitByThisExplosion.Add(m_TargetDHandler, null);
+
+		// this was a known target and we have a damagehandler for it
+		m_TargetDHandler.Damage(new vp_DamageInfo(damage, Source, OriginalSource)); // send the damage!
+
+	}
+
+
+	/// <summary>
+	/// sends damage to a target that has a custom script with the standard
+	/// method: "Damage(float damage)". this is to allow more by-default
+	/// compatibility with third party systems
+	/// </summary>
+	void DoUnityDamage(float damage)
+	{
+
+		// if we end up here the target is known to have no damagehandler,
+		// but we can optionally damage it in other ways, for example:
+
+		m_TargetCollider.gameObject.BroadcastMessage(DamageMessageName, damage, SendMessageOptions.DontRequireReceiver);
+		// NOTE: can potentially trigger several times per explosion (?)
+
+	}
+
+
+	/// <summary>
+	/// this is used as an event target to allow keeping track of who caused
+	/// the explosion. 	NOTE: in the case of grenades, this gets called by the
+	/// damagehandler of the grenade itself (upon death)
+	/// </summary>
+	public void SetSource(Transform source)
+	{
+		m_OriginalSource = source;		// who set off this explosion
+	}
+
 
 }
 

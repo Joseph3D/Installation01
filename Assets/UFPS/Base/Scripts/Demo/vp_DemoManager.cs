@@ -592,7 +592,7 @@ public class vp_DemoManager
 
 
 		// if the mouse cursor is locked, partly fade out the gui, otherwise show it fully
-		if (Screen.lockCursor && FadeGUIOnCursorLock)
+		if (vp_Utility.LockCursor && FadeGUIOnCursorLock)
 			GlobalAlpha = 0.35f;
 		else if (!ClosingDown)
 			GlobalAlpha = 1.0f;

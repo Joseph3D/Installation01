@@ -61,7 +61,7 @@ LookDownRotationSpringPower 1
 AmbientInterval 2.5 7.5
 PositionExitOffset 0 -1 0
 RotationExitOffset 40 0 0
-PositionOffset 0.2 -0.27 -0.01
+PositionOffset 0.14 -0.31 -0.04
 PositionSpring2Stiffness 0.942029
 PositionSpring2Damping 0.5362319
 RotationOffset -3.07 -2.65 0

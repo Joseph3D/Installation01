@@ -46,7 +46,8 @@ public class vp_Weapon : vp_Component
 	{
 		Custom,
 		Firearm,
-		Melee
+		Melee,
+		Thrown
 	}
 
 	public enum Grip
@@ -436,8 +437,7 @@ public class vp_Weapon : vp_Component
 	/// </summary>
 	protected virtual void OnStart_Dead()
 	{
-
-
+		
 		if (Player.IsFirstPerson.Get())
 			return;
 

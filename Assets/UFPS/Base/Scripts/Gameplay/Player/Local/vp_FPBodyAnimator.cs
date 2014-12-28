@@ -197,20 +197,34 @@ public class vp_FPBodyAnimator : vp_BodyAnimator
 
 	}
 
+
+	/// <summary>
+	/// refreshes materials at the end of the frame to give other
+	/// logics time to finish (e.g. 'Player.IsFirstPerson.Set')
+	/// </summary>
+	protected IEnumerator RefreshMaterialsOnEndOfFrame()
+	{
+
+		yield return new WaitForEndOfFrame();
+
+		RefreshMaterials();
+
+	}
+
 	
 	/// <summary>
-	/// swaps out the material array used on the body model at runtime,
-	/// depending on the current gameplay situation
+	/// swaps out the body model's material array depending on current
+	/// gameplay situation
 	/// </summary>
 	protected virtual void RefreshMaterials()
 	{
-
+		
 		if (InvisibleMaterial == null)
 		{
 			Debug.LogWarning("Warning (" + this + ") No invisible material has been set. Head and arms will look buggy in first person.");
-			return;
-		} 
-		
+			goto fail;
+		}
+
 		if (!Player.IsFirstPerson.Get())
 		{
 			if (m_ThirdPersonMaterials != null)
@@ -241,9 +255,12 @@ public class vp_FPBodyAnimator : vp_BodyAnimator
 			}
 		}
 
+		fail:
+		{}
+
 	}
-	
-	
+
+
 	/// <summary>
 	/// forces model position to bottom center of character controller
 	/// and applies user defined camera offset
@@ -481,7 +498,7 @@ public class vp_FPBodyAnimator : vp_BodyAnimator
 
 		base.OnMessage_CameraToggle3rdPerson();
 
-		RefreshMaterials();
+		StartCoroutine(RefreshMaterialsOnEndOfFrame());
 
 	}
 

@@ -50,7 +50,8 @@ public class vp_WeaponEditor : Editor
 	{
 		None,
 		Firearm,
-		MeleeWeapon
+		Melee,
+		Thrown
 	}
 
 	public enum GripName
@@ -114,59 +115,6 @@ public class vp_WeaponEditor : Editor
 	}
 
 
-	///// <summary>
-	///// 
-	///// </summary>
-	//public static void RefreshGrip(GripName name, vp_Weapon weapon)
-	//{
-	//    switch (name)
-	//    {
-	//        case GripName.OneHanded: weapon.AnimationWeaponGrip = 1; break;
-	//        case GripName.TwoHanded: weapon.AnimationWeaponGrip = 0; break;
-	//    }
-	//}
-
-
-	///// <summary>
-	///// 
-	///// </summary>
-	//public static void RefreshClass(ClassName name, vp_Weapon weapon)
-	//{
-	//    switch (name)
-	//    {
-	//        case ClassName.Nothing: weapon.AnimationWeaponClass = 0; break;
-	//        case ClassName.FireArm: weapon.AnimationWeaponClass = 1; break;
-	//        case ClassName.Melee: weapon.AnimationWeaponClass = 2; break;
-	//    }
-	//}
-
-
-	///// <summary>
-	///// 
-	///// </summary>
-	//public static void RefreshGrip(GripName name, vp_Weapon weapon)
-	//{
-	//    switch (name)
-	//    {
-	//        case GripName.OneHanded: weapon.AnimationWeaponGrip = 1; break;
-	//        case GripName.TwoHanded: weapon.AnimationWeaponGrip = 0; break;
-	//    }
-	//}
-
-
-	///// <summary>
-	///// 
-	///// </summary>
-	//public static void RefreshClass(ClassName name, vp_Weapon weapon)
-	//{
-	//    switch (name)
-	//    {
-	//        case ClassName.Nothing: weapon.AnimationWeaponClass = 0; break;
-	//        case ClassName.FireArm: weapon.AnimationWeaponClass = 1; break;
-	//        case ClassName.Melee: weapon.AnimationWeaponClass = 2; break;
-	//    }
-	//}
-
 	/// <summary>
 	/// disables the persister and removes its reference
 	/// </summary>
@@ -174,6 +122,7 @@ public class vp_WeaponEditor : Editor
 	{
 
 		m_Persister.IsActive = false;
+		m_Persister = null;	// NOTE: may prevent 'IsPlayingOrAllowExecuteInEditMode' error
 
 	}
 

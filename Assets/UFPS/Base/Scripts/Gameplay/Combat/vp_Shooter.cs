@@ -42,6 +42,7 @@ public class vp_Shooter : vp_Component
 	public float ProjectileSpawnDelay = 0.0f;			// delay between fire button pressed and projectile launched
 	public int ProjectileCount = 1;						// amount of projectiles to fire at once
 	public float ProjectileSpread = 0.0f;				// accuracy deviation in degrees (0 = spot on)
+	public bool ProjectileSourceIsRoot = true;			// whether to report this projectile as being sent from this transform or from its root
 	protected float m_NextAllowedFireTime = 0.0f;		// the next time firing will be allowed after having recently fired a shot
 
 	// muzzle flash
@@ -147,9 +148,7 @@ public class vp_Shooter : vp_Component
 	{
 
 		base.Start();
-
-
-
+		
 		// audio defaults
 		Audio.playOnAwake = false;
 		Audio.dopplerLevel = 0.0f;
@@ -157,8 +156,7 @@ public class vp_Shooter : vp_Component
 		RefreshDefaultState();
 
 		Refresh();
-
-
+		
 	}
 
 
@@ -201,16 +199,16 @@ public class vp_Shooter : vp_Component
 	/// NOTE: the vp_WeaponShooter does not use this method. it
 	/// fires via the player event handler's 'Fire' vp_Attempt.
 	/// </summary>
-	public virtual void TryFire()
+	public virtual bool TryFire()
 	{
 
 		// return if we can't fire yet
 		if (Time.time < m_NextAllowedFireTime)
-			return;
+			return false;
 
 		Fire();
 
-		return;
+		return true;
 
 	}
 
@@ -223,7 +221,7 @@ public class vp_Shooter : vp_Component
 	/// </summary>
 	protected virtual void Fire()
 	{
-				
+
 		// update firing rate
 		m_NextAllowedFireTime = Time.time + ProjectileFiringRate;
 
@@ -308,7 +306,7 @@ public class vp_Shooter : vp_Component
 			// TIP: uncomment this to debug-draw bullet paths and points of impact
 			//DrawProjectileDebugInfo(v);
 
-			p.SendMessage("SetSender", Transform, SendMessageOptions.DontRequireReceiver);	// TODO: optimize
+			p.SendMessage("SetSource", (ProjectileSourceIsRoot ? Root : Transform), SendMessageOptions.DontRequireReceiver);
 			p.transform.localScale = new Vector3(ProjectileScale, ProjectileScale, ProjectileScale);	// preset defined scale
 
 			SetSpread(m_CurrentFireSeed * (v + 1), p.transform);

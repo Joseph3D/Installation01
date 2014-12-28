@@ -243,7 +243,32 @@ public static class vp_Utility
 #endif
 
 	}
-	
+
+
+	/// <summary>
+	/// shows or hides the mouse cursor in a way suitable for the
+	/// current unity version
+	/// </summary>
+	public static bool LockCursor
+	{
+
+#if UNITY_3_5 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_5 || UNITY_4_6
+		get { return Screen.lockCursor; }
+		set { Screen.lockCursor = value; }
+#else
+		get
+		{
+			return ((Cursor.lockState == CursorLockMode.Locked) ? true : false);
+		}
+		set
+		{
+			Cursor.visible = !value;
+			Cursor.lockState = (value ? CursorLockMode.Locked : CursorLockMode.None);
+		}
+#endif
+
+	}
+
 
 	/// <summary>
 	/// Randomizes the order of the objects in the specified list.

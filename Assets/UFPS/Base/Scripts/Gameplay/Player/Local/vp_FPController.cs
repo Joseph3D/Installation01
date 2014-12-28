@@ -105,8 +105,10 @@ public class vp_FPController : vp_Component
 	public float PhysicsSlopeSlidiness = 0.15f;			// slidiness of the surface that we're standing on. will be additive if steeper than CharacterController.slopeLimit
 	public float PhysicsWallBounce = 0.0f;				// how much to bounce off walls
 	public float PhysicsWallFriction = 0.0f;
+	public float PhysicsCrouchHeightModifier = 0.5f;	// how much to downscale the controller when crouching
 	public bool PhysicsHasCollisionTrigger = true;		// whether to automatically generate a child object with a trigger on startup
-	protected GameObject m_Trigger = null;				// trigger for detection of incoming objects
+	protected GameObject m_Trigger = null;				// trigger gameobject for detection of incoming objects
+	protected CapsuleCollider m_TriggerCollider = null;	// trigger collider for detection of incoming objects
 	protected Vector3 m_ExternalForce = Vector3.zero;	// current velocity from external forces (explosion knockback, jump pads, rocket packs)
 	protected Vector3[] m_SmoothForceFrame = new Vector3[120];
 	protected bool m_Slide = false;						// are sliding on a steep surface without moving?
@@ -156,8 +158,8 @@ public class vp_FPController : vp_Component
 		m_NormalHeight = CharacterController.height;
 		CharacterController.center = m_NormalCenter = new Vector3(0, m_NormalHeight * 0.5f, 0);
 		CharacterController.radius = m_NormalHeight * 0.25f;	// NOTE: don't change radius in-game (it may cause missed wall collisions)
-		m_CrouchHeight = m_NormalHeight * 0.5f;	// NOTE: due to the workings of a capsule collider, height can never be smaller than radius
-		m_CrouchCenter = m_NormalCenter * 0.5f;
+		m_CrouchHeight = m_NormalHeight * PhysicsCrouchHeightModifier;	// NOTE: due to the workings of a capsule collider, height can never be smaller than radius
+		m_CrouchCenter = m_NormalCenter * PhysicsCrouchHeightModifier;
 
 	}
 
@@ -202,15 +204,18 @@ public class vp_FPController : vp_Component
 		// incoming rigidbodies
 		if (PhysicsHasCollisionTrigger)
 		{
+
 			m_Trigger = new GameObject("Trigger");
 			m_Trigger.transform.parent = m_Transform;
-			CapsuleCollider collider = m_Trigger.AddComponent<CapsuleCollider>();
-			collider.isTrigger = true;
-			collider.radius = CharacterController.radius + m_SkinWidth;
-			collider.height = CharacterController.height + (m_SkinWidth * 2.0f);
-			collider.center = CharacterController.center;
 			m_Trigger.layer = vp_Layer.LocalPlayer;
 			m_Trigger.transform.localPosition = Vector3.zero;
+
+			m_TriggerCollider = m_Trigger.AddComponent<CapsuleCollider>();
+			m_TriggerCollider.isTrigger = true;
+			m_TriggerCollider.radius = CharacterController.radius + m_SkinWidth;
+			m_TriggerCollider.height = CharacterController.height + (m_SkinWidth * 2.0f);
+			m_TriggerCollider.center = CharacterController.center;
+
 		}
 
 	}
@@ -1111,27 +1116,35 @@ public class vp_FPController : vp_Component
 
 
 	/// <summary>
-	/// simple solution for pushing rigid bodies. the push force
-	/// of the FPSController is used to determine how much we
-	/// can affect the other object, and we don't affect fast
-	/// falling objects.
+	/// updates charactercontroller and physics trigger sizes
+	/// depending on player Crouch activity
 	/// </summary>
-	protected virtual void OnControllerColliderHit(ControllerColliderHit hit)
+	protected virtual void RefreshColliders()
 	{
 
-		Rigidbody body = hit.collider.attachedRigidbody;
+		// modify collider size for crouching
+		if (Player.Crouch.Active
+			&& !(MotorFreeFly && !Grounded)	// don't shrink collider if freeflying without ground contact
+			)
+		{
+			CharacterController.height = m_CrouchHeight;
+			CharacterController.center = m_CrouchCenter;
+		}
+		else
+		{
+			CharacterController.height = m_NormalHeight;
+			CharacterController.center = m_NormalCenter;
+		}
 
-		if (body == null || body.isKinematic)
-			return;
-
-		if (hit.moveDirection.y < -0.3f)
-			return;
-
-		Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-		body.velocity = (pushDir * (PhysicsPushForce / body.mass));
+		// update physics trigger size
+		if (m_TriggerCollider != null)
+		{
+			m_TriggerCollider.radius = CharacterController.radius + m_SkinWidth;
+			m_TriggerCollider.height = CharacterController.height + (m_SkinWidth * 2.0f);
+			m_TriggerCollider.center = CharacterController.center;
+		}
 
 	}
-
 
 
 	/// <summary>
@@ -1196,6 +1209,29 @@ public class vp_FPController : vp_Component
 		}
 
 		return speed;
+
+	}
+
+
+	/// <summary>
+	/// simple solution for pushing rigid bodies. the push force
+	/// of the FPSController is used to determine how much we
+	/// can affect the other object, and we don't affect fast
+	/// falling objects.
+	/// </summary>
+	protected virtual void OnControllerColliderHit(ControllerColliderHit hit)
+	{
+
+		Rigidbody body = hit.collider.attachedRigidbody;
+
+		if (body == null || body.isKinematic)
+			return;
+
+		if (hit.moveDirection.y < -0.3f)
+			return;
+
+		Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+		body.velocity = (pushDir * (PhysicsPushForce / body.mass));
 
 	}
 
@@ -1306,7 +1342,7 @@ public class vp_FPController : vp_Component
 
 		}
 
-		// nothing above us - okay to get up
+		// nothing above us - okay to get up!
 		return true;
 
 	}
@@ -1323,13 +1359,8 @@ public class vp_FPController : vp_Component
 
 		Player.Run.Stop();
 
-		// skip modifying collider size if free flying without ground contact
-		if (MotorFreeFly && !Grounded)
-			return;
-
 		// modify collider size for crouching
-		CharacterController.height = m_CrouchHeight;
-		CharacterController.center = m_CrouchCenter;
+		RefreshColliders();
 
 	}
 
@@ -1340,8 +1371,7 @@ public class vp_FPController : vp_Component
 	protected virtual void OnStop_Crouch()
 	{
 
-		CharacterController.height = m_NormalHeight;
-		CharacterController.center = m_NormalCenter;
+		RefreshColliders();
 
 	}
 

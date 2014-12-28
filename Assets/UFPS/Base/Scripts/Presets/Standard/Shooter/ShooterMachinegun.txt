@@ -10,7 +10,7 @@ MotionPositionReset 0.5
 MotionRotationReset 0.5
 MotionPositionPause 0.5
 MotionRotationPause 0.5
-MotionDryFireRecoil -0.075
+MotionDryFireRecoil -0.05
 MotionRecoilDelay 0
 ProjectileScale 0.6
 ProjectileFiringRate 0.1

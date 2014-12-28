@@ -69,6 +69,7 @@ public class vp_FPWeaponEditor : Editor
 	{
 
 		m_Persister.IsActive = false;
+		m_Persister = null;	// NOTE: may prevent 'IsPlayingOrAllowExecuteInEditMode' error
 
 	}
 

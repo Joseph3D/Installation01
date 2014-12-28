@@ -17,6 +17,7 @@ using System.Collections.Generic;
 public class vp_PlayerDamageHandler : vp_DamageHandler
 {
 
+	
 	private vp_PlayerEventHandler m_Player = null;	// should never be referenced directly
 	protected vp_PlayerEventHandler Player	// lazy initialization of the event handler field
 	{
@@ -71,16 +72,6 @@ public class vp_PlayerDamageHandler : vp_DamageHandler
 
 
 	/// <summary>
-	/// 
-	/// </summary>
-	void Start()
-	{
-		if (Inventory != null)
-			m_InventoryWasEnabledAtStart = Inventory.enabled;
-	}
-
-
-	/// <summary>
 	/// registers this component with the event handler (if any).
 	/// NOTE: this is overriden by vp_FPPlayerEventHandler
 	/// </summary>
@@ -104,7 +95,24 @@ public class vp_PlayerDamageHandler : vp_DamageHandler
 			Player.Unregister(this);
 
 	}
-	
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	void Start()
+	{
+
+		if (Inventory != null)
+			m_InventoryWasEnabledAtStart = Inventory.enabled;
+
+
+	}
+
+
+
+
+
 
 	/// <summary>
 	/// instantiates the player's death effect, clears the current
@@ -153,7 +161,6 @@ public class vp_PlayerDamageHandler : vp_DamageHandler
 		{
 			//Debug.Log("sending kill event from master scene to vp_MasterClient");
 			vp_GlobalEvent<Transform>.Send("Kill", transform.root);
-			//vp_TargetEvent.Send(transform, "Die");
 		}
 
 	}

@@ -36,7 +36,7 @@ public class vp_WeaponHandler : MonoBehaviour
 
 	// reloading
 	public bool ReloadAutomatically = true;
-
+	
 	protected vp_PlayerEventHandler m_Player = null;
 	protected List<vp_Weapon> m_Weapons = null;// = new List<vp_Weapon>();
 	public List<vp_Weapon> Weapons
@@ -54,6 +54,8 @@ public class vp_WeaponHandler : MonoBehaviour
 	}
 
 	protected List<List<vp_Weapon>> m_WeaponLists = new List<List<vp_Weapon>>();
+
+
 
 	protected int m_CurrentWeaponIndex = -1;
 	protected vp_Weapon m_CurrentWeapon = null;
@@ -124,7 +126,7 @@ public class vp_WeaponHandler : MonoBehaviour
 			return;
 		}
 
-		// identify every unique gameobject that hold weapons as direct children
+		// identify every unique gameobject that holds weapons as direct children
 		List<Transform> weaponContainers = new List<Transform>();
 		foreach (vp_Weapon w in allWeapons)
 		{
@@ -227,7 +229,7 @@ public class vp_WeaponHandler : MonoBehaviour
 
 	}
 
-
+	
 	/// <summary>
 	/// unregisters this component from the event handler (if any)
 	/// </summary>
@@ -239,7 +241,6 @@ public class vp_WeaponHandler : MonoBehaviour
 			m_Player.Unregister(this);
 
 	}
-
 
 	/// <summary>
 	/// 
@@ -257,7 +258,7 @@ public class vp_WeaponHandler : MonoBehaviour
 	/// <summary>
 	/// 
 	/// </summary>
-	void UpdateFiring()
+	protected virtual void UpdateFiring()
 	{
 
 		// weaponhandler only fires for local and AI players. any other type
@@ -278,8 +279,8 @@ public class vp_WeaponHandler : MonoBehaviour
 		m_Player.Fire.Try();
 		
 	}
-
 	
+
 	/// <summary>
 	/// this method will disable the currently activated weapon
 	/// and activate the one with 'weaponIndex'. if index is zero,
@@ -540,10 +541,6 @@ public class vp_WeaponHandler : MonoBehaviour
 		if (m_Player.Reload.Active)
 			return false;
 
-		//// can' set a weapon that we don't have
-		//if(!vp_TargetEventReturn<bool>.SendUpwards(m_Transform, "vp_Inventory"))
-		//    return true;
-
 		return true;
 
 	}
@@ -676,24 +673,6 @@ public class vp_WeaponHandler : MonoBehaviour
 		return false;
 
 	}
-
-
-	/// <summary>
-	/// 
-	/// </summary>
-	//protected virtual bool OnAttempt_RemoveItem(object item)
-	//{
-
-	//    for (int v = 0; v < Weapons.Count; v++)
-	//    {
-
-	//        if (Weapons[v].name == (string)name)
-	//            return m_Player.SetWeapon.TryStart(v + 1);
-	//    }
-
-	//    return false;
-
-	//}
 
 
 	/// <summary>

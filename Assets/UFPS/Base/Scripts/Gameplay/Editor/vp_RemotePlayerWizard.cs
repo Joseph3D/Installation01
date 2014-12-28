@@ -47,6 +47,9 @@ public class vp_RemotePlayerWizard
 		target.name = target.name.Replace("(Clone)", "");
 		target.name = target.name + " (CONVERSION FAILED - see error log)";
 
+		// set layer of root object to 'Default' since it likely should no longer be 'LocalPlayer'
+		target.gameObject.layer = vp_Layer.Default;
+
 		// convert weapons
 		ConvertWeaponsTo3rdPerson(target);
 
@@ -205,6 +208,14 @@ public class vp_RemotePlayerWizard
 				// reloader is no vp_Component so don't generate states & presets
 			}
 
+			// copy weapon thrower
+			vp_FPWeaponThrower fpThrower = fpWeapon.GetComponent<vp_FPWeaponThrower>();
+			if (fpThrower != null)
+			{
+				vp_WeaponThrower tdpThrower = newWeaponGO.AddComponent<vp_WeaponThrower>();
+				vp_EditorUtility.CopyValuesFromDerivedComponent(fpWeapon, tdpThrower, true, true, null);
+			}
+
 			// copy item identifier
 			vp_ItemIdentifier identifier = fpWeapon.GetComponent<vp_ItemIdentifier>();
 			if (identifier != null)
@@ -212,7 +223,7 @@ public class vp_RemotePlayerWizard
 				vp_ItemIdentifier newIdentifier = newWeaponGO.AddComponent<vp_ItemIdentifier>();
 				newIdentifier.Type = identifier.Type;
 			}
-
+			
 			weaponsConverted++;
 
 		}

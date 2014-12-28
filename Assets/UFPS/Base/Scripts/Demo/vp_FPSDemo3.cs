@@ -61,7 +61,7 @@ public class vp_FPSDemo3 : MonoBehaviour
 		m_Demo.Input.MouseCursorZones = new Rect[2];
 		m_Demo.Input.MouseCursorZones[0] = new Rect((Screen.width * 0.5f) - 370, 40, 80, 80);
 		m_Demo.Input.MouseCursorZones[1] = new Rect((Screen.width * 0.5f) + 290, 40, 80, 80);
-		Screen.lockCursor = false;
+		vp_Utility.LockCursor = false;
 		
 	}
 	
@@ -120,7 +120,7 @@ public class vp_FPSDemo3 : MonoBehaviour
 			m_Demo.DrawCrosshair = true;
 			m_Demo.UnFreezePlayer();
 			m_Demo.Teleport(m_StartPos, m_StartAngle);
-			Screen.lockCursor = true;
+			vp_Utility.LockCursor = true;
 			m_Demo.Input.MouseCursorForced = false;
 			if(m_BodyAnimator != null)
 				m_BodyAnimator.gameObject.SetActive(true);
@@ -130,7 +130,7 @@ public class vp_FPSDemo3 : MonoBehaviour
 		m_Demo.DrawBoxes("part i: some examples", "This level has some basic gameplay features.\n• Press SHIFT to SPRINT, C to CROUCH, and the RIGHT MOUSE BUTTON to AIM.\n• To SWITCH WEAPONS, press Q, E or 1-3.\n• Press R to RELOAD, F to INTERACT and V for 3RD PERSON.", ImageLeftArrow, ImageRightArrow, delegate() { m_Demo.LoadLevel(1); });
 
 		// draw menu re-enable text
-		if (m_Demo.ShowGUI && Screen.lockCursor && !m_LoadingNextLevel && !m_Demo.ClosingDown)
+		if (m_Demo.ShowGUI && vp_Utility.LockCursor && !m_LoadingNextLevel && !m_Demo.ClosingDown)
 		{
 
 			GUI.color = new Color(1, 1, 1, ((m_Demo.ClosingDown) ? m_Demo.GlobalAlpha : 1.0f));

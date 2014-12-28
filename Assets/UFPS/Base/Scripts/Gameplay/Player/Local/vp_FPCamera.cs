@@ -191,11 +191,15 @@ public class vp_FPCamera : vp_Component
 
 		FPController = Root.GetComponent<vp_FPController>();
 
+		// run 'SetRotation' with the initial rotation of the camera. this is important
+		// when not using the spawnpoint system (or player rotation will snap to zero yaw)
+		SetRotation(new Vector2(Transform.eulerAngles.x, Transform.eulerAngles.y));
+
 		// set parent gameobject layer to 'LocalPlayer', so camera can exclude it
 		// this also prevents shell casings from colliding with the charactercollider
 		Parent.gameObject.layer = vp_Layer.LocalPlayer;
 
-		// TODO: evaluate this for multiplayer
+		// TODO: removed for multiplayer. evaluate consequences
 		//foreach (Transform b in Parent)
 		//{
 		//	if (b.gameObject.layer != vp_Layer.PlayerDamageCollider)
@@ -386,7 +390,7 @@ public class vp_FPCamera : vp_Component
 			vp_MathUtility.NaNSafeQuaternion((xQuaternion * yQuaternion), Parent.rotation);
 
 		// pitch and yaw the camera
-		yQuaternion = Quaternion.AngleAxis((-m_Pitch), Vector3.left);
+		yQuaternion = Quaternion.AngleAxis(-m_Pitch, Vector3.left);
 		Transform.rotation =
 			vp_MathUtility.NaNSafeQuaternion((xQuaternion * yQuaternion), Transform.rotation);
 
@@ -918,17 +922,42 @@ public class vp_FPCamera : vp_Component
 
 
 	/// <summary>
-	/// sets camera rotation and snaps springs and zoom to a halt
+	/// sets camera rotation and optionally snaps springs and zoom to a halt
 	/// </summary>
-	public virtual void SetRotation(Vector2 eulerAngles, bool stop = true, bool resetInitialRotation = true)
+	public virtual void SetRotation(Vector2 eulerAngles, bool stopZoomAndSprings)	// TEMP: don't use optional params: keep below overrides for mobile add-on compatibility
 	{
 
 		Angle = eulerAngles;
 
-		if(stop)
+		if (stopZoomAndSprings)
 			Stop();
 
 	}
+
+
+	/// <summary>
+	/// sets camera rotation and snaps springs and zoom to a halt
+	/// </summary>
+	public virtual void SetRotation(Vector2 eulerAngles)
+	{
+
+		Angle = eulerAngles;
+		Stop();
+
+	}
+
+
+	/// <summary>
+	/// sets camera rotation and optionally snaps springs and zoom to a halt
+	/// NOTE: provided only for mobile add-on backwards compatibility
+	/// </summary>
+	public virtual void SetRotation(Vector2 eulerAngles, bool stopZoomAndSprings, bool obsolete)
+	{
+
+		SetRotation(eulerAngles, stopZoomAndSprings);
+
+	}
+
 
 
 	/// <summary>
@@ -1171,6 +1200,16 @@ public class vp_FPCamera : vp_Component
 		}
 	}
 
+
+	/// <summary>
+	/// toggles camera view between 1st and 3rd person mode
+	/// </summary>
+	protected virtual void OnMessage_CameraToggle3rdPerson()
+	{
+
+		m_Player.IsFirstPerson.Set(!m_Player.IsFirstPerson.Get());
+
+	}
 
 }
 

@@ -135,7 +135,6 @@ public class vp_WeaponShooter : vp_Shooter
 
 	}
 
-
 	/// <summary>
 	/// in addition to spawning the projectile in the base class,
 	/// plays a fire animation on the weapon and applies recoil
@@ -144,7 +143,10 @@ public class vp_WeaponShooter : vp_Shooter
 	protected override void Fire()
 	{
 
-
+		// in UFPS multiplayer add-on, projectiles are spawned by RPC,
+		// and local spawn delay must not be applied
+		if (vp_Gameplay.isMultiplayer && !Player.IsLocal.Get())
+			ProjectileSpawnDelay = 0.0f;
 
 		m_LastFireTime = Time.time;
 

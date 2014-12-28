@@ -307,7 +307,7 @@ public class vp_BodyAnimator : MonoBehaviour
 
 		InitMaxSpeeds();
 		
-		Player.IsFirstPerson.Set(false);
+		//Player.IsFirstPerson.Set(false);	// TEMP: checking to see if commenting this out causes trouble
 
 	}
 

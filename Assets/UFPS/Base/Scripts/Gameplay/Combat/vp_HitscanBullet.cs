@@ -28,7 +28,7 @@ public class vp_HitscanBullet : MonoBehaviour
 	public string DamageMethodName = "Damage";	// user defined name of damage method on target
 												// TIP: this can be used to apply different types of damage, i.e
 												// magical, freezing, poison, electric
-	protected Transform m_Sender = null;		// inflictor / source of the damage
+	protected Transform m_Source = null;		// inflictor / source of the damage
 
 	public float m_SparkFactor = 0.5f;		// chance of bullet impact generating a spark
 
@@ -159,8 +159,8 @@ public class vp_HitscanBullet : MonoBehaviour
 			}
 
 			// do damage on the target
-			if(m_Sender != null)
-				hit.collider.SendMessageUpwards(DamageMethodName, new vp_DamageInfo(Damage, m_Sender), SendMessageOptions.DontRequireReceiver);
+			if(m_Source != null)
+				hit.collider.SendMessageUpwards(DamageMethodName, new vp_DamageInfo(Damage, m_Source), SendMessageOptions.DontRequireReceiver);
 			else
 				hit.collider.SendMessageUpwards(DamageMethodName, Damage, SendMessageOptions.DontRequireReceiver);
 
@@ -194,13 +194,25 @@ public class vp_HitscanBullet : MonoBehaviour
 
 
 	/// <summary>
-	/// 
+	/// identifies the source transform of a bullet's damage
+	/// (typically the person shooting)
 	/// </summary>
+	public void SetSource(Transform source)
+	{
+		m_Source = source;
+		if (source.transform.root == Camera.main.transform.root)	// TODO: optimize
+			IgnoreLocalPlayer = true;
+	}
+	
+	
+	/// <summary>
+	/// identifies the source transform of a bullet's damage
+	/// (typically the person shooting)
+	/// </summary>
+	[System.Obsolete("Please use 'SetSource' instead.")]
 	public void SetSender(Transform sender)
 	{
-		m_Sender = sender;
-		if (sender.transform.root == Camera.main.transform.root)
-			IgnoreLocalPlayer = true;
+		SetSource(sender);
 	}
 
 

@@ -180,6 +180,8 @@ public class vp_SimpleHUD : MonoBehaviour
 			m_FormattedHealth = (m_Player.Health.Get() * HealthMultiplier);
 			if(m_FormattedHealth < 1.0f)
 				m_FormattedHealth = (m_Player.Dead.Active ? Mathf.Min(m_FormattedHealth, 0.0f) : 1.0f);
+			if (m_Player.Dead.Active && m_FormattedHealth > 0.0f)
+				m_FormattedHealth = 0.0f;
 			return ((int)m_FormattedHealth).ToString();
 		}
 
@@ -203,9 +205,8 @@ public class vp_SimpleHUD : MonoBehaviour
 		else
 			m_TargetAmmoOffset = 10;
 
-
 		// make health black on death
-		if (m_Player.Dead.Active || (m_Player.Health.Get() < 0.0f))
+		if (m_Player.Dead.Active)
 			HealthColor = Color.black;
 
 		// if health is low, fade color up and down and play a warning sound
@@ -223,7 +224,7 @@ public class vp_SimpleHUD : MonoBehaviour
 			HealthColor = Color.white;	// health is not low, draw it normally
 
 		// if ammo is low, fade color up and down
-		if (m_Player.CurrentWeaponAmmoCount.Get() < 1)
+		if ((m_Player.CurrentWeaponAmmoCount.Get() < 1) && (m_Player.CurrentWeaponType.Get() != (int)vp_Weapon.Type.Thrown))
 			AmmoColor = Color.Lerp(Color.white, AmmoLowColor, (vp_MathUtility.Sinus(8.0f, 0.1f, 0.0f) * 5) + 0.5f);
 		else
 			AmmoColor = Color.white;	// ammo is not low, draw it normally
@@ -241,7 +242,21 @@ public class vp_SimpleHUD : MonoBehaviour
 		if (!ShowHUD)
 			return;
 		
-		// display a simple 'Health' HUD
+		DrawHealth();
+
+		DrawAmmo();
+
+		DrawText();
+
+	}
+
+
+	/// <summary>
+	/// displays a simple 'Health' HUD
+	/// </summary>
+	void DrawHealth()
+	{
+
 		DrawLabel("", new Vector2(m_CurrentHealthOffset, Screen.height - 68), new Vector2(80 + m_HealthWidth, 52), AmmoStyle, Color.white, m_TranspBlack, null);	// background
 		if (HealthIcon != null)
 			DrawLabel("", new Vector2(m_CurrentHealthOffset + 10, Screen.height - 58), new Vector2(32, 32), AmmoStyle, Color.white, HealthColor, HealthIcon);			// icon
@@ -249,21 +264,50 @@ public class vp_SimpleHUD : MonoBehaviour
 		DrawLabel("%", new Vector2(m_CurrentHealthOffset + 50 + m_HealthWidth, Screen.height - SmallFontOffset), new Vector2(110, 60), AmmoStyleSmall, HealthColor, Color.clear, null);	// percentage mark
 		GUI.color = Color.white;
 
-		// display a simple 'Ammo' HUD
-		DrawLabel("", new Vector2(m_CurrentAmmoOffset + Screen.width - 115 - (AmmoStyle.CalcSize(new GUIContent(m_Player.CurrentWeaponAmmoCount.Get().ToString())).x), Screen.height - 68), new Vector2(200, 52), AmmoStyle, AmmoColor, m_TranspBlack, null);	// background
-		if (m_Player.CurrentAmmoIcon.Get() != null)
-			DrawLabel("", new Vector2(m_CurrentAmmoOffset + Screen.width - 105 - (AmmoStyle.CalcSize(new GUIContent(m_Player.CurrentWeaponAmmoCount.Get().ToString())).x), Screen.height - 58), new Vector2(32, 32), AmmoStyle, Color.white, AmmoColor, m_Player.CurrentAmmoIcon.Get());	// icon
-		DrawLabel(m_Player.CurrentWeaponAmmoCount.Get().ToString(), new Vector2(m_CurrentAmmoOffset + Screen.width - 177, Screen.height - BigFontOffset), new Vector2(110, 60), AmmoStyle, AmmoColor, Color.clear, null);		// value
-		DrawLabel("/ " + m_Player.CurrentWeaponClipCount.Get().ToString(), new Vector2((m_CurrentAmmoOffset + Screen.width - 60), Screen.height - SmallFontOffset), new Vector2(110, 60), AmmoStyleSmall, AmmoColor, Color.clear, null);		// total ammo count
+	}
 
-		// show a message in the middle of the screen and fade it out
-		if (m_PickupMessage != null && m_MessageColor.a > 0.01f)
+	
+	/// <summary>
+	/// displays a simple 'Ammo' HUD
+	/// </summary>
+	void DrawAmmo()
+	{
+
+		if ((m_Player.CurrentWeaponType.Get() == (int)vp_Weapon.Type.Thrown))
 		{
-			m_MessageColor = Color.Lerp(m_MessageColor, m_InvisibleColor, Time.deltaTime * 0.4f);
-			GUI.color = m_MessageColor;
-			GUI.Box(new Rect(200, 150, Screen.width - 400, Screen.height - 400), m_PickupMessage, MessageStyle);
-			GUI.color = Color.white;
+			DrawLabel("", new Vector2(m_CurrentAmmoOffset + Screen.width - 93 - (AmmoStyle.CalcSize(new GUIContent(m_Player.CurrentWeaponAmmoCount.Get().ToString())).x), Screen.height - 68), new Vector2(200, 52), AmmoStyle, AmmoColor, m_TranspBlack, null);	// background
+			if (m_Player.CurrentAmmoIcon.Get() != null)
+				DrawLabel("", new Vector2(m_CurrentAmmoOffset + Screen.width - 83 - (AmmoStyle.CalcSize(new GUIContent(m_Player.CurrentWeaponAmmoCount.Get().ToString())).x), Screen.height - 58), new Vector2(32, 32), AmmoStyle, Color.white, AmmoColor, m_Player.CurrentAmmoIcon.Get());	// icon
+			DrawLabel((m_Player.CurrentWeaponAmmoCount.Get() + m_Player.CurrentWeaponClipCount.Get()).ToString(), new Vector2(m_CurrentAmmoOffset + Screen.width - 145, Screen.height - BigFontOffset), new Vector2(110, 60), AmmoStyle, AmmoColor, Color.clear, null);		// value
 		}
+		else
+		{
+			DrawLabel("", new Vector2(m_CurrentAmmoOffset + Screen.width - 115 - (AmmoStyle.CalcSize(new GUIContent(m_Player.CurrentWeaponAmmoCount.Get().ToString())).x), Screen.height - 68), new Vector2(200, 52), AmmoStyle, AmmoColor, m_TranspBlack, null);	// background
+			if (m_Player.CurrentAmmoIcon.Get() != null)
+				DrawLabel("", new Vector2(m_CurrentAmmoOffset + Screen.width - 105 - (AmmoStyle.CalcSize(new GUIContent(m_Player.CurrentWeaponAmmoCount.Get().ToString())).x), Screen.height - 58), new Vector2(32, 32), AmmoStyle, Color.white, AmmoColor, m_Player.CurrentAmmoIcon.Get());	// icon
+			DrawLabel(m_Player.CurrentWeaponAmmoCount.Get().ToString(), new Vector2(m_CurrentAmmoOffset + Screen.width - 177, Screen.height - BigFontOffset), new Vector2(110, 60), AmmoStyle, AmmoColor, Color.clear, null);		// value
+			DrawLabel("/ " + m_Player.CurrentWeaponClipCount.Get().ToString(), new Vector2((m_CurrentAmmoOffset + Screen.width - 60), Screen.height - SmallFontOffset), new Vector2(110, 60), AmmoStyleSmall, AmmoColor, Color.clear, null);		// total ammo count
+		}
+
+	}
+
+
+	/// <summary>
+	/// shows a message in the middle of the screen and fades it out
+	/// </summary>
+	void DrawText()
+	{
+
+		if (m_PickupMessage == null)
+			return;
+
+		if(m_MessageColor.a < 0.01f)
+			return;
+
+		m_MessageColor = Color.Lerp(m_MessageColor, m_InvisibleColor, Time.deltaTime * 0.4f);
+		GUI.color = m_MessageColor;
+		GUI.Box(new Rect(200, 150, Screen.width - 400, Screen.height - 400), m_PickupMessage, MessageStyle);
+		GUI.color = Color.white;
 
 	}
 

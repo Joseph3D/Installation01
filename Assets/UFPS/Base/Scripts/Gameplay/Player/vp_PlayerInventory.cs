@@ -17,7 +17,96 @@ using System.Collections.Generic;
 public class vp_PlayerInventory : vp_Inventory
 {
 
+	protected Dictionary<vp_ItemType, object> m_PreviouslyOwnedItems = new Dictionary<vp_ItemType, object>();
+	protected vp_ItemIdentifier m_WeaponIdentifierResult;
+	protected string m_MissingHandlerError = "Error (vp_PlayerInventory) this component must be on the same transform as a vp_PlayerEventHandler + vp_WeaponHandler.";
 
+	protected Dictionary<vp_UnitBankInstance, vp_Weapon> m_UnitBankWeapons = null;
+	protected Dictionary<vp_ItemInstance, vp_Weapon> m_ItemWeapons = null;
+
+	protected Dictionary<vp_Weapon, vp_ItemIdentifier> m_WeaponIdentifiers = null;
+	Dictionary<vp_Weapon, vp_ItemIdentifier> WeaponIdentifiers
+	{
+		get
+		{
+			if (m_WeaponIdentifiers == null)
+			{
+				m_WeaponIdentifiers = new Dictionary<vp_Weapon, vp_ItemIdentifier>();
+				foreach (vp_Weapon w in WeaponHandler.Weapons)
+				{
+					vp_ItemIdentifier i = w.GetComponent<vp_ItemIdentifier>();
+					if (i != null)
+					{
+						m_WeaponIdentifiers.Add(w, i);
+					}
+				}
+			}
+			return m_WeaponIdentifiers;
+		}
+	}
+
+	protected Dictionary<vp_UnitType, List<vp_Weapon>> m_WeaponsByUnit = null;
+	Dictionary<vp_UnitType, List<vp_Weapon>> WeaponsByUnit
+	{
+		get
+		{
+			if (m_WeaponsByUnit == null)
+			{
+				m_WeaponsByUnit = new Dictionary<vp_UnitType, List<vp_Weapon>>();
+				foreach (vp_Weapon w in WeaponHandler.Weapons)
+				{
+					vp_ItemIdentifier i;
+					if (WeaponIdentifiers.TryGetValue(w, out i) && (i != null))
+					{
+						vp_UnitBankType uType = i.Type as vp_UnitBankType;
+						if ((uType != null) && (uType.Unit != null))
+						{
+							List<vp_Weapon> weaponsWithUnitType;
+							if (m_WeaponsByUnit.TryGetValue(uType.Unit, out weaponsWithUnitType))
+							{
+								if (weaponsWithUnitType == null)
+									weaponsWithUnitType = new List<vp_Weapon>();
+								m_WeaponsByUnit.Remove(uType.Unit);
+							}
+							else
+								weaponsWithUnitType = new List<vp_Weapon>();
+							weaponsWithUnitType.Add(w);
+							m_WeaponsByUnit.Add(uType.Unit, weaponsWithUnitType);
+						}
+					}
+				}
+
+			}
+			return m_WeaponsByUnit;
+		}
+	}
+
+	protected vp_ItemInstance m_CurrentWeaponInstance = null;
+	protected virtual vp_ItemInstance CurrentWeaponInstance
+	{
+		get
+		{
+			if (Application.isPlaying && (WeaponHandler.CurrentWeaponIndex == 0))
+			{
+				m_CurrentWeaponInstance = null;
+				return null;
+			}
+
+			if (m_CurrentWeaponInstance == null)
+			{
+				if (CurrentWeaponIdentifier == null)
+				{
+					MissingIdentifierError();
+					m_CurrentWeaponInstance = null;
+					return null;
+				}
+				m_CurrentWeaponInstance = GetItem(CurrentWeaponIdentifier.Type, CurrentWeaponIdentifier.ID);
+			}
+
+			return m_CurrentWeaponInstance;
+
+		}
+	}
 
 	private vp_PlayerEventHandler m_Player = null;	// should never be referenced directly
 	protected vp_PlayerEventHandler Player	// lazy initialization of the event handler field
@@ -41,21 +130,36 @@ public class vp_PlayerInventory : vp_Inventory
 		}
 	}
 
-
-	protected Dictionary<int, vp_ItemIdentifier> m_WeaponIdentifiers = new Dictionary<int, vp_ItemIdentifier>();
-	protected vp_ItemIdentifier m_WeaponIdentifierResult;
-	protected string m_MissingHandlerError = "Error (vp_PlayerInventory) this component must be on the same transform as a vp_PlayerEventHandler + vp_WeaponHandler.";
-
 	public vp_ItemIdentifier CurrentWeaponIdentifier
 	{
 		get
 		{
 			if (!Application.isPlaying)
 				return null;
-			return GetWeaponIdentifier(WeaponHandler.CurrentWeaponIndex);
+			return GetWeaponIdentifier(WeaponHandler.CurrentWeapon);
 		}
 	}
 
+
+	////////////// 'AutoWield' section ////////////////
+	[System.Serializable]
+	public class AutoWieldSection
+	{
+		public bool Always = false;
+		public bool IfUnarmed = true;
+		public bool IfOutOfAmmo = true;
+		public bool IfNotPresent = true;
+		public bool FirstTimeOnly = true;
+
+#if UNITY_EDITOR
+		[vp_HelpBox(typeof(AutoWieldSection), UnityEditor.MessageType.None, typeof(vp_PlayerInventory), null, true)]
+		public float helpbox;
+#endif
+
+	}
+	[SerializeField]
+	protected AutoWieldSection m_AutoWield;
+	
 
 	////////////// 'Misc' section ////////////////
 	[System.Serializable]
@@ -70,20 +174,22 @@ public class vp_PlayerInventory : vp_Inventory
 	/// <summary>
 	/// 
 	/// </summary>
-	protected virtual vp_ItemIdentifier GetWeaponIdentifier(int index)
+	protected virtual vp_ItemIdentifier GetWeaponIdentifier(vp_Weapon weapon)
 	{
+
 		if (!Application.isPlaying)
 			return null;
-		if (!m_WeaponIdentifiers.TryGetValue(index, out m_WeaponIdentifierResult))
+
+		if (weapon == null)
+			return null;
+
+		if (!WeaponIdentifiers.TryGetValue(weapon, out m_WeaponIdentifierResult))
 		{
 
-			if ((index < 1) || index > (WeaponHandler.Weapons.Count))
+			if (weapon == null)
 				return null;
 
-			if (WeaponHandler.Weapons[index - 1] == null)
-				return null;
-
-			m_WeaponIdentifierResult = WeaponHandler.Weapons[index - 1].GetComponent<vp_ItemIdentifier>();
+			m_WeaponIdentifierResult = weapon.GetComponent<vp_ItemIdentifier>();
 
 			if (m_WeaponIdentifierResult == null)
 				return null;
@@ -91,11 +197,12 @@ public class vp_PlayerInventory : vp_Inventory
 			if (m_WeaponIdentifierResult.Type == null)
 				return null;
 
-			m_WeaponIdentifiers.Add(index, m_WeaponIdentifierResult);
+			WeaponIdentifiers.Add(weapon, m_WeaponIdentifierResult);
 
 		}
 
 		return m_WeaponIdentifierResult;
+
 	}
 
 
@@ -179,10 +286,12 @@ public class vp_PlayerInventory : vp_Inventory
 	protected override void DoAddItem(vp_ItemType type, int id)
 	{
 
-		bool hadItBefore = HaveItem(type, id);
+		bool alreadyHaveIt = vp_Gameplay.isMultiplayer ? HaveItem(type) : HaveItem(type, id);	// NOTE: id not supported in UFPS multiplayer add-on
+
 		base.DoAddItem(type, id);
-		if (!hadItBefore)
-			TryWield(GetItem(type, id));
+
+		TryWieldNewItem(type, alreadyHaveIt);
+
 	}
 
 
@@ -204,10 +313,72 @@ public class vp_PlayerInventory : vp_Inventory
 	protected override void DoAddUnitBank(vp_UnitBankType unitBankType, int id, int unitsLoaded)
 	{
 
-		bool hadItBefore = HaveItem(unitBankType, id);
+		bool alreadyHaveIt = vp_Gameplay.isMultiplayer ?
+			HaveItem(unitBankType)			// NOTE: id not supported in UFPS multiplayer add-on
+			: HaveItem(unitBankType, id);	// singleplayer
+
 		base.DoAddUnitBank(unitBankType, id, unitsLoaded);
-		if (!hadItBefore)
-			TryWield(GetItem(unitBankType, id));
+
+		TryWieldNewItem(unitBankType, alreadyHaveIt);
+
+	}
+
+
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	protected virtual void TryWieldNewItem(vp_ItemType type, bool alreadyHaveIt)
+	{
+
+		bool haveHadItBefore = m_PreviouslyOwnedItems.ContainsKey(type);
+		if (!haveHadItBefore)
+			m_PreviouslyOwnedItems.Add(type, null);
+
+		// --- see if we should try to wield a weapon because of this item pickup ---
+
+		if (m_AutoWield.Always)
+			goto tryWield;
+
+		if (m_AutoWield.IfUnarmed && (WeaponHandler.CurrentWeaponIndex < 1))
+			goto tryWield;
+
+		if (m_AutoWield.IfOutOfAmmo
+			&& (WeaponHandler.CurrentWeaponIndex > 0)
+			&& (WeaponHandler.CurrentWeapon.AnimationType != (int)vp_Weapon.Type.Melee)
+			&& m_Player.CurrentWeaponAmmoCount.Get() < 1)
+			goto tryWield;
+
+		if (m_AutoWield.IfNotPresent && !m_AutoWield.FirstTimeOnly && !alreadyHaveIt)
+			goto tryWield;
+
+		if (m_AutoWield.FirstTimeOnly && !haveHadItBefore)
+			goto tryWield;
+
+		return;
+
+	tryWield:
+
+		if ((type is vp_UnitBankType))
+			TryWield(GetItem(type));
+		else if (type is vp_UnitType)
+			TryWieldByUnit(type as vp_UnitType);
+		else if (type is vp_ItemType)	// tested last since the others derive from it
+			TryWield(GetItem(type));
+		else
+		{
+			System.Type baseType = type.GetType();
+			if (baseType == null)
+				return;
+			baseType = baseType.BaseType;
+			if ((baseType == typeof(vp_UnitBankType)))
+				TryWield(GetItem(type));
+			else if (baseType == typeof(vp_UnitType))
+				TryWieldByUnit(type as vp_UnitType);
+			else if (baseType == typeof(vp_ItemType))
+				TryWield(GetItem(type));
+		}
+		
 	}
 
 
@@ -222,30 +393,99 @@ public class vp_PlayerInventory : vp_Inventory
 
 	}
 
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	protected virtual vp_Weapon GetWeaponOfItemInstance(vp_ItemInstance itemInstance)
+	{
 
+		if (m_ItemWeapons == null)
+		{
+			m_ItemWeapons = new Dictionary<vp_ItemInstance, vp_Weapon>();
+		}
+
+		vp_Weapon weapon;
+		m_ItemWeapons.TryGetValue(itemInstance, out weapon);
+		if (weapon != null)
+			return weapon;
+
+		try
+		{
+			for (int v = 0; v < WeaponHandler.Weapons.Count; v++)
+			{
+				vp_ItemInstance i = GetItemInstanceOfWeapon(WeaponHandler.Weapons[v]);
+
+				Debug.Log("weapon with index: " + v + ", item instance: " + ((i == null) ? "(have none)" : i.Type.ToString()));
+				
+				if (i != null)
+				{
+					if (i.Type == itemInstance.Type)
+					{
+						weapon = WeaponHandler.Weapons[v];
+						m_ItemWeapons.Add(i, weapon);
+						return weapon;
+					}
+				}
+			}
+		}
+		catch
+		{
+			Debug.LogError("Exception " + this + " Crashed while trying to get item instance for a weapon. Likely a nullreference.");
+		}
+
+		return null;
+	}
+
+	
 	/// <summary>
 	/// 
 	/// </summary>
 	public override bool DoAddUnits(vp_UnitBankInstance bank, int amount)
 	{
+		if(bank == null)
+			return false;
+
+		int prevUnitCount = GetUnitCount(bank.UnitType);
+
 		bool result = base.DoAddUnits(bank, amount);
 
 		// if units were added to the inventory (and not to a weapon)
-		if ((result == true && bank.IsInternal) && !((Application.isPlaying) && WeaponHandler.CurrentWeaponIndex == 0))
+		if ((result == true && bank.IsInternal) )
 		{
-			// fetch the inventory record for the current weapon to see
-			// if we should reload it straight away
-			vp_UnitBankInstance weapon = (CurrentWeaponInstance as vp_UnitBankInstance);
-			if (weapon != null)
+
+			try
 			{
-				// if the currently wielded weapon uses the same kind of units,
-				// and is currently out of ammo ...
-				if ((bank.UnitType == weapon.UnitType) && (weapon.Count == 0))
-					Player.AutoReload.Try();	// try to auto-reload (success determined by weaponhandler)
+				TryWieldNewItem(bank.UnitType, (prevUnitCount != 0));
 			}
+			catch
+			{
+				// DEBUG: uncomment on elusive item wielding issues
+				//Debug.LogError("Error (" + this + ") Failed to wield new item.");
+			}
+
+			// --- auto reload firearms ---
+
+			if(!((Application.isPlaying) && WeaponHandler.CurrentWeaponIndex == 0))
+			{
+				// fetch the inventory record for the current weapon to see
+				// if we should reload it straight away
+				vp_UnitBankInstance curBank = (CurrentWeaponInstance as vp_UnitBankInstance);
+				if (curBank != null)
+				{
+					// if the currently wielded weapon uses the same kind of units,
+					// and is currently out of ammo ...
+					if ((bank.UnitType == curBank.UnitType) && (curBank.Count == 0))
+					{
+						Player.AutoReload.Try();	// try to auto-reload (success determined by weaponhandler)
+					}
+				}
+			}
+			
 		}
 
 		return result;
+
 	}
 
 
@@ -262,11 +502,87 @@ public class vp_PlayerInventory : vp_Inventory
 
 		return result;
 	}
+	
+
+	/// <summary>
+	///	
+	/// </summary>
+	public vp_UnitBankInstance GetUnitBankInstanceOfWeapon(vp_Weapon weapon)
+	{
+
+		return GetItemInstanceOfWeapon(weapon) as vp_UnitBankInstance;
+
+	}
 
 
 	/// <summary>
-	/// unwields the currently wielded weapon if it's not present
-	/// in the inventory
+	///	
+	/// </summary>
+	public vp_ItemInstance GetItemInstanceOfWeapon(vp_Weapon weapon)
+	{
+
+		vp_ItemIdentifier itemIdentifier = GetWeaponIdentifier(weapon);
+		if (itemIdentifier == null)
+			return null;
+
+		vp_ItemInstance ii = GetItem(itemIdentifier.Type);
+
+		return ii;
+
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public int GetAmmoInWeapon(vp_Weapon weapon)
+	{
+
+		vp_UnitBankInstance unitBank = GetUnitBankInstanceOfWeapon(weapon);
+		if (unitBank == null)
+			return 0;
+
+		return unitBank.Count;
+
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public int GetExtraAmmoForWeapon(vp_Weapon weapon)
+	{
+
+		vp_UnitBankInstance unitBank = GetUnitBankInstanceOfWeapon(weapon);
+		if (unitBank == null)
+			return 0;
+
+		return GetUnitCount(unitBank.UnitType);
+
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public int GetAmmoInCurrentWeapon()
+	{
+		return OnValue_CurrentWeaponAmmoCount;
+	}
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public int GetExtraAmmoForCurrentWeapon()
+	{
+		return OnValue_CurrentWeaponClipCount;
+	}
+
+
+	/// <summary>
+	/// unwields the currently wielded weapon if not present in
+	/// the inventory
 	/// </summary>
 	protected virtual void UnwieldMissingWeapon()
 	{
@@ -288,7 +604,33 @@ public class vp_PlayerInventory : vp_Inventory
 
 	}
 
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	protected bool TryWieldByUnit(vp_UnitType unitType)
+	{
+		
+		// try to find a weapon with this unit type
+		List<vp_Weapon> weaponsWithUnitType;
+		if(WeaponsByUnit.TryGetValue(unitType, out weaponsWithUnitType)
+			&& (weaponsWithUnitType != null)
+			&& (weaponsWithUnitType.Count > 0)
+			)
+		{
+			// try to set the first weapon we find that uses this unit type
+			foreach (vp_Weapon w in weaponsWithUnitType)
+			{
+				if (m_Player.SetWeapon.TryStart(WeaponHandler.Weapons.IndexOf(w) + 1))
+					return true;	// found matching weapon: stop looking
+			}
+		}
 
+		return false;
+		
+	}
+
+	
 	/// <summary>
 	/// wields the vp_Weapon mapped to 'item' (if any)
 	/// </summary>
@@ -301,12 +643,15 @@ public class vp_PlayerInventory : vp_Inventory
 		if (Player.Dead.Active)
 			return;
 
+		if (!WeaponHandler.enabled)
+			return;
+
 		int index;
 		vp_ItemIdentifier identifier;
 		for (index = 1; index < WeaponHandler.Weapons.Count + 1; index++)
 		{
 
-			identifier = GetWeaponIdentifier(index);
+			identifier = GetWeaponIdentifier(WeaponHandler.Weapons[index - 1]);
 
 			if (identifier == null)
 				continue;
@@ -323,7 +668,6 @@ public class vp_PlayerInventory : vp_Inventory
 			goto found;
 
 		}
-
 		return;
 
 	found:
@@ -380,10 +724,10 @@ public class vp_PlayerInventory : vp_Inventory
 
 
 	/// <summary>
-	/// returns true if the inventory contains a weapon by the
-	/// index fed as an argument to the 'SetWeapon' activity.
-	/// false if not. this is used to regulate which weapons the
-	/// player currently has access to.
+	/// returns true if the inventory contains a weapon by the index
+	/// fed as an argument to the 'SetWeapon' activity. false if not.
+	/// this is used to regulate which weapons the player currently
+	/// has access to.
 	/// </summary>
 	protected virtual bool CanStart_SetWeapon()
 	{
@@ -392,18 +736,47 @@ public class vp_PlayerInventory : vp_Inventory
 		if (index == 0)
 			return true;
 
-		vp_ItemIdentifier weapon = GetWeaponIdentifier(index);
-		if (weapon == null)
-		{
-			if ((index < 1) || index > (WeaponHandler.Weapons.Count))
-				return false;
+		if ((index < 1) || index > (WeaponHandler.Weapons.Count))
+			return false;
+
+		vp_ItemIdentifier weaponIdentifier = GetWeaponIdentifier(WeaponHandler.Weapons[index - 1]);
+		if (weaponIdentifier == null)
 			return MissingIdentifierError(index);
+
+		bool haveItem = HaveItem(weaponIdentifier.Type, weaponIdentifier.ID);
+
+		// see if weapon is thrown
+		if (haveItem && (vp_Weapon.Type)WeaponHandler.Weapons[index-1].AnimationType == vp_Weapon.Type.Thrown)
+		{
+
+			if (GetAmmoInWeapon(WeaponHandler.Weapons[index - 1]) < 1)
+			{
+				vp_UnitBankType uType = weaponIdentifier.Type as vp_UnitBankType;
+				if (uType == null)
+				{
+					Debug.LogError("Error (" + this + ") Tried to wield thrown weapon " + WeaponHandler.Weapons[index-1] + " but its item identifier does not point to a UnitBank.");
+					return false;
+				}
+				else 
+				{
+					if (!TryReload(uType, weaponIdentifier.ID))	// NOTE: ID might not work for identification here because of multiplayer add-on pickup logic
+					{
+						//Debug.Log("uType: " + uType + ", weapon.ID: " + weapon.ID);
+						//Debug.Log("failed because: no thrower wielded and no extra ammo");
+						return false;
+					}
+				}
+				//Debug.Log("success because: no thrower wielded but we have extra ammo");
+			}
+			//else
+			//Debug.Log("success because: thrower wielded");
+
 		}
 
-		return HaveItem(weapon.Type, weapon.ID);
+		return haveItem;
 
 	}
-
+	
 
 	/// <summary>
 	/// tries to remove one unit from ammo level of current weapon
@@ -415,6 +788,9 @@ public class vp_PlayerInventory : vp_Inventory
 
 		if (CurrentWeaponIdentifier == null)
 			return MissingIdentifierError();
+
+		if (WeaponHandler.CurrentWeapon.AnimationType == (int)vp_Weapon.Type.Thrown)
+			TryReload(CurrentWeaponInstance as vp_UnitBankInstance);
 
 		return TryDeduct(CurrentWeaponIdentifier.Type as vp_UnitBankType, CurrentWeaponIdentifier.ID, 1);
 
@@ -439,27 +815,11 @@ public class vp_PlayerInventory : vp_Inventory
 	/// <summary>
 	/// 
 	/// </summary>
-	protected virtual vp_ItemInstance CurrentWeaponInstance
-	{
-		get
-		{
-			if (Application.isPlaying && (WeaponHandler.CurrentWeaponIndex == 0))
-				return null;
-			if (CurrentWeaponIdentifier == null)
-			{
-				MissingIdentifierError();
-				return null;
-			}
-			return GetItem(CurrentWeaponIdentifier.Type, CurrentWeaponIdentifier.ID);
-		}
-	}
-
-
-	/// <summary>
-	/// 
-	/// </summary>
 	public override void Reset()
 	{
+
+		m_PreviouslyOwnedItems.Clear();
+		m_CurrentWeaponInstance = null;
 
 		if (!m_Misc.ResetOnRespawn)
 			return;
@@ -569,13 +929,16 @@ public class vp_PlayerInventory : vp_Inventory
 
 		int amount = (arr.Length == 2) ? (int)arr[1] : 1;
 
+		if (type is vp_UnitType)
+			return TryGiveUnits((type as vp_UnitType), amount);
+
 		return TryGiveItems(type, amount);
 
 	}
 
 
 	/// <summary>
-	/// tries to remove an amount of items to the item count.
+	/// tries to remove an amount of items from the item count.
 	/// NOTE: this event should be passed an object array where
 	/// the first object is of type 'vp_ItemType', and the second
 	/// (optional) object is of type 'int', representing the amount
@@ -593,6 +956,9 @@ public class vp_PlayerInventory : vp_Inventory
 
 		int amount = (arr.Length == 2) ? (int)arr[1] : 1;
 
+		if(type is vp_UnitType)
+			return TryRemoveUnits((type as vp_UnitType), amount);
+
 		return TryRemoveItems(type, amount);
 
 	}
@@ -601,7 +967,7 @@ public class vp_PlayerInventory : vp_Inventory
 	/// <summary>
 	/// 
 	/// </summary>
-	Texture2D OnValue_CurrentAmmoIcon
+	protected virtual Texture2D OnValue_CurrentAmmoIcon
 	{
 		get
 		{
@@ -620,4 +986,14 @@ public class vp_PlayerInventory : vp_Inventory
 	}
 
 
+	/// <summary>
+	/// 
+	/// </summary>
+	protected virtual void OnStop_SetWeapon()
+	{
+		m_CurrentWeaponInstance = null;
+	}
+
 }
+
+
